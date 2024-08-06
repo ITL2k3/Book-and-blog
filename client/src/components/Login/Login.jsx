@@ -10,7 +10,7 @@ export default function Login() {
             <Form method='post' action="/">
                 <input type='text' name='formId' value="login" style={{display: 'none'}}></input>
                 <label>
-                    <span>username</span>
+                    <span>MSSV</span>
                     <input type='text' name='username' required/>
                 </label>
                 <label>
@@ -19,7 +19,7 @@ export default function Login() {
                 </label>
                 <button>Login</button>
                 
-                {data && data.error && <p>{data.error}</p>}
+                {data && data.error && data.formId =='login' &&<p>{data.error}</p>}
             </Form>
 
         </div>
@@ -28,7 +28,7 @@ export default function Login() {
 }
 
 export const loginAction = async (submission) => {
-     
+
     const loginURL = 'http://localhost:3055/api/login'
 
     const res = await fetch(loginURL,{
@@ -46,6 +46,7 @@ export const loginAction = async (submission) => {
         return null;
     }else{
         return {
+            formId: 'login',
             error: res.message
         }
     }

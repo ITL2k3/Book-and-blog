@@ -9,7 +9,7 @@ import Home from "../components/Home/Home";
 import About from "../components/About/About"
 //import css
 import './router.css'
-import { login_registerAction } from "../components/Login";
+import login_registerAction from "../components/Login";
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element ={<RootLayout/>} action={login_registerAction} >

@@ -4,6 +4,8 @@ import { Form, redirect, useActionData } from "react-router-dom"
 
 export default function Register() {
     const data = useActionData()
+ 
+    
     return (
         <div>
             <h3>Register Form</h3>
@@ -12,7 +14,7 @@ export default function Register() {
 
                 <label>
                     <p>userId</p>
-                    <input type='text' name='userId' required/>
+                    <input type='text' name='userId' pattern='[0-9]{8}'  required/>
                 </label>
                 <label>
                     <p>first name</p>
@@ -24,7 +26,7 @@ export default function Register() {
                 </label>
                 <label>
                     <p>email</p>
-                    <input type='text' name='email' required/>
+                    <input type='email' name='email' required/>
                 </label>
                 <label>
                     <p>password</p>
@@ -32,7 +34,7 @@ export default function Register() {
                 </label>
                 <button>register</button>
                 
-                {data && data.error && <p>{data.error}</p>}
+                {data && data.error && data.formId =='register' &&<p>{data.error}</p>}
             </Form>
 
         </div>
@@ -45,7 +47,7 @@ export const registerAction = async (submission) => {
     
     const loginURL = 'http://localhost:3055/v1/api/register'
 
-    const res = await fetch(loginURL,{
+    let res = await fetch(loginURL,{
         method: "POST",
         body:JSON.stringify(submission),
         headers: {
@@ -53,13 +55,19 @@ export const registerAction = async (submission) => {
         },
         credentials: 'include'
     })
-    console.log('res: ', res)
-    if(res.statusCode == 201){
+    res = await res.text()
+    const data = await JSON.parse(res)
+
+    // console.log('res: ', data.code)
+   
+    if(data.code == 201){
         window.location.reload()
         return null
     }else{
+        
         return {
-            error: res.message
+            formId: 'register',
+            error: data.message
         }
     }
     //Dang ky 

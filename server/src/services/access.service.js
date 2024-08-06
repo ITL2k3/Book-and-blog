@@ -1,6 +1,8 @@
 
+import setToken from '../Auth/setToken.js'
 import { BadRequestError } from '../common/error.response.js'
 import UserRepo from '../repository/UserRepo.js'
+import { createRandKey, getInfoData } from '../utils/index.js'
 
 const userRepoHelper = new UserRepo()
 
@@ -8,9 +10,16 @@ class AccessService{
     static register = async(payload) => {
         
         try{
-        console.log(payload)
         const res = await userRepoHelper.insertIntoTableValues(payload)
-        console.log(res)
+            
+        const signedValue = getInfoData({fields: ['userId','email'],object: payload})
+
+        const tokenKey = createRandKey()
+
+        //sign tokenKey to token, create token in db, return token -> controller, set req.cookies.
+       
+            
+        
         return res
         }catch(err){
             throw new BadRequestError(err.message)

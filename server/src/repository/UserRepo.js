@@ -1,15 +1,17 @@
 import table from "../configs/config.table.js";
 import connection from "../dbs/init.mysql.js";
 import BaseRepo from "./BaseRepo.js";
-import UserEntity from "./utils/user.entity.js";
+import UserEntity from "./entities/user.entity.js";
 
 
 
 class UserRepo extends BaseRepo {
     insertIntoTableValues = async(payload) => {
+        //convert DTO -> Domain Model
         let newUser = new UserEntity(payload)
         const newUserQueryString = newUser.getQueryString()
 
+        console.log(newUserQueryString)
     
             
         const [results, fields] = await connection.query(
