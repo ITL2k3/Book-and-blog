@@ -1,0 +1,12 @@
+.NavBar {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+
+}
+.NavBar a {
+    font-family:'Times New Roman', Times, serif;
+    border: 1px solid black;
+    padding: 15px;
+    display: block;
+}

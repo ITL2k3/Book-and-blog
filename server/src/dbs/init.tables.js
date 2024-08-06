@@ -7,7 +7,7 @@ await connection.query(`CREATE TABLE IF NOT EXISTS user(
     last_name VARCHAR(45) NOT NULL,
     email VARCHAR(45) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role char(1) NOT NULL,
+    role char(1) NOT NULL DEFAULT 'A',
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id)

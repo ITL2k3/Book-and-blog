@@ -1,13 +1,20 @@
+import { CREATED } from "../common/success.response.js"
 import AccessService from "../services/access.service.js"
 
 class AccessController {
     register = async (req, res, next) => {
-        const results = AccessService.login(req.body)
-        res.send({
+        new CREATED({
             message: 'register success',
-            metaData: results
-        })
+            metaData: await AccessService.register(req.body)
+        }).send(res)
+        
     }
+
+
+
+
+
+
     getUser = async (req, res, next) => {
         const results = await  AccessService.getUser(req.query)
         res.send({

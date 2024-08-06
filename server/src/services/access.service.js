@@ -1,9 +1,22 @@
 
+import { BadRequestError } from '../common/error.response.js'
 import UserRepo from '../repository/UserRepo.js'
 
 const userRepoHelper = new UserRepo()
 
 class AccessService{
+    static register = async(payload) => {
+        
+        try{
+        console.log(payload)
+        const res = await userRepoHelper.insertIntoTableValues(payload)
+        console.log(res)
+        return res
+        }catch(err){
+            throw new BadRequestError(err.message)
+        }
+        
+    }
     static login = async(payload) => {
        
         

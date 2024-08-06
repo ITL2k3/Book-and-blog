@@ -10,13 +10,13 @@ class UserRepo extends BaseRepo {
         let newUser = new UserEntity(payload)
         const newUserQueryString = newUser.getQueryString()
 
-
+    
+            
         const [results, fields] = await connection.query(
             `INSERT INTO ${table.user} VALUES ${newUserQueryString}`
         )
+        
     
-
-        //destroy instance
         newUser = null
 
         return results
