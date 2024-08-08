@@ -13,10 +13,10 @@ class UserDTO extends BaseDTO {
     constructor({userId, firstName, lastName, email, password, role}){
         userId = Number(userId)
         super({id: userId})
-        this.firstName = firstName
-        this.lastName = lastName
-        this.email = email
-        this.password = password
+        this.firstName = firstName ? firstName : null
+        this.lastName = lastName ? lastName : null
+        this.email = email ? email : null
+        this.password = password ? password : null
         this.role = role ? role : 'default'
 
         this.validateJoiSchemaUser = {
@@ -42,6 +42,13 @@ class UserDTO extends BaseDTO {
     }
     validateRegister(){
         const fields = ['userId', 'firstName', 'lastName', 'email', 'password']
+        const joiSchemaUser = _.pick(this.validateJoiSchemaUser,fields)
+        const validateFieldUser = _.pick(this.validateFieldUser, fields)
+        return Joi.object(joiSchemaUser).validate(validateFieldUser)
+    }
+
+    validateLogin(){
+        const fields = ['userId', 'password']
         const joiSchemaUser = _.pick(this.validateJoiSchemaUser,fields)
         const validateFieldUser = _.pick(this.validateFieldUser, fields)
         return Joi.object(joiSchemaUser).validate(validateFieldUser)

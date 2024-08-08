@@ -7,9 +7,11 @@ const accessRouter = Router()
 
 
 accessRouter.post('/register', asyncHandler(AccessController.register))
+accessRouter.post('/login', asyncHandler(AccessController.login))
+
 
 // check auth
 accessRouter.use('/', asyncHandler(checkToken))
 
-accessRouter.get('/getuser', AccessController.getUser)
+accessRouter.get('/getuser', asyncHandler(AccessController.getUser))
 export default accessRouter

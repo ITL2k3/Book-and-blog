@@ -11,11 +11,10 @@ class UserRepo extends BaseRepo {
         let newUser = new UserEntity(payload)
         const newUserQueryString = newUser.getQueryString()
 
-        console.log(newUserQueryString)
     
             
         const [results, fields] = await connection.query(
-            `INSERT INTO ${table.user} VALUES ${newUserQueryString}`
+            `INSERT INTO ${table.USER} VALUES ${newUserQueryString}`
         )
         
     
@@ -23,9 +22,9 @@ class UserRepo extends BaseRepo {
 
         return results
     }
-    getValuesById = async(userId) => {
+    getUserById = async(userId) => {
         const [results, fields] = await connection.query(
-            `SELECT * FROM ${table.user}
+            `SELECT * FROM ${table.USER}
              WHERE user_id = ${userId}
             `
         )

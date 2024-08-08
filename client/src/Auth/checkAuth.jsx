@@ -10,8 +10,8 @@ export default  async function checkAuth(url) {
     const finalRes = JSON.parse(messageText)
     console.log('fetch thanh cong')
     console.log(finalRes)
-    if(finalRes.status == 200){
-        return finalRes
+    if(finalRes.statusCode == 200){
+        return finalRes.metadata
     }else{
         return false
     }

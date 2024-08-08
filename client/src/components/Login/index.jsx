@@ -8,7 +8,7 @@ const login_registerAction = async ({request}) => {
     
     if(formAction == 'login'){
         const submission = {
-            username: data.get('username'),
+            userId: data.get('userId'),
             password: data.get('password')
         }
         return loginAction(submission)

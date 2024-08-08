@@ -8,7 +8,16 @@ class SuccessResponse {
         this.reasonStatusCode = reasonStatusCode
         this.metadata = metadata
     }
-    send(res,headers = {}){
+    send(res,headers ){
+        if(headers){
+            headers.map(header =>{
+                Object.entries(header).map(([key, value]) => {
+                    res.setHeader(key,value)
+                })
+                // console.log(Object.entries(header).map([key, value]) => {})
+            })
+        }
+        
         return res.status(this.statusCode).json(this)
     }
 }

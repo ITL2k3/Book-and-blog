@@ -11,7 +11,7 @@ export default function Login() {
                 <input type='text' name='formId' value="login" style={{display: 'none'}}></input>
                 <label>
                     <span>MSSV</span>
-                    <input type='text' name='username' required/>
+                    <input type='text' name='userId' required/>
                 </label>
                 <label>
                     <span>password</span>
@@ -29,8 +29,8 @@ export default function Login() {
 
 export const loginAction = async (submission) => {
 
-    const loginURL = 'http://localhost:3055/api/login'
-
+    const loginURL = 'http://localhost:3055/v1/api/login'
+    console.log(submission)
     const res = await fetch(loginURL,{
         method: "POST",
         body:JSON.stringify(submission),

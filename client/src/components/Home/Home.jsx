@@ -16,7 +16,7 @@ export default function Home() {
     const [data, setData] = useState(null)
     useEffect(() => {
         
-        checkAuth('http://localhost:4000/api/getUser').then((res) => {
+        checkAuth('http://localhost:3055/v1/api/getUser').then((res) => {
             if(res == false){
                 setValid(false)
             }else{

@@ -1,7 +1,7 @@
 
 const table = {
-    user: "user",
-    token:"token"
+    USER: "user",
+    KEYTOKEN:"key_token"
 }
 
 export default table
