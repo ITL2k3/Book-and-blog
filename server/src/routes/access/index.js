@@ -13,5 +13,6 @@ accessRouter.post('/login', asyncHandler(AccessController.login))
 // check auth
 accessRouter.use('/', asyncHandler(checkToken))
 
-accessRouter.get('/getuser', asyncHandler(AccessController.getUser))
+accessRouter.post('/logout', asyncHandler(AccessController.logout))
+// accessRouter.get('/getuser', asyncHandler(AccessController.getUser))
 export default accessRouter

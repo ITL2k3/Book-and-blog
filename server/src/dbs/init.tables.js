@@ -5,9 +5,11 @@ await connection.query(`CREATE TABLE IF NOT EXISTS user(
     user_id INT UNSIGNED NOT NULL unique,
     first_name VARCHAR(45) NOT NULL,
     last_name VARCHAR(45) NOT NULL,
+    name VARCHAR(100),
     email VARCHAR(45) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role char(1) NOT NULL DEFAULT 'A',
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id)
@@ -68,6 +70,8 @@ CREATE TABLE IF NOT EXISTS comment(
     content TEXT,
     user_id INT UNSIGNED NOT NULL,
     book_id INT UNSIGNED NOT NULL,
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id),
     FOREIGN KEY (user_id) REFERENCES user(user_id),
     FOREIGN KEY (book_id) REFERENCES book(book_id)

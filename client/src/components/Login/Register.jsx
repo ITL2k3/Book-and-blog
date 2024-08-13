@@ -58,9 +58,9 @@ export const registerAction = async (submission) => {
     res = await res.text()
     const data = await JSON.parse(res)
 
-    // console.log('res: ', data.code)
    
-    if(data.code == 201){
+    if(data.statusCode == 201){
+        
         window.location.reload()
         return null
     }else{

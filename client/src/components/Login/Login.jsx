@@ -4,6 +4,7 @@ import { Form, redirect, useActionData } from "react-router-dom"
 
 export default function Login() {
     const data = useActionData()
+    console.log('Hello', data)
     return (
         <div>
             <h3>Login Form</h3>
@@ -41,13 +42,13 @@ export const loginAction = async (submission) => {
     })
     console.log('res: ', res)
     //Dang nhap thanh cong 
-    if(res.status != '404'){
+    if(res.status == '200'){
         window.location.reload();
         return null;
     }else{
         return {
             formId: 'login',
-            error: res.message
+            error: 'Sai ten dang nhap hoac mat khau'
         }
     }
     

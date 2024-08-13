@@ -20,19 +20,26 @@ class AccessController {
      
 
         //not throw error <=> register success -> send cookies
-    
-        res.cookie('access_token', token, {
-            maxAge: 1000000,
-            httpOnly: true
-        })
-        res.cookie('userId','hmm')
+        //set token cookies and send request
+        let setHeaderArray = [
+            {
+                'Set-Cookie': setHeaderCookie('accessToken',token,{
+                    'Max-Age': 10000000,
+                    httpOnly: true
+                })
+            },
+            {
+                'Set-Cookie':  setHeaderCookie('userId',(validUser.userId).toString(),{
+                    'Max-Age': 10000000,
+                   
+                })
+            }
+        ]
         
         new CREATED({
             message: 'register success',
-        }).send(res)
+        }).send(res,setHeaderArray)
     }
-
-
 
 
     login = async (req, res, next) => {
@@ -75,22 +82,22 @@ class AccessController {
         
     }
 
-
-
-
-
-
-    getUser = async (req, res, next) => {
-        const userId = req.cookies.userId
-        const results = await  AccessService.getUser({userId})
-        new SuccessResponse({
-            message: 'get success',
-            metadata: {
-                results
-            }
-
-        }).send(res)
+    logout = async (req, res, next) => {
+        
     }
+
+
+    // getUser = async (req, res, next) => {
+    //     const userId = req.cookies.userId
+    //     const results = await  AccessService.getUser({userId})
+    //     new SuccessResponse({
+    //         message: 'get success',
+    //         metadata: {
+    //             results
+    //         }
+
+    //     }).send(res)
+    // }
 }
 
 export default new AccessController
