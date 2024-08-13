@@ -18,10 +18,74 @@ await connection.query(`CREATE TABLE IF NOT EXISTS user(
 await connection.query(`CREATE TABLE IF NOT EXISTS key_token(
     token_id INT UNSIGNED AUTO_INCREMENT,
     token_key VARCHAR(255) NOT NULL unique,
-    
     user_id INT UNSIGNED NOT NULL ,
     PRIMARY KEY(token_id),
     FOREIGN KEY (user_id) REFERENCEs user(user_id)
 );`)
+
+await connection.query(`
+CREATE TABLE IF NOT EXISTS book(
+	book_id INT UNSIGNED auto_increment,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(200) NOT NULL,
+    description TEXT,
+    quantity INT,
+    thumbnail BLOB,
+	PRIMARY KEY (book_id)
+);
+`)
+await connection.query(`
+CREATE TABLE IF NOT EXISTS rate(
+	rate_id INT UNSIGNED auto_increment,
+    rate_value FLOAT DEFAULT 0,
+    num_reviews INT UNSIGNED DEFAULT 0,
+    book_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY (rate_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
+);   
+`)
+
+await connection.query(`
+CREATE TABLE IF NOT EXISTS category(
+	category_id INT UNSIGNED auto_increment,
+    name_category VARCHAR(45) NOT NULL,
+    PRIMARY KEY (category_id)
+);
+`)
+await connection.query(`
+CREATE TABLE IF NOT EXISTS book_category (
+	book_id INT UNSIGNED NOT NULL,
+    category_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (book_id) REFERENCES book(book_id),
+    FOREIGN KEY (category_id) REFERENCES category(category_id)
+);
+`)
+
+await connection.query(`
+CREATE TABLE IF NOT EXISTS comment(
+	comment_id BIGINT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    content TEXT,
+    user_id INT UNSIGNED NOT NULL,
+    book_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
+);    
+`)
+
+
+await connection.query(`
+CREATE TABLE IF NOT EXISTS comment_rate(
+	rate_id BIGINT UNSIGNED auto_increment,
+    upvote INT UNSIGNED DEFAULT 0,
+    downvote INT UNSIGNED DEFAULT 0,
+    comment_id BIGINT UNSIGNED,
+    PRIMARY KEY (rate_id),
+    FOREIGN KEY (comment_id) REFERENCES comment(comment_id)
+);
+`)
+
+
 
 export default 1
