@@ -21,12 +21,14 @@ class BookController {
             )
         }
 
-
         
-
+        
         new CREATED({
             message: 'insert Book success',
-            metadata: await BookService.insertBook(isValidBook.value)
+            metadata: await BookService.insertBook({
+                filepath: req.filepath,
+                ...isValidBook.value
+            })
 
         }).send(res)
 

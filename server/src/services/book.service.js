@@ -9,7 +9,6 @@ class BookService {
     } 
 
     static insertBook = async (payload) => {
-
         await BookHelper.insertIntoTableValues(payload)
 
         //not throw error <=> add success

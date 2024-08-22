@@ -6,7 +6,7 @@ import { getInfoData } from "../utils/index.js"
 
 
 
-export const checkToken = async (req,res,next) => {
+export const authentication = async (req,res,next) => {
    
 
     const token = req.cookies.accessToken
@@ -17,11 +17,25 @@ export const checkToken = async (req,res,next) => {
 
     if(!token_key) throw new BadRequestError('User not Found!!')
 
-    const isValid = JWT.verify(token,token_key)
-    if(!isValid) throw new AuthFailureError('Wrong token')
+    const decodeUser = JWT.verify(token,token_key)
+    if(!decodeUser) throw new AuthFailureError('Wrong token')
+    req.user = decodeUser
+    
 
 
-    next()
+    return next()
 
 
+}
+
+export const checkPermission = (permission) => {
+    return (req, res, next) => {
+        
+        if(req.user.role == permission){
+            return next()
+        }
+
+        throw new BadRequestError('Permission denied', 403)
+        
+    }
 }

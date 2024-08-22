@@ -52,9 +52,10 @@ class AccessService {
         }
 
         //get tokenKey -> set new token -> return
-
         const { token_key: tokenKey } = await getKeyToken(userId)
-        const token = setToken({ userId, password }, tokenKey)
+
+        const {user_id, email, role} = foundUser
+        const token = setToken({ user_id, email, role }, tokenKey)
 
         return {
             user: getInfoData({ fields: ["user_id", "email"], object: foundUser }),
@@ -64,12 +65,12 @@ class AccessService {
 
     }
 
-    static getUser = async({ userId }) => {
+    // static getUser = async({ userId }) => {
 
-        const [res] = await (new UserRepo()).getUserById(userId)
-        console.log(res)
-        return res
+    //     const [res] = await (new UserRepo()).getUserById(userId)
+    //     console.log(res)
+    //     return res
 
-    }
+    // }
 }
 export default AccessService

@@ -9,14 +9,16 @@ class BookDTO extends BaseDTO {
     _description
     _quantity
     _thumbnail
+   
 
-    constructor({title, author, description, quantity, thumbnail}){
+    constructor({title, author, description, quantity, thumbnail, filepath}){
         super({})
         this._title = title
         this._author = author
         this._description = description
         this._quantity = quantity
         this._thumbnail = thumbnail
+        
 
         this.validateJoiSchemaUser = {
             
@@ -24,7 +26,8 @@ class BookDTO extends BaseDTO {
             author: Joi.string().max(200).required(),
             description: Joi.string(),
             quantity: Joi.number(),
-            thumbnail: Joi.string()
+            thumbnail: Joi.string(),
+        
            
         }
         this.validateFieldUser = {

@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS book(
     author VARCHAR(200) NOT NULL,
     description TEXT,
     quantity INT,
-    thumbnail BLOB,
+    thumbnail VARCHAR(1000),
+    filepath VARCHAR(200) NOT NULL,
 	PRIMARY KEY (book_id)
 );
 `)
