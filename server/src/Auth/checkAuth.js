@@ -10,7 +10,9 @@ export const authentication = async (req,res,next) => {
    
 
     const token = req.cookies.accessToken
-    if(!token) throw new AuthFailureError('token not found!')
+    const userId = req.cookies.userId
+   
+    if(!token || !userId) throw new AuthFailureError('token not found!')
 
    
     const {token_key} = await getKeyToken(req.cookies.userId)
@@ -30,7 +32,7 @@ export const authentication = async (req,res,next) => {
 
 export const checkPermission = (permission) => {
     return (req, res, next) => {
-        
+        console.log(req.body);
         if(req.user.role == permission){
             return next()
         }

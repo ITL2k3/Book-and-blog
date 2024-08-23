@@ -13,8 +13,10 @@ class Database {
             host: host,
             user: user,
             password: password,
+            multipleStatements: true,
+
            
-        })
+        },)
         
         await connection.query(`CREATE DATABASE IF NOT EXISTS ${database}`);
         await connection.query( `USE ${database}`)

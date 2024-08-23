@@ -15,7 +15,6 @@ class KeyTokenRepo extends BaseRepo {
                 ${query}
             `)
 
-        console.log(results, fields)
 
         return results
 

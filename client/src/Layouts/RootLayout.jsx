@@ -19,7 +19,6 @@ export default function RootLayout() {
     useEffect(() => {
         checkAuth('http://localhost:3055/v1/api/get-all-books').then((res) => setValid(res))
     }, [])
-    console.log(isValid)
     if (isValid == null) {
         return <p className="load">Loading...</p>
     } else {
@@ -29,6 +28,7 @@ export default function RootLayout() {
                     <header className='NavBar'>
                         <NavLink to='/'>Home</NavLink>
                         <NavLink to='/about'>About</NavLink>
+                        <NavLink to='/insert-book'>Insert Book</NavLink>
                         <NavLink to='/help'>Help</NavLink>
 
                     </header>

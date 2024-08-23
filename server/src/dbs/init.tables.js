@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS book(
     title VARCHAR(200) NOT NULL,
     author VARCHAR(200) NOT NULL,
     description TEXT,
-    quantity INT,
     thumbnail VARCHAR(1000),
     filepath VARCHAR(200) NOT NULL,
 	PRIMARY KEY (book_id)
@@ -50,7 +49,7 @@ CREATE TABLE IF NOT EXISTS rate(
 
 await connection.query(`
 CREATE TABLE IF NOT EXISTS category(
-	category_id INT UNSIGNED auto_increment,
+	category_id VARCHAR(10) UNIQUE NOT NULL ,
     name_category VARCHAR(45) NOT NULL,
     PRIMARY KEY (category_id)
 );
@@ -58,7 +57,7 @@ CREATE TABLE IF NOT EXISTS category(
 await connection.query(`
 CREATE TABLE IF NOT EXISTS book_category (
 	book_id INT UNSIGNED NOT NULL,
-    category_id INT UNSIGNED NOT NULL,
+    category_id VARCHAR(10) NOT NULL,
     FOREIGN KEY (book_id) REFERENCES book(book_id),
     FOREIGN KEY (category_id) REFERENCES category(category_id)
 );
@@ -92,5 +91,15 @@ CREATE TABLE IF NOT EXISTS comment_rate(
 `)
 
 
-
+await connection.query(`
+    INSERT IGNORE INTO category VALUES 
+        ('kns', 'Kỹ năng sống'),
+        ('kt', 'Kinh tế'),
+        ('tc', 'Tài chính'),
+        ('cn', 'Công nghệ'),
+        ('nn', 'Ngoại ngữ'),
+        ('dc', 'Đề cương'),
+        ('gt', 'Giáo trình');
+    `)
+    
 export default 1

@@ -1,4 +1,7 @@
 
+
+
+
 export default  async function checkAuth(url) {
     const res = await fetch(url, {
         method: 'GET',
@@ -16,3 +19,5 @@ export default  async function checkAuth(url) {
         return false
     }
 }
+
+// export async function 

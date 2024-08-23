@@ -4,7 +4,6 @@ import { Form, redirect, useActionData } from "react-router-dom"
 
 export default function Login() {
     const data = useActionData()
-    console.log('Hello', data)
     return (
         <div>
             <h3>Login Form</h3>
