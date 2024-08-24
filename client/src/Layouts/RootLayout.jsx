@@ -17,7 +17,9 @@ export default function RootLayout() {
 
     const [isValid, setValid] = useState(null)
     useEffect(() => {
-        checkAuth('http://localhost:3055/v1/api/get-all-books').then((res) => setValid(res))
+        checkAuth('http://localhost:3055/v1/api/').then((res) => {
+            setValid(res)
+        })
     }, [])
     if (isValid == null) {
         return <p className="load">Loading...</p>

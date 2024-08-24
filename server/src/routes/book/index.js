@@ -18,8 +18,10 @@ bookRouter.get('/', async (req, res) => {
         statusText: 'authen success'
     })
 })
-bookRouter.get('/get-all-books', asyncHandler(BookController.getAllBooks))
 
+
+bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
+bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
 
 
 

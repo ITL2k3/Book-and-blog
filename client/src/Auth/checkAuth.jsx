@@ -14,7 +14,7 @@ export default  async function checkAuth(url) {
     console.log('fetch thanh cong')
     console.log(finalRes)
     if(finalRes.statusCode == 200){
-        return finalRes.metadata
+        return true
     }else{
         return false
     }

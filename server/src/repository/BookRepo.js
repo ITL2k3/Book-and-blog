@@ -9,6 +9,7 @@ import UserEntity from "./entities/user.entity.js";
 
 
 class BookRepo extends BaseRepo {
+    
     insertIntoBookTableValues = async(payload) => {
         //convert DTO -> Domain Model
         let newBook = new BookEntity(payload)
@@ -41,12 +42,26 @@ class BookRepo extends BaseRepo {
 
 
 
-    getAllBooks = async() => {
+    getBooks = async(LIMIT, OFFSET) => {
         const [results, fields] = await connection.query(
-            `SELECT * FROM ${table.BOOK}`
+            `SELECT book_id, title, author, thumbnail FROM ${table.BOOK}
+             LIMIT ${LIMIT}
+             OFFSET ${OFFSET} 
+            `
         )
         return results
     }
+
+    getOneBookById = async(bookId) => {
+        const [results, fields] = await connection.query(
+            `SELECT title, author, thumbnail, description, filepath
+            FROM ${table.BOOK}
+            WHERE book_id = ${bookId}
+            `
+        )
+        return results
+    }
+
     getUserById = async(userId) => {
         const [results, fields] = await connection.query(
             `SELECT * FROM ${table.USER}

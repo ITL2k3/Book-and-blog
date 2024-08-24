@@ -63,8 +63,8 @@ export default function Insert() {
                         </label>
                         <br />
                         <label>
-                            <span>Ảnh</span>
-                            <input type='file' name='thumbnail'  />
+                            <span>link Ảnh: </span>
+                            <input type='text' name='thumbnail'  />
                         </label>
                         <br />
                         <label>
@@ -112,7 +112,7 @@ export const insertAction = async ({request}) => {
     payload.append("description", formData.get('description'))
 
     payload.append("pdf", formData.get('pdf'))
-    payload.append("img", formData.get('thumbnail'))
+    payload.append("thumbnail", formData.get('thumbnail'))
 
     const URL = 'http://localhost:3055/v1/api/post-book'
   
