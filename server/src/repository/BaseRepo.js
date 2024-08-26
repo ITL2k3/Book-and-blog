@@ -11,6 +11,7 @@ class BaseRepo {
             `SELECT COUNT(*) as SUM
             FROM ${table}`
         )
+        
         return results
     }
     getAllEntityFromTable = async (table) => {

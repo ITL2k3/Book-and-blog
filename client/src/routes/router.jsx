@@ -17,6 +17,7 @@ import Insert, { insertAction } from "../components/insert/insert";
 //import css
 import './router.css'
 import Detail from "../components/detail/Detail";
+import UpdateBook, { updateAction } from "../components/UpdateBook/UpdateBook";
 
 
 const router = createBrowserRouter(
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
             <Route path='detail/:query' element={<Detail/>}/>
             <Route path='about' element={<About />}/>
             <Route path='insert-book' element={<Insert/>} action={insertAction}/>
+            <Route path='update-book' element={<UpdateBook/>} action={updateAction}/>
         </Route>
     )
 

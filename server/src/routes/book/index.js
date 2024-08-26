@@ -21,6 +21,8 @@ bookRouter.get('/', async (req, res) => {
 
 
 bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
+
+
 bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
 
 
@@ -28,11 +30,22 @@ bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
 
 //check permission
 bookRouter.use(checkPermission(permission["LIBRARIAN"]))
+
+
+
 bookRouter.post('/post-book',upload.fields([{
     name: 'pdf', maxCount: 1}, 
     {
     name: 'img', maxCount: 1
 }]),asyncHandler(BookController.insertBook))
+
+bookRouter.put('/update-book',upload.fields([{
+    name: 'pdf', maxCount: 1}, 
+    {
+    name: 'img', maxCount: 1
+}]),asyncHandler(BookController.updateBook))
+
+bookRouter.delete('/delete-book', asyncHandler(BookController.deleteBook))
 
 
 export default bookRouter

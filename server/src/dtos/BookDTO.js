@@ -40,6 +40,19 @@ class BookDTO extends BaseDTO {
         const validateFieldUser = _.pick(this.validateFieldUser, fields)
         return Joi.object(joiSchemaUser).validate(validateFieldUser)
     }
+    
+
+    static validateCategories(categories){
+
+        
+        let isValidCategories = false
+        Object.entries(categories).forEach(([key, value]) => {
+            if(value != 'null'){
+                isValidCategories = true
+            }
+        })
+        return isValidCategories
+    }
 
 
     

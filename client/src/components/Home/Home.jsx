@@ -30,7 +30,7 @@ function Items() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3055/v1/api/Library/search?page=${page}`, {
+        fetch(`http://localhost:3055/v1/api/Library/search?page=${page}&option=Home`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -53,7 +53,7 @@ function Items() {
 
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-        fetch(`http://localhost:3055/v1/api/Library/search?page=${event.selected + 1}`, {
+        fetch(`http://localhost:3055/v1/api/Library/search?page=${event.selected + 1}&option=Home`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {

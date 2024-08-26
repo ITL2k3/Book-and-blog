@@ -1,31 +1,45 @@
-
 class BookEntity {
-    _bookId
-    _title
-    _author 
-    _description
-    _quantity
-    _thumbnail
-    _filepath
+    book_id
+    title
+    author
+    description
+    thumbnail
+    filepath
 
-    constructor({title, author, description, thumbnail, filepath}){
-        this._bookId = 'default'
-        this._title = title
-        this._author = author
-        this._description = description ? description : null
-        this._thumbnail = thumbnail ? thumbnail : null
-        this._filepath = filepath
+    constructor({ bookId, title, author, description, thumbnail, filepath }) {
+        this.book_id = bookId ? bookId : 'default'
+        this.title = title ? title : null
+        this.author = author ? author : null
+        this.description = description ? description : null
+        this.thumbnail = thumbnail ? thumbnail : null
+        this.filepath = filepath ? filepath : null
     }
 
-    getQueryString(){
-        return `(${this._bookId},'${this._title}', '${this._author}','${this._description}'
-        ,'${this._thumbnail}', '${this._filepath}'
+    getQueryString() {
+        return `(${this.book_id},'${this.title}', '${this.author}','${this.description}'
+        ,'${this.thumbnail}', '${this.filepath}'
         )`
     }
 
-    
+    getUpdateQueryString() {
+        let result = `  `
+        Object.entries(this).map(([key, value]) => {
+            if (key != 'book_id') {
+                if (value != null)
+                    result += `${key} = '${value}', `
+            }
+        })
 
-    
+
+
+
+        return result.slice(0, -2)
+
+    }
+
+
+
+
 }
 
 export default BookEntity

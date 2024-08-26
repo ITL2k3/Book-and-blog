@@ -15,8 +15,15 @@ const setHeaderCookie = (nameCookie, valueCookie, cookieOptions) => {
      
 }
 
+const getFilepathFromString = (string) => {
+    return string.split('/').pop()
+}
+
+
+
 export {
     getInfoData,
     createRandKey,
-    setHeaderCookie
+    setHeaderCookie,
+    getFilepathFromString
 }

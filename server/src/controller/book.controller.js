@@ -10,7 +10,9 @@ class BookController {
 
     getBooks = async (req, res, next) => {
         const page = req.query.page
-        const results = await BookService.getBooks(page)
+        if(!req.query.option) throw new BadRequestError('Not Found')
+        const results = await BookService.getBooks(page,req.query.option)
+
         let sumOfBooks
         if(page == '1'){
             const {SUM} = await BookService.countBooks()
@@ -25,6 +27,7 @@ class BookController {
         }).send(res)
        
     }
+
 
     getDetailBook = async (req, res, next) => {
         const {id} = req.params
@@ -75,6 +78,48 @@ class BookController {
 
         }).send(res)
 
+    }
+
+    updateBook = async (req, res, next) => {
+        //set null for '' string
+        Object.entries(req.body).forEach(([key, value]) => {
+            if(value == ''){
+                req.body[key] = null
+            }
+        })
+        //check categories 
+        const categories = {
+            kns: req.body.kns,
+            kt: req.body.kt,
+            tc: req.body.tc,
+            cn: req.body.cn,
+            nn: req.body.nn,
+            dc: req.body.dc,
+            gt: req.body.gt
+        }
+        if(!BookDTO.validateCategories(categories)){
+            throw new BadRequestError('sách phải có ít nhất 1 thể loại')
+        }
+
+        // console.log('bookcontroller.updatebook: ',req.body);
+        new OK({
+            message: 'update Book success',
+            metadata: await BookService.updateBook({
+                categories: categories,
+                ...req.body,
+                filepath: req.filePdfPath,
+                
+            })
+
+        }).send(res)
+    }
+
+    deleteBook = async (req, res, next) => {
+       
+        new OK({
+            message: 'Delete success',
+            metadata: await BookService.deleteBook(req.query)
+        }).send(res)
     }
 
 

@@ -6,7 +6,6 @@ import checkAuth from '../../Auth/checkAuth'
 
 export default function Insert() {
     const actionData = useActionData()
-    console.log('ad: ', actionData);
     const [isValid, setValid] = useState(null)
     const [data, setData] = useState(null)
     useEffect(() => {
