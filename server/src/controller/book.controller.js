@@ -2,8 +2,8 @@ import { BadRequestError } from "../common/error.response.js"
 import { CREATED, OK, SuccessResponse } from "../common/success.response.js"
 import BookDTO from "../dtos/BookDTO.js"
 import BookService from "../services/book.service.js"
-import path from 'path'
-
+import path, { basename } from 'path'
+import fs from 'fs'
 const __dirname = import.meta.dirname;
 
 class BookController {
@@ -44,6 +44,23 @@ class BookController {
             message: 'get one book success',
             metadata: result
         }).send(res)
+    }
+
+
+    getPdfBook = async (req, res, next) => {
+        const {path} = req.params
+        const filename = basename(path)
+
+        const stream = fs.createReadStream(`uploads/files_pdf/${filename}.pdf`)
+        stream.on('error', (err) => {
+            console.log('Error reading file: ', err);
+            res.status(500).send('Internal Server Error')
+        })
+        // res.on('error', (err) => {
+        //     console.error('Error writing response:', err);
+        // });
+        stream.pipe(res)
+        
     }
 
 

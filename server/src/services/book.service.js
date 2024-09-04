@@ -1,7 +1,6 @@
 import { BadRequestError } from "../common/error.response.js"
 import table from "../configs/config.table.js"
 import BookRepo from "../repository/BookRepo.js"
-import fs from 'fs/promises'
 import { getFilepathFromString } from "../utils/index.js"
 const BookHelper = new BookRepo()
 class BookService {
@@ -32,6 +31,15 @@ class BookService {
 
         return result
     }
+
+    
+
+
+
+
+
+
+
     static insertBook = async(payload) => {
 
         //insert book and get bookId 

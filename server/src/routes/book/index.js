@@ -21,10 +21,12 @@ bookRouter.get('/', async (req, res) => {
 
 
 bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
-
-
 bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
 
+
+bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
+bookRouter.get('/load-anotation')
+bookRouter.post('/save-anotation')
 
 
 

@@ -7,11 +7,16 @@ import RootLayout from "../Layouts/RootLayout";
 //import pages
 import Home from "../components/Home/Home";
 import About from "../components/About/About"
+import Read from "../components/detail/read/index";
 
 
 //import action
 import login_registerAction from "../components/Login";
 import Insert, { insertAction } from "../components/insert/insert";
+
+//import error handler
+import ErrorBoundary from "../ErrorRouter";
+
 
 
 //import css
@@ -24,7 +29,8 @@ const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element ={<RootLayout/>} action={login_registerAction} >
             <Route index element={<Home/>}/>
-            <Route path='detail/:query' element={<Detail/>}/>
+            <Route path='detail/:query' element={<Detail/>} errorElement={<ErrorBoundary/>}/>
+            <Route path='read/:query' element={<Read/>}/>
             <Route path='about' element={<About />}/>
             <Route path='insert-book' element={<Insert/>} action={insertAction}/>
             <Route path='update-book' element={<UpdateBook/>} action={updateAction}/>
