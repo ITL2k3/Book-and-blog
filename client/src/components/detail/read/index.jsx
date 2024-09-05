@@ -14,8 +14,10 @@ export default function Read() {
     const [data, setData] = useState(null)
     //set query and get BookId
     const { query } = useParams()
-    const lastIndex = query.lastIndexOf("_");
-    const filename = query.substring(lastIndex + 1)
+    const queryArray = query.split('_')
+    const arrayLength = queryArray.length
+    const filename = queryArray[arrayLength - 1]
+    const bookId = queryArray[arrayLength - 2]
     //setBuffer
     const [buffer, setBuffer] = useState(null);
 
@@ -37,12 +39,18 @@ export default function Read() {
         }).then((res) => {
             return res.arrayBuffer()
         }).then((data) => {
-
             setBuffer(data)
         }).catch((err) => {
 
         })
+
+       
     }, [])
+    
+
+    
+
+   
 
 
 
@@ -53,7 +61,7 @@ export default function Read() {
         if (isValid) {
             return (
                 <div>
-                    { buffer ? <PDFViewer buffer={ buffer } /> : <p>Loading PDF...</p> }
+                    { buffer ? <PDFViewer buffer={ buffer } bookId={ bookId } /> : <p>Loading PDF...</p> }
                 </div>
             )
 

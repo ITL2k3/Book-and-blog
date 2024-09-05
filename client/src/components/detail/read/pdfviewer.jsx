@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import WebViewer from '@pdftron/pdfjs-express';
-
-const PDFViewer = ({ buffer }) => {
+const content = document.getElementsByClassName('content')
+//class: content: document
+const PDFViewer = ({ buffer, bookId }) => {
   const viewerRef = useRef(null);
+
+
+
+  
   useEffect(() => {
 
     WebViewer(
@@ -15,31 +20,28 @@ const PDFViewer = ({ buffer }) => {
       const { docViewer, annotManager, UI } = instance;
 
       const blob = new Blob([buffer], { type: 'application/pdf' });
-      docViewer.loadDocument(blob, { filename: 'document.pdf' });
+      docViewer.loadDocument(blob, { filename: 'document.pdf'});
 
       docViewer.on('documentLoaded', async () => {
         try {
-          console.log('hello');
           // Fetch annotations từ server ngay sau khi tài liệu được load
-          const response = await fetch('http://localhost:3055/v1/api/load-anotation', {
+          const response = await fetch(`http://localhost:3055/v1/api/load-anotation?bookId=${bookId}`, {
             method: 'get',
             credentials: 'include'
           });
           const messageText = await response.text()
-          console.log(messageText);
           const finalRes = JSON.parse(messageText)
-          console.log('fetch thanh cong')
-          console.log(finalRes)
 
           // Import annotations vào document viewer
-          await annotManager.importAnnotations(finalRes.xml);
+          await annotManager.importAnnotations(finalRes.metadata.xml_data);
           console.log('Annotations imported successfully');
         } catch (error) {
           console.error('Error importing annotations:', error);
         }
       });
 
-
+  
+      UI.disableElements(['toggleNotesButton', 'printButton', 'copy', 'copyTextButton'])
       UI.setHeaderItems(header => {
         header.push({
           type: 'actionButton',
@@ -52,7 +54,7 @@ const PDFViewer = ({ buffer }) => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ xfdf: xfdfString }),
+                body: JSON.stringify({ xml: xfdfString, bookId: bookId }),
                 credentials: 'include'
               }).then((data) => {
                 console.log('ok');
@@ -65,25 +67,44 @@ const PDFViewer = ({ buffer }) => {
           },
           title: 'Save Document',
         });
+        
       });
 
+      UI.hotkeys.off()
+      // UI.hotkeys.on('ctrl+c', {
+      //   keydown: e => {
+      //     e.preventDefault()
+      //     console.log('ctrl+c is pressed!');
+      //   },
+      //   keyup: e => {
+      //     console.log('ctrl+g is released!')
+      //   },
+      // });
 
-
-      const handleBeforeUnload = event => {
-        event.preventDefault();
-
-        return (event.returnValue =
-          'Are you sure you want to exit?');
-      };
-
-      window.addEventListener('beforeunload', handleBeforeUnload);
-
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
+      
 
     });
+
+    
   }, [buffer]);
+//   useEffect(() => {
+//     const handleKeyDown = (event) => {
+//       console.log('helloads');
+//       event.preventDefault(); // Ngăn chặn hành động mặc định
+//     };
+//     document.addEventListener('keydown', handleKeyDown);
+
+//     // return () => {
+//     //     document.removeEventListener('copy', handleCopy);
+//     // };
+// }, []);
+// content.addEventListener('keydown', function(event) {
+//   console.log('hellosd');
+//   if (event.ctrlKey && event.key === 'c') {
+//       event.preventDefault();
+//   }
+// });
+ 
 
   return (
     <div>

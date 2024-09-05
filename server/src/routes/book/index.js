@@ -25,8 +25,8 @@ bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
 
 
 bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
-bookRouter.get('/load-anotation')
-bookRouter.post('/save-anotation')
+bookRouter.get('/load-anotation', asyncHandler(BookController.loadAnotation))
+bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
 
 
 

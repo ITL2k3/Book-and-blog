@@ -60,7 +60,7 @@ export default function Detail() {
                         <h3>{data.author}</h3>
                         <p>{data.description}</p>
                         <button onClick={() => {
-                            navigate(`/read/${title}_${filename}`)
+                            navigate(`/read/${title}_${BookId}_${filename}`)
                         }}>Đọc sách</button>
                         
                         

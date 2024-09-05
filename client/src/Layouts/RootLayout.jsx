@@ -30,8 +30,8 @@ export default function RootLayout() {
                     <header className='NavBar'>
                         <NavLink to='/'>Home</NavLink>
                         <NavLink to='/about'>About</NavLink>
-                        <NavLink to='/insert-book'>Insert Book</NavLink>
-                        <NavLink to='/update-book'>Update Book</NavLink>
+                        {/* <NavLink to='/insert-book'>Insert Book</NavLink>
+                        <NavLink to='/update-book'>Update Book</NavLink> */}
                         <NavLink to='/help'>Help</NavLink>
 
                     </header>

@@ -37,6 +37,15 @@ CREATE TABLE IF NOT EXISTS book(
 );
 `)
 await connection.query(`
+CREATE TABLE IF NOT EXISTS anotation(
+	book_id INT UNSIGNED,
+    user_id INT UNSIGNED,
+    xml_data LONGTEXT,
+    FOREIGN KEY (book_id) REFERENCES book(book_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+`)
+await connection.query(`
 CREATE TABLE IF NOT EXISTS rate(
 	rate_id INT UNSIGNED auto_increment,
     rate_value FLOAT DEFAULT 0,

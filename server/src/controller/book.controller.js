@@ -56,12 +56,41 @@ class BookController {
             console.log('Error reading file: ', err);
             res.status(500).send('Internal Server Error')
         })
-        // res.on('error', (err) => {
-        //     console.error('Error writing response:', err);
-        // });
+        res.on('error', (err) => {
+            console.error('Error writing response:', err);
+        });
         stream.pipe(res)
         
     }
+
+    loadAnotation = async (req, res, next) => {
+        const {user_id} = req.user
+        const {bookId} = req.query
+        new OK({
+            message: 'load success',
+            metadata: await BookService.loadAnotation({userId : user_id, bookId})
+        }).send(res)
+   
+    }
+    saveAnotation = async (req, res, next) => {
+        const {user_id} = req.user
+        const {xml, bookId} = req.body
+
+        BookService.saveAnotation({userId : user_id, xml, bookId})
+
+        new OK({
+            message: 'save success',
+        }).send(res)
+        // const {xml, userId, bookId} = req.body
+       
+
+
+    }
+
+
+
+
+
 
 
     insertBook = async (req, res, next) => {

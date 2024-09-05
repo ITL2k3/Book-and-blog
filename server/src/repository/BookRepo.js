@@ -104,6 +104,57 @@ class BookRepo extends BaseRepo {
         return results
 
     }
+    loadAnotation = async({bookId, userId}) => {
+        const [result, fields] = await connection.query(
+            `SELECT xml_data FROM ${table.ANOTATION}
+            WHERE book_id = ${bookId} AND user_id = ${userId}
+            `
+        )
+        let [xml] = result
+        return xml
+    }
+
+    saveAnotation = async ({bookId, userId, xml}) =>{
+
+        const [result, fields] = await connection.query(
+            `SELECT COUNT(*) FROM ${table.ANOTATION}
+            WHERE book_id = ${bookId} AND user_id = ${userId}
+            `
+        )
+        const isExistsAnotation = result[0]["COUNT(*)"]
+        
+        if(isExistsAnotation){ //record exists
+            const query = `
+                UPDATE ${table.ANOTATION}
+                SET xml_data = (?)
+                WHERE book_id = (?) AND user_id = (?)`
+            await connection.execute(query, [xml, bookId, userId], (err, results, fields) => {
+                if (err) {
+                    console.error('Lỗi khi thực hiện truy vấn:', err);
+                } else {
+                    console.log('Insert thành công:', results);
+                }
+            })
+        }else{
+            const query = `INSERT INTO ${table.ANOTATION} (book_id, user_id, xml_data)
+               VALUES (?, ?, ?)`;
+
+            await connection.execute(query, [bookId, userId, xml], (err, results, fields) => {
+                if (err) {
+                    console.error('Lỗi khi thực hiện truy vấn:', err);
+                  } else {
+                    console.log('Insert thành công:', results);
+                  }
+            })
+
+
+            // await connection.query(`
+            //     INSERT INTO ${table.ANOTATION}
+            //     VALUES (${bookId}, ${userId}, '${xml}')
+            // `)
+        }
+        console.log(result);
+    }
 
 }
 
