@@ -46,6 +46,14 @@ CREATE TABLE IF NOT EXISTS anotation(
 );
 `)
 await connection.query(`
+CREATE TABLE IF NOT EXISTS storage(
+	user_id INT UNSIGNED,
+    book_id INT UNSIGNED,
+    FOREIGN KEY (book_id) REFERENCES book(book_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);    
+`)
+await connection.query(`
 CREATE TABLE IF NOT EXISTS rate(
 	rate_id INT UNSIGNED auto_increment,
     rate_value FLOAT DEFAULT 0,

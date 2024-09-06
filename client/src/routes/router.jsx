@@ -23,6 +23,7 @@ import ErrorBoundary from "../ErrorRouter";
 import './router.css'
 import Detail from "../components/detail/Detail";
 import UpdateBook, { updateAction } from "../components/UpdateBook/UpdateBook";
+import Storage from "../components/storage";
 
 
 const router = createBrowserRouter(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
             <Route path='detail/:query' element={<Detail/>} errorElement={<ErrorBoundary/>}/>
             <Route path='read/:query' element={<Read/>}/>
             <Route path='about' element={<About />}/>
+            <Route path='storage' element={<Storage/>}/>
             <Route path='insert-book' element={<Insert/>} action={insertAction}/>
             <Route path='update-book' element={<UpdateBook/>} action={updateAction}/>
         </Route>

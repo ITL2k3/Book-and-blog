@@ -4,6 +4,7 @@ const table = {
     KEYTOKEN:"key_token",
     BOOK: "book",
     ANOTATION: "anotation",
+    STORAGE: "storage",
     BOOK_CATEGORY: "book_category"
 }
 

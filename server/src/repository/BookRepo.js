@@ -9,13 +9,12 @@ import UserEntity from "./entities/user.entity.js";
 
 
 class BookRepo extends BaseRepo {
-    
+
     insertIntoBookTableValues = async(payload) => {
         //convert DTO -> Domain Model
         let newBook = new BookEntity(payload)
 
         const newBookQueryString = newBook.getQueryString()
-        console.log('helloasds', newBookQueryString);
 
         const [results, fields] = await connection.query(
             `INSERT INTO ${table.BOOK} VALUES ${newBookQueryString};
@@ -30,7 +29,7 @@ class BookRepo extends BaseRepo {
         let newBook = new BookEntity(payload)
 
         const UpdateQueryString = newBook.getUpdateQueryString()
-        if(!UpdateQueryString){
+        if (!UpdateQueryString) {
             return 0
         }
         const [results, fields] = await connection.query(
@@ -54,21 +53,21 @@ class BookRepo extends BaseRepo {
 
     }
 
-    deleteBook = async (bookId) => {
+    deleteBook = async(bookId) => {
         const [results, fields] = await connection.query(
             `DELETE FROM ${table.BOOK}
             WHERE book_id = ${bookId};
             `
         )
-        return results 
+        return results
     }
-    deleteBookCategory = async (bookId) => {
+    deleteBookCategory = async(bookId) => {
         const [results, fields] = await connection.query(
             `DELETE FROM ${table.BOOK_CATEGORY}
             WHERE book_id = ${bookId};
             `
         )
-        return results 
+        return results
     }
 
 
@@ -85,7 +84,7 @@ class BookRepo extends BaseRepo {
         return results
     }
 
-    getOneBookById = async(field ,bookId) => {
+    getOneBookById = async(field, bookId) => {
         const [results, fields] = await connection.query(
             `SELECT ${field}
             FROM ${table.BOOK}
@@ -104,7 +103,7 @@ class BookRepo extends BaseRepo {
         return results
 
     }
-    loadAnotation = async({bookId, userId}) => {
+    loadAnotation = async({ bookId, userId }) => {
         const [result, fields] = await connection.query(
             `SELECT xml_data FROM ${table.ANOTATION}
             WHERE book_id = ${bookId} AND user_id = ${userId}
@@ -114,7 +113,7 @@ class BookRepo extends BaseRepo {
         return xml
     }
 
-    saveAnotation = async ({bookId, userId, xml}) =>{
+    saveAnotation = async({ bookId, userId, xml }) => {
 
         const [result, fields] = await connection.query(
             `SELECT COUNT(*) FROM ${table.ANOTATION}
@@ -122,8 +121,8 @@ class BookRepo extends BaseRepo {
             `
         )
         const isExistsAnotation = result[0]["COUNT(*)"]
-        
-        if(isExistsAnotation){ //record exists
+
+        if (isExistsAnotation) { //record exists
             const query = `
                 UPDATE ${table.ANOTATION}
                 SET xml_data = (?)
@@ -135,16 +134,16 @@ class BookRepo extends BaseRepo {
                     console.log('Insert thành công:', results);
                 }
             })
-        }else{
+        } else {
             const query = `INSERT INTO ${table.ANOTATION} (book_id, user_id, xml_data)
                VALUES (?, ?, ?)`;
 
             await connection.execute(query, [bookId, userId, xml], (err, results, fields) => {
                 if (err) {
                     console.error('Lỗi khi thực hiện truy vấn:', err);
-                  } else {
+                } else {
                     console.log('Insert thành công:', results);
-                  }
+                }
             })
 
 
