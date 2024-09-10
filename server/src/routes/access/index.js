@@ -6,13 +6,13 @@ import { authentication } from '../../Auth/checkAuth.js'
 const accessRouter = Router()
 
 
-accessRouter.post('/register', asyncHandler(AccessController.register))
-accessRouter.post('/login', asyncHandler(AccessController.login))
+accessRouter.use('/register', asyncHandler(AccessController.register))
+accessRouter.use('/login', asyncHandler(AccessController.login))
 
 
 // check auth
-accessRouter.use('/', asyncHandler(authentication))
 
-accessRouter.post('/logout', asyncHandler(AccessController.logout))
+
+accessRouter.use('/logout', asyncHandler(authentication), asyncHandler(AccessController.logout))
 // accessRouter.get('/getuser', asyncHandler(AccessController.getUser))
 export default accessRouter

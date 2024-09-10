@@ -84,6 +84,10 @@ class AccessController {
 
     logout = async (req, res, next) => {
         
+        res.clearCookie('accessToken', {path: '/v1/api'})
+        new SuccessResponse({
+            message: 'clear cookies success'
+        }).send(res)
     }
 
 

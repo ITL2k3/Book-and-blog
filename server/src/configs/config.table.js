@@ -5,6 +5,7 @@ const table = {
     BOOK: "book",
     ANOTATION: "anotation",
     STORAGE: "storage",
+    CATEGORY: "category",
     BOOK_CATEGORY: "book_category"
 }
 

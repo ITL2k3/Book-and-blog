@@ -5,12 +5,19 @@ import { getFilepathFromString } from "../utils/index.js"
 const bookHelper = new BookRepo()
 class BookService {
 
-    static countBooks = async() => {
+    static countBooks = async(Filter) => {
+        if(Filter){
+            if(typeof Filter == 'string'){
+                Filter = [Filter]
+            }
+            const [results] = await bookHelper.countEntitiesWithFilter(Filter)
+            return results
+        }
         const [results] = await bookHelper.countAllEntities(table.BOOK)
         return results
     }
 
-    static getBooks = async(page, option) => {
+    static getBooks = async(page, option, Filter) => {
         const LIMIT = 5;
         const OFFSET = (page - 1) * LIMIT
         let fields = ''
@@ -19,9 +26,29 @@ class BookService {
         }else if(option == 'update-book'){
             fields = '*'
         }
-        const results = await bookHelper.getBooks(fields, LIMIT, OFFSET)
+        let books
+        if(Filter){
+            if(typeof Filter == 'string'){
+                Filter = [Filter]
+            }
+            books = await bookHelper.getBooksWithFilter(fields, Filter, LIMIT, OFFSET)
 
-        return results
+            // const result = await Promise.all(
+            //     books.map(async (book) => {
+                
+            //         let categories = await bookHelper.getCategories(book.book_id)
+                    
+            //         return {...book,...{categories}}
+            //     })
+            // ) 
+        }else{
+            books = await bookHelper.getBooks(fields, LIMIT, OFFSET)
+
+        }
+
+
+       
+        return books
     }
 
    
@@ -66,6 +93,7 @@ class BookService {
         return result
     }
     static saveAnotation = async (payload) => {
+        console.log(payload.xml.length);
         bookHelper.saveAnotation(payload)
         return 1
     }

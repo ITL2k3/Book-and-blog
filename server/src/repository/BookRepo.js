@@ -71,7 +71,21 @@ class BookRepo extends BaseRepo {
     }
 
 
+    countEntitiesWithFilter = async(category) => {
+      
+        const [result, fields] = await connection.query(`
+            SELECT COUNT(*) AS SUM
+            FROM (
+                SELECT book_id
+                FROM book_category
+                WHERE category_id IN (?)
+                GROUP BY book_id
+                HAVING COUNT(DISTINCT category_id) = ?
+            ) AS matched_books;
+        `,[category, category.length])
 
+        return result
+    }
 
 
     getBooks = async(field, LIMIT, OFFSET) => {
@@ -82,6 +96,35 @@ class BookRepo extends BaseRepo {
             `
         )
         return results
+    }
+
+    getBooksWithFilter = async(field, category, LIMIT, OFFSET) => {
+        const [results, fields] = await connection.query(
+            `SELECT ${field} 
+            FROM book
+            WHERE book_id IN (
+                SELECT book_id
+                FROM book_category
+                WHERE category_id IN (?)
+                GROUP BY book_id
+                HAVING COUNT(DISTINCT category_id) = ?
+            )
+            LIMIT ${LIMIT}
+            OFFSET ${OFFSET};
+            `,[category, category.length])
+        console.log('result: ', results);
+            return results
+    }
+
+    getCategories = async(bookId) => {
+        const [results, fields] = await connection.query(
+            `SELECT category_id, name_category 
+            FROM ${table.BOOK_CATEGORY} JOIN ${table.CATEGORY} USING(category_id)
+            WHERE book_id = ${bookId}
+            `
+        )
+        return results
+
     }
 
     getOneBookById = async(field, bookId) => {

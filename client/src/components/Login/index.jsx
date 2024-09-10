@@ -1,5 +1,31 @@
-import { loginAction } from "./Login"
-import { registerAction } from "./Register"
+import { useNavigate } from "react-router-dom"
+import Login, { loginAction } from "./Login"
+import Register, { registerAction } from "./Register"
+import { useEffect, useState } from "react"
+import checkAuth from "../../Auth/checkAuth"
+
+
+const Login_registerElement = () => {
+    const navigate = useNavigate()
+    const [isLogin, setIsLogin] = useState(null)
+    useEffect(() => {
+        checkAuth('http://localhost:3055/v1/api/')
+        .then((res) => {
+            setIsLogin(res)
+        }).catch((error) => {
+            console.error("Authentication check failed:", error);
+        });
+    }, [])
+    if (isLogin){
+        navigate('/')
+    }
+    return (
+        <>
+            <Login/>
+            <Register/>
+        </>
+    )
+}
 
 const login_registerAction = async ({request}) => {
     
@@ -31,3 +57,7 @@ const login_registerAction = async ({request}) => {
 
 }
 export default login_registerAction
+
+export {
+    Login_registerElement
+}

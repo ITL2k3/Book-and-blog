@@ -9,8 +9,8 @@ export default function Insert() {
     const [isValid, setValid] = useState(null)
     const [data, setData] = useState(null)
     useEffect(() => {
-
-        checkAuth('http://localhost:3055/v1/api/').then((res) => {
+        
+        checkAuth('http://localhost:3055/v1/api/lib').then((res) => {
             if (res == false) {
                 setValid(false)
             } else {
@@ -49,9 +49,9 @@ export default function Insert() {
                             <label for='category04'>Công nghệ</label> <br />
                             <input type='checkbox' name='categories05' value = 'nn' id= 'category05' />
                             <label for='category05'>Ngoại ngữ</label> <br />
-                            <input type='checkbox' name='categories06' value = 'gt' id= 'category06' />
+                            <input type='checkbox' name='categories06' value = 'dc' id= 'category06' />
                             <label for='category06'>Đề cương</label> <br />
-                            <input type='checkbox' name='categories07' value = 'dc' id= 'category07' />
+                            <input type='checkbox' name='categories07' value = 'gt' id= 'category07' />
                             <label for='category07'>Giáo trình</label> <br />
                         </div>
                         
@@ -84,9 +84,9 @@ export default function Insert() {
 
 
 
-        } else {
+        } else  {
             // return <p>Loading...</p>
-            return <Login />
+            return <p>Forbidden !!</p>
         }
     }
 
@@ -113,7 +113,7 @@ export const insertAction = async ({request}) => {
     payload.append("pdf", formData.get('pdf'))
     payload.append("thumbnail", formData.get('thumbnail'))
 
-    const URL = 'http://localhost:3055/v1/api/post-book'
+    const URL = 'http://localhost:3055/v1/api/lib/post-book'
   
     let res = await fetch(URL, {
         method: "POST",
@@ -127,19 +127,23 @@ export const insertAction = async ({request}) => {
 
     console.log(data);
     if (data.statusCode == 201) {
-        // setTimeout(() => {
-        //     window.location.reload()
-        // }, 2000)
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000)
         return {
             success: "Thêm sách thành công"
         }
     }else if(data.statusCode == 401) {
         
         window.location.reload()
+    }else if(data.statusCode == 400){
+        return {
+            error: data.message
+        }
     }
     else {
         return {
-            error: "Sai format dữ liệu, đề nghị xem lại file Ảnh và file sách."
+            error: "Sai format dữ liệu, đề nghị xem lại file Ảnh hoặc file sách."
         }
     }
    

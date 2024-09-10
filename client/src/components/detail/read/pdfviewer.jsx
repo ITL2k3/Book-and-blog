@@ -6,9 +6,8 @@ const PDFViewer = ({ buffer, bookId }) => {
   const viewerRef = useRef(null);
 
 
-
-  
   useEffect(() => {
+
 
     WebViewer(
       {
@@ -17,10 +16,19 @@ const PDFViewer = ({ buffer, bookId }) => {
       },
       viewerRef.current
     ).then(async (instance) => {
-      const { docViewer, annotManager, UI } = instance;
-
+      const { docViewer, documentViewer, annotManager, UI, Core } = instance;
+    
       const blob = new Blob([buffer], { type: 'application/pdf' });
-      docViewer.loadDocument(blob, { filename: 'document.pdf'});
+      docViewer.loadDocument(blob, { filename: 'document.pdf' });
+
+
+
+      
+      
+
+   
+
+
 
       docViewer.on('documentLoaded', async () => {
         try {
@@ -40,71 +48,88 @@ const PDFViewer = ({ buffer, bookId }) => {
         }
       });
 
-  
-      UI.disableElements(['toggleNotesButton', 'printButton', 'copy', 'copyTextButton'])
+      UI.disableElements(['toggleNotesButton', 
+        'notesPanelButton','notesPanel','printButton', 
+        'downloadButton','printButton','fileAttachmentDownload',
+        'linkButton','annotationCommentButton','copy', 'copyTextButton',
+      'annotationNoteConnectorLine','filePickerButton',
+      'annotationCommentButton','polygonToolButton','imageSignaturePanelButton',
+      'fileAttachmentToolGroupButton','notesToolButton', 'commentToolButton'
+    ,'stickyToolGroupButton','stickyToolButton'])
+      
+        // Core.documentViewer.addEventListener('documentLoaded', () => {
+
+        //   const checkForNewBookmarks = async () => {
+        //     const bookmarks = await Core.documentViewer.getDocument().getBookmarks();
+        //     Core.documentViewer.displayBookmark(bookmarks[5])
+            
+        //     console.log(bookmarks);
+        //   }
+        //   setInterval(checkForNewBookmarks, 2000);
+          
+        // })
+
+
+
+
+     
       UI.setHeaderItems(header => {
         header.push({
           type: 'actionButton',
           img: 'icon-save',
           onClick: async () => {
-          
-              const xfdfString = await annotManager.exportAnnotations();
-              fetch('http://localhost:3055/v1/api/save-anotation', {
-                method: 'post',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ xml: xfdfString, bookId: bookId }),
-                credentials: 'include'
-              }).then((data) => {
-                console.log('ok');
-              }).catch((err) => {
-                alert('Bạn đã ghi chú quá nhiều, đề nghị xóa bớt ghi chú trước khi lưu')
-                console.log('hello');
-                console.log('error!!', err);
-              })
             
+
+
+
+
+           
+            const xfdfString = await annotManager.exportAnnotations();
+            fetch('http://localhost:3055/v1/api/save-anotation', {
+              method: 'post',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ xml: xfdfString, bookId: bookId }),
+              credentials: 'include'
+            }).then((data) => {
+              alert('Lưu thành công!')
+              console.log('ok');
+            }).catch((err) => {
+              alert('Bạn đã ghi chú quá nhiều, đề nghị xóa bớt ghi chú trước khi lưu')
+              console.log('hello');
+              console.log('error!!', err);
+            })
+
           },
           title: 'Save Document',
         });
-        
+
       });
-
-      UI.hotkeys.off()
-      // UI.hotkeys.on('ctrl+c', {
-      //   keydown: e => {
-      //     e.preventDefault()
-      //     console.log('ctrl+c is pressed!');
-      //   },
-      //   keyup: e => {
-      //     console.log('ctrl+g is released!')
-      //   },
-      // });
-
+      UI.addEventListener('keydown', (e) => {
+       
+        if(e.key == 'F12' || e.key == "Control" || e.key == 'Shift' || e.key == 'Alt'){
+          console.log('blocked!');
+          e.preventDefault();
+        }
       
+        
+      })
+      
+      UI.hotkeys.off()
+      // // UI.hotkeys.off()
+      // UI.hotkeys
+
+
 
     });
 
-    
-  }, [buffer]);
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       console.log('helloads');
-//       event.preventDefault(); // Ngăn chặn hành động mặc định
-//     };
-//     document.addEventListener('keydown', handleKeyDown);
 
-//     // return () => {
-//     //     document.removeEventListener('copy', handleCopy);
-//     // };
-// }, []);
-// content.addEventListener('keydown', function(event) {
-//   console.log('hellosd');
-//   if (event.ctrlKey && event.key === 'c') {
-//       event.preventDefault();
-//   }
-// });
- 
+
+
+  }, [buffer]);
+
+  
 
   return (
     <div>

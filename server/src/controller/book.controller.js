@@ -9,15 +9,18 @@ const __dirname = import.meta.dirname;
 class BookController {
 
     getBooks = async (req, res, next) => {
+       
         const page = req.query.page
+        const {category} = req.query
         if(!req.query.option) throw new BadRequestError('Not Found')
-        const results = await BookService.getBooks(page,req.query.option)
+        const results = await BookService.getBooks(page,req.query.option, category)
 
         let sumOfBooks
-        if(page == '1'){
-            const {SUM} = await BookService.countBooks()
+        
+            const {SUM} = await BookService.countBooks(category)
             sumOfBooks = SUM
-        }
+       
+        console.log(sumOfBooks);
         new OK({
             message: 'get success',
             metadata: {

@@ -17,7 +17,7 @@ function Items() {
     const [page, setPage] = useState(1)
 
 
-    
+
     const [currentItems, setCurrentItems] = useState(null);
     const [pageCount, setPageCount] = useState(0);
     // Here we use item offsets; we could also use page offsets
@@ -35,7 +35,7 @@ function Items() {
         }).then(async (res) => {
             console.log(res);
             const messageText = await res.text()
-            
+
             const finalRes = JSON.parse(messageText)
             setbooksLength(finalRes.metadata.sumOfBooks)
             setData(finalRes.metadata.results)
@@ -43,7 +43,7 @@ function Items() {
     }, [])
 
 
-    
+
     useEffect(() => {
         // Fetch items from another resources.
         setCurrentItems(data);
@@ -58,7 +58,7 @@ function Items() {
         }).then(async (res) => {
             console.log(res);
             const messageText = await res.text()
-            
+
             const finalRes = JSON.parse(messageText)
             setData(finalRes.metadata.results)
         })
@@ -91,40 +91,45 @@ function Items() {
             <>
                 <div className="library-container">
                     <table>
-                        <tr>
-                            <th>Book</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>description</th>
-                            <th>Option</th>
-                        </tr>
-                        {data.map((book) => {
-                            return (
-                                <tr>
-                                    <td><img src={ book.thumbnail } alt="" width = "200" height = "200" /></td>
-                                    <td><p>{ book.title }</p></td>
-                                    <td><p>{ book.author }</p></td>
-                                    <td><p>{book.description}</p></td>
-                                    <td><button  onClick= {() => {
-                                        fetch(`http://localhost:3055/v1/api/delete-book?file=${book.filepath}&book_id=${book.book_id}`,{
-                                            method: 'delete',
-                                            credentials: 'include'
-                                        }).then((res) => {
-                                            window.location.reload()
-                                        })
-                                    }}>Xóa</button> 
-                                    <button onClick={() => {
-                                        setDataForm(book)
-                                        handleEditClick()
-                                       
-                                    }}>Sửa</button></td>
-                                </tr>
-                            )
-                        })}
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>description</th>
+                                <th>Option</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { data.map((book) => {
+                                return (
+                                    <tr key={ book.book_id }>
+                                        <td><img src={ book.thumbnail } alt="" width="200" height="200" /></td>
+                                        <td><p>{ book.title }</p></td>
+                                        <td><p>{ book.author }</p></td>
+                                        <td><p>{ book.description }</p></td>
+                                        <td><button onClick={ () => {
+                                            fetch(`http://localhost:3055/v1/api/lib/delete-book?file=${book.filepath}&book_id=${book.book_id}`, {
+                                                method: 'delete',
+                                                credentials: 'include'
+                                            }).then((res) => {
+                                                window.location.reload()
+                                            })
+                                        } }>Xóa</button>
+                                            <button onClick={ () => {
+                                                setDataForm(book)
+                                                handleEditClick()
+
+                                            } }>Sửa</button></td>
+                                    </tr>
+                                )
+                            }) }
+                        </tbody>
+
                     </table>
-                    
-                    
-                {/* { data.map((book) => {
+
+
+                    {/* { data.map((book) => {
                     
                     return (
                         <div className = 'bookitem'>
@@ -141,71 +146,71 @@ function Items() {
 
                 }) } */}
                 </div>
-                
+
                 <ReactPaginate
-                        nextLabel="next >"
-                        onPageChange={ handlePageClick }
-                        pageRangeDisplayed={ 3 }
-                        marginPagesDisplayed={ 2 }
-                        pageCount={ pageCount }
-                        previousLabel="< previous"
-                        pageClassName="page-item"
-                        pageLinkClassName="page-link"
-                        previousClassName="page-item"
-                        previousLinkClassName="page-link"
-                        nextClassName="page-item"
-                        nextLinkClassName="page-link"
-                        breakLabel="..."
-                        breakClassName="page-item"
-                        breakLinkClassName="page-link"
-                        containerClassName="pagination"
-                        activeClassName="active"
-                        renderOnZeroPageCount={ null }
-                    />
-                    {isFormVisible && (
-               
+                    nextLabel="next >"
+                    onPageChange={ handlePageClick }
+                    pageRangeDisplayed={ 3 }
+                    marginPagesDisplayed={ 2 }
+                    pageCount={ pageCount }
+                    previousLabel="< previous"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    renderOnZeroPageCount={ null }
+                />
+                { isFormVisible && (
+
                     <Form method='put' action="/update-book" encType='multipart/form-data'>
-                        <button onClick={() => {
+                        <button onClick={ () => {
                             setIsFormVisible(false)
-                        }}>Close</button>
+                        } }>Close</button>
                         <h3>Cập Nhật Sách</h3>
-                        <input type="text" name='bookId' value={dataForm.book_id} style={{display: 'none'}}  />
+                        <input type="text" name='bookId' value={ dataForm.book_id } style={ { display: 'none' } } />
                         <label>
                             <span>Tiêu đề</span>
-                            <input type='text' placeholder={dataForm.title} name='title' />
+                            <input type='text' placeholder={ dataForm.title } name='title' />
                         </label>
                         <br />
                         <label>
                             <span>Tác giả</span>
-                            <input type='text' placeholder={dataForm.author} name='author' />
+                            <input type='text' placeholder={ dataForm.author } name='author' />
                         </label>
                         <div>
                             <span>Thể loại: </span><br />
-                            <input type='checkbox' name='categories01' value = 'kns' id= 'category01' />
+                            <input type='checkbox' name='categories01' value='kns' id='category01' />
                             <label for='category01'>Kỹ năng sống</label> <br />
-                            <input type='checkbox' name='categories02' value = 'kt' id= 'category02' />
+                            <input type='checkbox' name='categories02' value='kt' id='category02' />
                             <label for='category02'>Kinh tế</label> <br />
-                            <input type='checkbox' name='categories03' value = 'tc' id= 'category03' />
+                            <input type='checkbox' name='categories03' value='tc' id='category03' />
                             <label for='category03'>Tài chính</label> <br />
-                            <input type='checkbox' name='categories04' value = 'cn' id= 'category04' />
+                            <input type='checkbox' name='categories04' value='cn' id='category04' />
                             <label for='category04'>Công nghệ</label> <br />
-                            <input type='checkbox' name='categories05' value = 'nn' id= 'category05' />
+                            <input type='checkbox' name='categories05' value='nn' id='category05' />
                             <label for='category05'>Ngoại ngữ</label> <br />
-                            <input type='checkbox' name='categories06' value = 'gt' id= 'category06' />
+                            <input type='checkbox' name='categories06' value='gt' id='category06' />
                             <label for='category06'>Đề cương</label> <br />
-                            <input type='checkbox' name='categories07' value = 'dc' id= 'category07' />
+                            <input type='checkbox' name='categories07' value='dc' id='category07' />
                             <label for='category07'>Giáo trình</label> <br />
                         </div>
-                        
+
                         <br />
                         <label>
                             <span>Mô tả</span>
-                            <input type='text' placeholder={dataForm.description} name='description' />
+                            <input type='text' placeholder={ dataForm.description } name='description' />
                         </label>
                         <br />
                         <label>
                             <span>link Ảnh: </span>
-                            <input type='text' name='thumbnail'  />
+                            <input type='text' name='thumbnail' />
                         </label>
                         <br />
                         <label>
@@ -214,25 +219,25 @@ function Items() {
                         </label>
                         <br />
                         <button>Cập Nhật</button>
-                        {actionData && actionData.error  &&<p>{actionData.error}</p>}
+                        { actionData && actionData.error && <p>{ actionData.error }</p> }
 
-                        {actionData && actionData.success && <p>{actionData.success}, tải lại trang sau 2s </p> }
+                        { actionData && actionData.success && <p>{ actionData.success }, tải lại trang sau 2s </p> }
 
                     </Form>
-                )}
+                ) }
             </>
         )
 
     }
 }
 
-export const updateAction = async ({request}) => {
+export const updateAction = async ({ request }) => {
     const formData = await request.formData()
-  
+
     //append formdata
     const payload = new FormData()
     payload.append("bookId", formData.get('bookId'))
-    payload.append("title",formData.get('title') )
+    payload.append("title", formData.get('title'))
     payload.append("author", formData.get('author'))
     payload.append("kns", formData.get('categories01'))
     payload.append("kt", formData.get('categories02'))
@@ -247,16 +252,16 @@ export const updateAction = async ({request}) => {
     payload.append("pdf", formData.get('pdf'))
     payload.append("thumbnail", formData.get('thumbnail'))
 
-    const URL = 'http://localhost:3055/v1/api/update-book'
-  
+    const URL = 'http://localhost:3055/v1/api/lib/update-book'
+
     let res = await fetch(URL, {
         method: "PUT",
         body: payload,
-       
+
         credentials: 'include'
     })
     res = await res.text()
-    
+
     const data = await JSON.parse(res)
     if (data.statusCode == 200) {
         setTimeout(() => {
@@ -265,17 +270,17 @@ export const updateAction = async ({request}) => {
         return {
             success: "Cập Nhật thành công"
         }
-    }else if(data.statusCode == 401) {
-        
+    } else if (data.statusCode == 401) {
+
         window.location.reload()
-    }else if(data.statusCode == 400){
+    } else if (data.statusCode == 400) {
         return {
             error: data.message
         }
-    }else{
+    } else {
         console.log('?');
     }
-   
+
 
 }
 
@@ -288,7 +293,7 @@ export default function UpdateBook() {
 
 
     useEffect(() => {
-        checkAuth('http://localhost:3055/v1/api/').then((res) => {
+        checkAuth('http://localhost:3055/v1/api/lib').then((res) => {
             if (res == false) {
                 setValid(false)
             } else {
@@ -314,14 +319,14 @@ export default function UpdateBook() {
             return (
                 <>
                     <Items />
-                    
+
                 </>
             )
 
 
         } else {
             // return <p>Loading...</p>
-            return <Login />
+            return <p>Forbidden !!</p>
         }
     }
 }

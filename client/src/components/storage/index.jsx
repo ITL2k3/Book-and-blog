@@ -1,6 +1,6 @@
 import Login from '../Login/Login'
 import { useEffect, useRef, useState } from 'react'
-import { Form, Link, NavLink, Outlet, useActionData } from 'react-router-dom'
+import { Form, Link, NavLink, Outlet, useActionData, useNavigate } from 'react-router-dom'
 import checkAuth from '../../Auth/checkAuth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ReactPaginate from 'react-paginate'
@@ -14,11 +14,15 @@ import ReactPaginate from 'react-paginate'
 
 
 function Items() {
+    const [valid, setValid] = useState(false)
     const [books, setBooks] = useState([]);   // Quản lý trạng thái còn dữ liệu để tải
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
     const fetchBooks = async () => {
+
+       
+
         fetch(`http://localhost:3055/v1/api/get-books-from-storage?page=${page}`, {
             method: 'get',
             credentials: 'include'
@@ -52,8 +56,8 @@ function Items() {
             dataLength={books.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<h4>Đang tải thêm...</h4>}
-            endMessage={<p>Hết</p>}
+            loader={<h4></h4>}
+            endMessage={<p></p>}
         >
 
 <>
@@ -73,8 +77,15 @@ function Items() {
                                 console.log(books);
                                 return (
                                     <tr key={ book.book_id }>
-                                        <td><img src={ book.thumbnail } alt="" width="200" height="200" /></td>
-                                        <td><p>{ book.title }</p></td>
+                                        
+                                        <td><a href={`/detail/${book.title}_${book.book_id}`}>
+                                        <img src={ book.thumbnail } alt="" width="200" height="200" />
+                                        </a>
+                                        </td>
+                                        <td><a href={`/detail/${book.title}_${book.book_id}`}>
+                                        <p>{ book.title }</p>
+                                        </a>
+                                        </td>
                                         <td><p>{ book.author }</p></td>
                                         <td><p>{ book.description }</p></td>
                                         <td><button onClick={ () => {
@@ -165,7 +176,7 @@ export default function Storage() {
     // let rT = Cookies.get('refresh_token')
     const [isValid, setValid] = useState(null)
     const [data, setData] = useState(null)
-
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -178,9 +189,6 @@ export default function Storage() {
             }
         })
     }, [])
-
-
-
 
 
 
@@ -201,8 +209,8 @@ export default function Storage() {
 
 
         } else {
-            // return <p>Loading...</p>
-            return <Login />
+            
+            navigate('/access')
         }
     }
 }

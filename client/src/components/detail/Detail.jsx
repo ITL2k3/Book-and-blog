@@ -9,7 +9,7 @@ export default function Detail() {
     const navigate = useNavigate();
     // let refreshToken = document.cookie.refresh_Token
     // let rT = Cookies.get('refresh_token')
-    const [isValid, setValid] = useState(null)
+    const [isValid, setValid] = useState(true)
     const [data, setData] = useState(null)
     //set alert book storage
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -23,13 +23,13 @@ export default function Detail() {
 
     useEffect(() => {
 
-        checkAuth('http://localhost:3055/v1/api/').then((res) => {
-            if (res == false) {
-                setValid(false)
-            } else {
-                setValid(true)
-            }
-        })
+        // checkAuth('http://localhost:3055/v1/api/').then((res) => {
+        //     if (res == false) {
+        //         setValid(false)
+        //     } else {
+        //         setValid(true)
+        //     }
+        // })
 
 
         fetch(`http://localhost:3055/v1/api/book-detail/${BookId}`, {
@@ -54,7 +54,6 @@ export default function Detail() {
     } else {
         if (isValid) {
             if (data != null) {
-                console.log(data);
                 let { title, filepath } = data
                 let filename = filepath.split('/').pop().split('.').shift()
                 return (
@@ -82,7 +81,11 @@ export default function Detail() {
                                 if (finalRes.statusCode == 400) {
                                     setInsideText("Sách đã tồn tại trong kho lưu trữ")
                                     setIsModalOpen(true)
-                                }else{
+                                }else if(finalRes.statusCode == 401){
+                                    setInsideText("Bạn chưa đăng nhập!")
+                                    setIsModalOpen(true)
+                                }
+                                else{
                                     setInsideText("Thêm sách thành công")
                                     setIsModalOpen(true)
                                 }
@@ -98,8 +101,6 @@ export default function Detail() {
                                 </div>
                             </div>)}
                         
-
-
                     </div>
                 )
             } else {

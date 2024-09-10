@@ -1,5 +1,5 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
-import { loginAction } from "../components/Login/Login";
+import Login, { loginAction } from "../components/Login/Login";
 
 //import layouts
 import RootLayout from "../Layouts/RootLayout";
@@ -11,7 +11,7 @@ import Read from "../components/detail/read/index";
 
 
 //import action
-import login_registerAction from "../components/Login";
+import login_registerAction, { Login_registerElement } from "../components/Login";
 import Insert, { insertAction } from "../components/insert/insert";
 
 //import error handler
@@ -30,6 +30,7 @@ const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element ={<RootLayout/>} action={login_registerAction} >
             <Route index element={<Home/>}/>
+            <Route path='access' element={<Login_registerElement/>} action={login_registerAction}/>
             <Route path='detail/:query' element={<Detail/>} errorElement={<ErrorBoundary/>}/>
             <Route path='read/:query' element={<Read/>}/>
             <Route path='about' element={<About />}/>

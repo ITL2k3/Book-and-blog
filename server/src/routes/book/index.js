@@ -10,6 +10,11 @@ const bookRouter = Router()
 
 
 // check auth
+bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
+bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
+
+
+
 bookRouter.use('/', asyncHandler(authentication))
 //passed
 bookRouter.get('/', async (req, res) => {
@@ -20,8 +25,7 @@ bookRouter.get('/', async (req, res) => {
 })
 
 
-bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
-bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
+
 
 
 bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
@@ -31,23 +35,28 @@ bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
 
 
 //check permission
-bookRouter.use(checkPermission(permission["LIBRARIAN"]))
+bookRouter.use('/lib', checkPermission(permission["LIBRARIAN"]))
 
 
-
-bookRouter.post('/post-book',upload.fields([{
+bookRouter.get('/lib', async (req, res) => {
+    res.send({
+        statusCode: 200,
+        statusText: 'authen success'
+    })
+})
+bookRouter.post('/lib/post-book',upload.fields([{
     name: 'pdf', maxCount: 1}, 
     {
     name: 'img', maxCount: 1
 }]),asyncHandler(BookController.insertBook))
 
-bookRouter.put('/update-book',upload.fields([{
+bookRouter.put('/lib/update-book',upload.fields([{
     name: 'pdf', maxCount: 1}, 
     {
     name: 'img', maxCount: 1
 }]),asyncHandler(BookController.updateBook))
 
-bookRouter.delete('/delete-book', asyncHandler(BookController.deleteBook))
+bookRouter.delete('/lib/delete-book', asyncHandler(BookController.deleteBook))
 
 
 export default bookRouter

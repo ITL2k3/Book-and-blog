@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Login from '../../Login/Login';
-import checkAuth from '../../../Auth/checkAuth';
+import checkAuth, { checkDevTool } from '../../../Auth/checkAuth';
 import PDFViewer from './pdfviewer';
 
 
@@ -21,9 +21,19 @@ export default function Read() {
     //setBuffer
     const [buffer, setBuffer] = useState(null);
 
-
-
+    
+   
     useEffect(() => {
+        const handleKeyDown = (event) => {
+            event.preventDefault(); // Ngăn chặn hành động mặc định
+          };
+      
+          // Thêm sự kiện keydown
+          window.addEventListener('keydown', handleKeyDown);
+      
+          
+        const checkdev = setInterval(checkDevTool, 500)
+        
 
         checkAuth('http://localhost:3055/v1/api/').then((res) => {
             if (res == false) {
@@ -43,14 +53,14 @@ export default function Read() {
         }).catch((err) => {
 
         })
+    
+        // Dọn dẹp sự kiện khi component unmount
+        return () => {
+            // clearInterval(checkdev)
+            window.removeEventListener('keydown', handleKeyDown);
+          };
 
-       
     }, [])
-    
-
-    
-
-   
 
 
 
@@ -67,7 +77,8 @@ export default function Read() {
 
         } else {
             // return <p>Loading...</p>
-            return <Login />
+
+            navigate('/access')
         }
     }
 }
