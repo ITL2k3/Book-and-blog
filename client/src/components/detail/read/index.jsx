@@ -24,15 +24,24 @@ export default function Read() {
     
    
     useEffect(() => {
+       
+
         const handleKeyDown = (event) => {
             event.preventDefault(); // Ngăn chặn hành động mặc định
           };
+          const handleBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = ''; // Trả về một chuỗi để hiển thị hộp thoại xác nhận
+          };
+      
       
           // Thêm sự kiện keydown
+          window.addEventListener('beforeunload', handleBeforeUnload);
+
           window.addEventListener('keydown', handleKeyDown);
       
           
-        const checkdev = setInterval(checkDevTool, 500)
+        // const checkdev = setInterval(checkDevTool, 500)
         
 
         checkAuth('http://localhost:3055/v1/api/').then((res) => {
@@ -58,6 +67,8 @@ export default function Read() {
         return () => {
             // clearInterval(checkdev)
             window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+
           };
 
     }, [])
@@ -65,10 +76,12 @@ export default function Read() {
 
 
     if (isValid == null) {
+       
         <p>Loading...</p>
 
     } else {
         if (isValid) {
+          
             return (
                 <div>
                     { buffer ? <PDFViewer buffer={ buffer } bookId={ bookId } /> : <p>Loading PDF...</p> }

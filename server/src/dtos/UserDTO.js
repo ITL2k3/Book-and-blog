@@ -4,25 +4,21 @@ import _ from 'lodash'
 
 class UserDTO extends BaseDTO {
    
-    firstName
-    lastName
+    mame
     email
     password
     role
 
-    constructor({userId, firstName, lastName, email, password, role}){
+    constructor({userId, name, email, password, role}){
         userId = Number(userId)
         super({id: userId})
-        this.firstName = firstName ? firstName : null
-        this.lastName = lastName ? lastName : null
         this.email = email ? email : null
         this.password = password ? password : null
         this.role = role ? role : 'default'
-
+        this.name= name 
         this.validateJoiSchemaUser = {
             userId: Joi.number().integer().min(10000000).max(99999999).required(),
-            firstName: Joi.string().required(),
-            lastName: Joi.string().required(),
+            name: Joi.string().required(),
             email:Joi.string().email({
                 tlds : true
             }).required(),
@@ -31,8 +27,7 @@ class UserDTO extends BaseDTO {
         }
         this.validateFieldUser = {
             userId: this.id,
-            firstName: this.firstName,
-            lastName: this.lastName,
+            name: this.name,
             email: this.email,
             password: this.password,
             role: this.role
@@ -41,7 +36,7 @@ class UserDTO extends BaseDTO {
 
     }
     validateRegister(){
-        const fields = ['userId', 'firstName', 'lastName', 'email', 'password']
+        const fields = ['userId', 'name', 'email', 'password']
         const joiSchemaUser = _.pick(this.validateJoiSchemaUser,fields)
         const validateFieldUser = _.pick(this.validateFieldUser, fields)
         return Joi.object(joiSchemaUser).validate(validateFieldUser)

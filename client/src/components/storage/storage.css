@@ -1,0 +1,68 @@
+* {
+    user-select: none;
+}
+
+
+.storage-content{
+    height: 100%;
+
+}
+
+
+.storage-p {
+    padding-left: 0vw;
+    padding-top: 50px;
+    min-height: 1000px;
+    
+}
+.btext a{
+    text-decoration: none;
+}
+.btext {
+    margin-left: 10px;
+    line-height: 10px;
+
+}
+
+
+.btitle{
+    font-size: large;
+    font-weight: bold;
+
+}
+.bauthor{
+    font-size: medium;
+    font-weight: lighter;
+}
+.bcate{
+    font-size: medium;
+    font-weight: lighter;
+}
+
+.btext button{
+    background-color: #FF4646;
+    color: black; /* Màu chữ đen */
+    border: none; /* Không có viền */
+    padding: 10px 15px; /* Khoảng cách bên trong */
+    text-align: center; /* Căn giữa nội dung */
+    text-decoration: none; /* Không có gạch chân */
+    display: inline-block; /* Hiển thị như một khối inline */
+    font-size: 16px; /* Kích thước chữ */
+    cursor: pointer; /* Hiệu ứng con trỏ khi di chuột */
+    border-radius: 11px; /* Bo góc */
+    transition: background-color 0.2s; /* Hiệu ứng chuyển màu nền */
+}
+.btext button:hover {
+    background-color: rgb(245, 135, 135); /* Màu nền khi di chuột */
+}
+
+.button-ctn :first-child{
+    background-color:#8CFF9F ;
+    font-size: medium;
+    font-weight:400;
+    margin-right: 10px;
+}
+.button-ctn :first-child:hover{
+    background-color:#45f863 ;
+   
+}

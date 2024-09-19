@@ -72,7 +72,7 @@ class BookRepo extends BaseRepo {
 
 
     countEntitiesWithFilter = async(category) => {
-      
+
         const [result, fields] = await connection.query(`
             SELECT COUNT(*) AS SUM
             FROM (
@@ -82,7 +82,7 @@ class BookRepo extends BaseRepo {
                 GROUP BY book_id
                 HAVING COUNT(DISTINCT category_id) = ?
             ) AS matched_books;
-        `,[category, category.length])
+        `, [category, category.length])
 
         return result
     }
@@ -111,9 +111,9 @@ class BookRepo extends BaseRepo {
             )
             LIMIT ${LIMIT}
             OFFSET ${OFFSET};
-            `,[category, category.length])
+            `, [category, category.length])
         console.log('result: ', results);
-            return results
+        return results
     }
 
     getCategories = async(bookId) => {

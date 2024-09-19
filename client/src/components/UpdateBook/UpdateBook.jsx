@@ -278,7 +278,9 @@ export const updateAction = async ({ request }) => {
             error: data.message
         }
     } else {
-        console.log('?');
+        return {
+            error: "Sai format dữ liệu, đề nghị xem lại file ảnh hoặc sách."
+        }
     }
 
 

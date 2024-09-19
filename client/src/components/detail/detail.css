@@ -1,0 +1,166 @@
+.detail-p{
+    padding-left: 0vw;
+    padding-top: 60px;
+    background-color: #E6EBF4 ;
+    
+}
+
+.bookDetail{
+    padding-top: 10px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+}
+.img-container{
+    margin-left: 15px;
+    margin-top: 8px;
+}
+.img-container img{
+    width: 300px;
+    height: auto;
+    
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
+}
+.book-text{
+    width: 50%;
+
+}
+.book-text h5{
+    font-size:large;
+    font-weight: 400;
+}
+.book-text p{
+    text-align: left;
+}
+
+#author{
+    font-weight: 500;
+    color: #6E8CC6;
+}
+#cate{
+    font-size:medium;
+}
+.book-text h5:last-child{
+    font-size: medium;
+}
+
+.detail-option{
+    width: 20%;
+   
+}
+
+
+.detail-option{
+    display: flex;
+    /* border: 1px solid black; */
+    flex-direction: column;
+    align-items: center;
+}
+.button-ctn-detail button{
+    margin: 2px;
+    border-radius: 20px;
+    padding: 5px;
+    border: none;
+    width: 90%;
+}
+.button-ctn-detail{
+    width:70%;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.detail-option button:first-child{
+    margin-top: 10px;
+    /* margin-left: 12px; */
+    background-color: #8CFF9F;
+    
+}
+.detail-option button:first-child:hover{
+    background-color: #69fd81;
+    
+}
+.detail-option button:nth-child(2){
+    background-color: #FFD700;
+    
+}
+.detail-option button:nth-child(2):hover{
+    background-color: #f3cf01;
+}
+
+.HR{
+    border: 1px solid #D9D9D9;
+    margin: 10px;
+    width: 90%;
+}
+.button-ctn-detail button:last-child{
+    background-color: #FF4646;
+    margin-bottom: 10px;
+}
+.button-ctn-detail button:last-child:hover{
+    background-color: #f82020;
+    /* margin-bottom: 10px; */
+}
+
+.tb-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(143, 167, 197, 0.7); /* Màu nền tối với độ trong suốt */
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    z-index: 1000; /* Đảm bảo overlay nằm trên tất cả các phần tử khác */
+    
+}
+.Modal-tb{
+    background-color: white; /* Màu nền cho modal */
+    width: 300px;
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho modal */
+    text-align: center; 
+}
+.Modal-tb button{
+    /* margin-left: 15px;  */
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black; /* Màu chữ */
+    cursor: pointer; /* Hiệu ứng con trỏ khi di chuột */
+}
+.Modal-tb button:hover{
+    background-color: red; /* Màu nền khi di chuột qua nút */
+    color: white;
+    
+
+}
+.Modal-tb p{
+    padding: 20px;
+}
+.Nav-TB {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    border-bottom: 1px solid rgb(199, 199, 199);
+    padding: 2px
+    
+}
+.Nav-TB{
+
+}
+.Nav-TB h2{
+    font-size:larger;
+    margin-left: 5px;
+    margin-bottom: 0px;
+}
+.Nav-TB h2 svg{
+    
+    margin-bottom: 2px;
+}

@@ -4,10 +4,11 @@ import Register, { registerAction } from "./Register"
 import { useEffect, useState } from "react"
 import checkAuth from "../../Auth/checkAuth"
 
-
+import './access.css'
 const Login_registerElement = () => {
     const navigate = useNavigate()
     const [isLogin, setIsLogin] = useState(null)
+    const [option, setOption] = useState(1)
     useEffect(() => {
         checkAuth('http://localhost:3055/v1/api/')
         .then((res) => {
@@ -21,8 +22,28 @@ const Login_registerElement = () => {
     }
     return (
         <>
-            <Login/>
-            <Register/>
+            <div className="logo-access">LibOnl</div>
+            {option && <Login />}
+            {option && <div className="newto">
+                <div class="divider" >
+                    <span class="divider-text">Chưa có tài khoản?</span>
+                </div>
+                <button class="create-account" onClick={() => {
+                    setOption(!option)
+                }} >Đăng ký</button>
+            </div> }
+            {!option && <Register />}
+            {!option && <div className="newto">
+                <div class="divider" >
+                    <span class="divider-text">Đã có tài khoản?</span>
+                </div>
+                <button class="create-account" onClick={() => {
+                    setOption(!option)
+                }} >Đăng Nhập</button>
+            </div> }
+            
+            
+            
         </>
     )
 }
@@ -41,8 +62,7 @@ const login_registerAction = async ({request}) => {
     }else if(formAction == 'register'){
         const submission = {
             userId: data.get('userId'),
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
+            name: data.get('name'),
             email: data.get('email'),
             password: data.get('password'),
             role: 'default'

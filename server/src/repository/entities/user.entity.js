@@ -2,8 +2,7 @@
 
 class UserEntity  {
     _userId
-    _firstName
-    _fullName
+    _name
     _lastName
     _email
     _password
@@ -12,11 +11,9 @@ class UserEntity  {
     _lastUpdate
     
 
-    constructor({userId, firstName, lastName, email, password, role, createAt, lastUpdate}){
+    constructor({userId, name, email, password, role, createAt, lastUpdate}){
         this._userId = userId
-        this._firstName = firstName,
-        this._lastName = lastName
-        this._fullName = firstName + ' ' + lastName
+        this._name = name
         this._email = email
         this._password = password
         this._role = role ? role : 'default'
@@ -24,8 +21,7 @@ class UserEntity  {
         this._lastUpdate = lastUpdate ? lastUpdate : 'default'
     }
     getQueryString(){
-        return `(${this._userId}, '${this._firstName}',
-        '${this._lastName}','${this._fullName}', '${this._email}', '${this._password}',
+        return `(${this._userId}, '${this._name}', '${this._email}', '${this._password}',
         ${this._role}, ${this._createAt},${this._lastUpdate})`
     }
 }

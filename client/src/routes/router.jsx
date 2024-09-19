@@ -28,7 +28,7 @@ import Storage from "../components/storage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path='/' element ={<RootLayout/>} action={login_registerAction} >
+        <Route path='/' element ={<RootLayout/>}  >
             <Route index element={<Home/>}/>
             <Route path='access' element={<Login_registerElement/>} action={login_registerAction}/>
             <Route path='detail/:query' element={<Detail/>} errorElement={<ErrorBoundary/>}/>

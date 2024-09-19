@@ -6,6 +6,13 @@ import UserEntity from "./entities/user.entity.js";
 
 
 class UserRepo extends BaseRepo {
+    getInfoAccount = async(userId) => {
+        const [results, fields] = await connection.query(
+            `SELECT user_id, name, email FROM ${table.USER}
+            WHERE user_id = ${userId}`
+        )
+        return results
+    }
     insertIntoTableValues = async(payload) => {
         //convert DTO -> Domain Model
         let newUser = new UserEntity(payload)

@@ -7,6 +7,8 @@ class StorageController {
     getBooksFromStorage = async(req, res, next) => {
         const { user_id } = req.user
         const {page} = req.query
+      
+        
         new OK({
             message: "Get All Book success",
             metadata: await StorageService.getBooksFromStorage({ userId: user_id, page })

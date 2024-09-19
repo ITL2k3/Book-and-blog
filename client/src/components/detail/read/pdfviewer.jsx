@@ -115,6 +115,9 @@ const PDFViewer = ({ buffer, bookId }) => {
       
         
       })
+      UI.addEventListener('copy', (e) => {
+        e.preventDefault()
+      })
       
       UI.hotkeys.off()
       // // UI.hotkeys.off()

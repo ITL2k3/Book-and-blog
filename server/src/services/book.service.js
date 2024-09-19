@@ -6,8 +6,8 @@ const bookHelper = new BookRepo()
 class BookService {
 
     static countBooks = async(Filter) => {
-        if(Filter){
-            if(typeof Filter == 'string'){
+        if (Filter) {
+            if (typeof Filter == 'string') {
                 Filter = [Filter]
             }
             const [results] = await bookHelper.countEntitiesWithFilter(Filter)
@@ -18,48 +18,53 @@ class BookService {
     }
 
     static getBooks = async(page, option, Filter) => {
-        const LIMIT = 5;
+        const LIMIT = 15;
         const OFFSET = (page - 1) * LIMIT
         let fields = ''
-        if(option == 'Home'){
+        if (option == 'Home') {
             fields = 'book_id, title, author, thumbnail'
-        }else if(option == 'update-book'){
+        } else if (option == 'update-book') {
             fields = '*'
         }
         let books
-        if(Filter){
-            if(typeof Filter == 'string'){
+        if (Filter) {
+            if (typeof Filter == 'string') {
                 Filter = [Filter]
             }
             books = await bookHelper.getBooksWithFilter(fields, Filter, LIMIT, OFFSET)
 
             // const result = await Promise.all(
             //     books.map(async (book) => {
-                
+
             //         let categories = await bookHelper.getCategories(book.book_id)
-                    
+
             //         return {...book,...{categories}}
             //     })
             // ) 
-        }else{
+        } else {
             books = await bookHelper.getBooks(fields, LIMIT, OFFSET)
 
         }
 
 
-       
+
         return books
     }
 
-   
+
 
     static getOneBook = async(id) => {
-        const result = await bookHelper.getOneBookById('*',id)
-
-        return result
+        const [result] = await bookHelper.getOneBookById('*', id)
+        const categories = await bookHelper.getCategories(result.book_id)
+        const stringRes = categories.map(category => category.name_category)
+        console.log(stringRes);
+        return {
+            ...result,
+            categories: stringRes
+        }
     }
 
-    
+
 
 
 
@@ -92,7 +97,7 @@ class BookService {
         const result = await bookHelper.loadAnotation(payload)
         return result
     }
-    static saveAnotation = async (payload) => {
+    static saveAnotation = async(payload) => {
         console.log(payload.xml.length);
         bookHelper.saveAnotation(payload)
         return 1
@@ -106,27 +111,27 @@ class BookService {
 
     static updateBook = async(payload) => {
         //if update filepath required:  
-        if(payload.filepath){
+        if (payload.filepath) {
             //delete old file
-            const [linkOldFilePath] = await bookHelper.getOneBookById('filepath',payload.bookId)
+            const [linkOldFilePath] = await bookHelper.getOneBookById('filepath', payload.bookId)
             fs.unlink(`uploads/files_pdf/${getFilepathFromString(linkOldFilePath.filepath)}`)
-            .catch((err) => {
-            console.log('file Not Found');
-            })
+                .catch((err) => {
+                    console.log('file Not Found');
+                })
         }
 
         //update book record
 
         await bookHelper.updateIntoBookTableValues(payload)
-        //update categories record
+            //update categories record
         await bookHelper.deleteBookCategory(payload.bookId)
         const categories = Object.entries(payload.categories).filter(([key, value]) => value != 'null')
             .map(([key]) => key)
 
         categories.forEach(async(category) => {
-            await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: payload.bookId })
-        })
-        //not throw error <=> add success
+                await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: payload.bookId })
+            })
+            //not throw error <=> add success
 
         return {
             payload
@@ -143,15 +148,15 @@ class BookService {
 
 
     static deleteBook = async(payload) => {
-        const {book_id, file} = payload
+        const { book_id, file } = payload
         fs.unlink(`uploads/files_pdf/${getFilepathFromString(file)}`)
-        .catch((err) => {
-            console.log('file Not Found');
-        })
-        //delete record
+            .catch((err) => {
+                console.log('file Not Found');
+            })
+            //delete record
         await bookHelper.deleteBookCategory(book_id)
         await bookHelper.deleteBook(book_id)
-        //delete file
+            //delete file
         return book_id
     }
 

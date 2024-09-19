@@ -12,7 +12,7 @@ accessRouter.use('/login', asyncHandler(AccessController.login))
 
 // check auth
 
-
+accessRouter.use('/get-info', asyncHandler(authentication), asyncHandler(AccessController.getAccount))
 accessRouter.use('/logout', asyncHandler(authentication), asyncHandler(AccessController.logout))
 // accessRouter.get('/getuser', asyncHandler(AccessController.getUser))
 export default accessRouter

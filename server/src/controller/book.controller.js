@@ -4,6 +4,7 @@ import BookDTO from "../dtos/BookDTO.js"
 import BookService from "../services/book.service.js"
 import path, { basename } from 'path'
 import fs from 'fs'
+import AccessService from "../services/access.service.js"
 const __dirname = import.meta.dirname;
 
 class BookController {
@@ -14,7 +15,7 @@ class BookController {
         const {category} = req.query
         if(!req.query.option) throw new BadRequestError('Not Found')
         const results = await BookService.getBooks(page,req.query.option, category)
-
+        
         let sumOfBooks
         
             const {SUM} = await BookService.countBooks(category)
@@ -25,7 +26,8 @@ class BookController {
             message: 'get success',
             metadata: {
                 results: results,
-                sumOfBooks: sumOfBooks
+                sumOfBooks: sumOfBooks,
+               
             }
         }).send(res)
        

@@ -1,13 +1,21 @@
 import { BadRequestError } from "../common/error.response.js"
-import { CREATED, SuccessResponse } from "../common/success.response.js"
+import { CREATED, OK, SuccessResponse } from "../common/success.response.js"
 import UserDTO from "../dtos/UserDTO.js"
 import AccessService from "../services/access.service.js"
 import { setHeaderCookie } from "../utils/index.js"
 
 class AccessController {
+    getAccount = async (req, res, next) => {
+        console.log(req.user);
+        new OK({
+            metadata: await AccessService.getAccount(req.user.userId)
+        }).send(res)
+    }
     register = async (req, res, next) => {
+        console.log(req.body);
         //check valid user
         const reqUserDTo = new UserDTO(req.body)
+        
         const isValidUser = reqUserDTo.validateRegister()
         if(isValidUser && isValidUser["error"]){
             throw new BadRequestError(

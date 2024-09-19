@@ -6,6 +6,13 @@ import { getKeyToken, saveKeyToken } from './keytoken.service.js'
 import bcrypt from 'bcrypt'
 
 class AccessService {
+
+    static getAccount = async(userId) => {
+      
+        const [result] =  await (new UserRepo()).getInfoAccount(userId)
+        return result
+    }
+
     static register = async(payload) => {
         try {
             //hashed password
@@ -55,7 +62,7 @@ class AccessService {
         const { token_key: tokenKey } = await getKeyToken(userId)
 
         const {user_id, email, role} = foundUser
-        const token = setToken({ user_id, email, role }, tokenKey)
+        const token = setToken({ userId: user_id, email, role }, tokenKey)
 
         return {
             user: getInfoData({ fields: ["user_id", "email"], object: foundUser }),

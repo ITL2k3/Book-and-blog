@@ -7,10 +7,26 @@ import BaseRepo from "./BaseRepo.js";
 
 class StorageRepo extends BaseRepo {
 
-    getBooksFromStorage = async({userId, LIMIT, OFFSET}) => {
+
+    getCategoriesFromBooks = async (bookIds) => {
+    
+      
+        try{
+            const [results, fields] = await connection.query(`
+                SELECT book_id, name_category FROM
+                ${table.BOOK_CATEGORY} join ${table.CATEGORY} using(category_id)
+                WHERE book_id IN (?)
+                `,[bookIds])
+            return results
+        }catch(err){
+            console.log(err);
+        }
+        
+    }
+    getBooksFromStorage = async({userId, LIMIT, OFFSET, Filter}) => {
         
         const [result, fields] = await connection.query(`
-            SELECT book_id, title, author, thumbnail, description FROM
+            SELECT book_id, title, author, thumbnail,filepath, description FROM
             ${table.STORAGE} join ${table.BOOK} using (book_id)
             WHERE user_id = ${userId}
             LIMIT ${LIMIT}

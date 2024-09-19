@@ -3,8 +3,7 @@ import connection from "./init.mysql.js";
 
 await connection.query(`CREATE TABLE IF NOT EXISTS user(
     user_id INT UNSIGNED NOT NULL unique,
-    first_name VARCHAR(45) NOT NULL,
-    last_name VARCHAR(45) NOT NULL,
+
     name VARCHAR(100),
     email VARCHAR(45) NOT NULL,
     password VARCHAR(255) NOT NULL,
