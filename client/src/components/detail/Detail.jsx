@@ -10,7 +10,7 @@ export default function Detail() {
     const navigate = useNavigate();
     // let refreshToken = document.cookie.refresh_Token
     // let rT = Cookies.get('refresh_token')
-    const [isValid, setValid] = useState(true)
+    const [isValid, setValid] = useState(null)
     const [data, setData] = useState(null)
     //set alert book storage
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -49,9 +49,13 @@ export default function Detail() {
             const messageText = await res.text()
 
             const finalRes = JSON.parse(messageText)
+            console.log(finalRes);
+            setValid(true)
             if (finalRes.statusCode == 400) {
                 setData(null)
+                setValid(false)
             }
+            
             console.log(finalRes);
             setData(finalRes.metadata)
         })
@@ -155,6 +159,7 @@ export default function Detail() {
                     </div>
                 )
             } else {
+                
                 return (
                     <div>
                         <h3>Not Found!</h3>
@@ -165,7 +170,11 @@ export default function Detail() {
 
         } else {
             // return <p>Loading...</p>
-            return <Login />
+            return (
+                <div>
+                    <h3>Not Found!</h3>
+                </div>
+            )
         }
     }
 }

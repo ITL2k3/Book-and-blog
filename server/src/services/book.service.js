@@ -2,6 +2,7 @@ import { BadRequestError } from "../common/error.response.js"
 import table from "../configs/config.table.js"
 import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
+import fs from 'fs/promises'
 const bookHelper = new BookRepo()
 class BookService {
 
@@ -110,18 +111,25 @@ class BookService {
 
 
     static updateBook = async(payload) => {
+        console.log(payload);
         //if update filepath required:  
         if (payload.filepath) {
             //delete old file
             const [linkOldFilePath] = await bookHelper.getOneBookById('filepath', payload.bookId)
-            fs.unlink(`uploads/files_pdf/${getFilepathFromString(linkOldFilePath.filepath)}`)
+            try{
+                fs.unlink(`uploads/files_pdf/${getFilepathFromString(linkOldFilePath.filepath)}`)
                 .catch((err) => {
                     console.log('file Not Found');
                 })
+            }catch(err){
+                console.log(err);
+            }
+            
+
         }
 
         //update book record
-
+       
         await bookHelper.updateIntoBookTableValues(payload)
             //update categories record
         await bookHelper.deleteBookCategory(payload.bookId)

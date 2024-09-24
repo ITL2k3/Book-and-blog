@@ -31,8 +31,10 @@ class StorageRepo extends BaseRepo {
             WHERE user_id = ${userId}
             LIMIT ${LIMIT}
             OFFSET ${OFFSET}
+            
             ; 
             `)
+            
         return result
     }
 

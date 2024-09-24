@@ -27,29 +27,37 @@ class BookRepo extends BaseRepo {
 
     updateIntoBookTableValues = async(payload) => {
         let newBook = new BookEntity(payload)
-
-        const UpdateQueryString = newBook.getUpdateQueryString()
-        if (!UpdateQueryString) {
-            return 0
-        }
-        const [results, fields] = await connection.query(
-            `UPDATE ${table.BOOK} SET
+        try {
+            const UpdateQueryString = newBook.getUpdateQueryString()
+            if (!UpdateQueryString) {
+                return 0
+            }
+            const [results, fields] = await connection.query(
+                `UPDATE ${table.BOOK} SET
             ${UpdateQueryString}
             WHERE book_id = ${payload.bookId}
             `
-        )
-        return 1
+            )
+            return 1
+        } catch (err) {
+            console.log(err);
+        }
+
     }
 
     insertIntoBookCategoryTableValues = async(payload) => {
         let newBookCategory = new Book_CategoryEntity(payload)
         let queryString = newBookCategory.getQueryString()
-
-        const [results, fields] = await connection.query(
-            `INSERT INTO ${table.BOOK_CATEGORY} VALUES ${queryString};
-            `
-        )
-        return results
+        try{
+            const [results, fields] = await connection.query(
+                `INSERT INTO ${table.BOOK_CATEGORY} VALUES ${queryString};
+                `
+            )
+            return results
+        }catch(err){
+            console.log(err);
+        }
+        
 
     }
 
@@ -62,12 +70,16 @@ class BookRepo extends BaseRepo {
         return results
     }
     deleteBookCategory = async(bookId) => {
-        const [results, fields] = await connection.query(
-            `DELETE FROM ${table.BOOK_CATEGORY}
-            WHERE book_id = ${bookId};
-            `
-        )
-        return results
+        
+       
+            const [results, fields] = await connection.query(
+                `DELETE FROM ${table.BOOK_CATEGORY}
+                WHERE book_id = ${bookId};
+                `
+            )
+            return results
+        
+        
     }
 
 
@@ -128,12 +140,14 @@ class BookRepo extends BaseRepo {
     }
 
     getOneBookById = async(field, bookId) => {
+        
         const [results, fields] = await connection.query(
             `SELECT ${field}
             FROM ${table.BOOK}
             WHERE book_id = ${bookId}
             `
         )
+        console.log(results);
         return results
     }
 

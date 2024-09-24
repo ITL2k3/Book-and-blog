@@ -6,6 +6,7 @@ const storageHelper = new StorageRepo()
 class StorageService {
 
     static getBooksFromStorage = async({userId, page}) => {
+       
         const LIMIT = 15;
         const OFFSET = (page - 1) * LIMIT
         const books = await storageHelper.getBooksFromStorage({userId, LIMIT, OFFSET})
@@ -26,6 +27,7 @@ class StorageService {
             console.log(results);
             return results
         }
+        
         return 1
         
        

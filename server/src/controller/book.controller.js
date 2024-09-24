@@ -69,19 +69,19 @@ class BookController {
     }
 
     loadAnotation = async (req, res, next) => {
-        const {user_id} = req.user
+        const {userId} = req.user
         const {bookId} = req.query
         new OK({
             message: 'load success',
-            metadata: await BookService.loadAnotation({userId : user_id, bookId})
+            metadata: await BookService.loadAnotation({userId, bookId})
         }).send(res)
    
     }
     saveAnotation = async (req, res, next) => {
-        const {user_id} = req.user
+        const {userId} = req.user
         const {xml, bookId} = req.body
 
-        BookService.saveAnotation({userId : user_id, xml, bookId})
+        BookService.saveAnotation({userId , xml, bookId})
 
         new OK({
             message: 'save success',
@@ -132,6 +132,7 @@ class BookController {
     }
 
     updateBook = async (req, res, next) => {
+      
         //set null for '' string
         Object.entries(req.body).forEach(([key, value]) => {
             if(value == ''){
@@ -151,7 +152,6 @@ class BookController {
         if(!BookDTO.validateCategories(categories)){
             throw new BadRequestError('sách phải có ít nhất 1 thể loại')
         }
-
         // console.log('bookcontroller.updatebook: ',req.body);
         new OK({
             message: 'update Book success',

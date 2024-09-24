@@ -23,7 +23,10 @@ function Items() {
     const [showViewDropdown, setViewShowDropdown] = useState(false);
     const [queryString, setQueryString] = useState();
 
+    const [hasBooks, setHasBooks] = useState(false)
+
     const navigate = useNavigate()
+    
     const fetchBooks = async () => {
 
         
@@ -36,8 +39,9 @@ function Items() {
 
             const finalRes = JSON.parse(messageText)
             const data = finalRes.metadata
-            if(!data && page == 1) setHasBooks(true)
-                
+            
+            if(data) setHasBooks(true)
+            if(!data && page == 1) setHasBooks(false)
             console.log(data.length, page);
             if (data.length == 0) {
                 setHasMore(false)
@@ -177,7 +181,7 @@ function Items() {
                     </>
                 </InfiniteScroll> 
                 {/* {isFirstLoad? <p>Đang tải</p>: (books.length? "" : <p>Không có sách</p>) } */}
-                {books.length ? "" : <p>Không có sách để hiển thị</p>}
+                {hasBooks && (books.length ? <p className = "endtext">Hết</p> : <p className="endtext">Thêm sách để hiển thị</p>)}
                 
             </div>
     
