@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Form, Link, NavLink, Outlet, useActionData } from 'react-router-dom'
 import checkAuth from '../../Auth/checkAuth'
 import ReactPaginate from 'react-paginate'
+import { host } from '../../host'
 
 
 // const useCookieState(){
@@ -29,7 +30,7 @@ function Items() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3055/v1/api/Library/search?page=${page}&option=update-book`, {
+        fetch(`http://${host}:3055/v1/api/Library/search?page=${page}&option=update-book`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -52,7 +53,7 @@ function Items() {
 
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-        fetch(`http://localhost:3055/v1/api/Library/search?page=${event.selected + 1}&option=update-book`, {
+        fetch(`http://${host}:3055/v1/api/Library/search?page=${event.selected + 1}&option=update-book`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -109,7 +110,7 @@ function Items() {
                                         <td><p>{ book.author }</p></td>
                                         <td><p>{ book.description }</p></td>
                                         <td><button onClick={ () => {
-                                            fetch(`http://localhost:3055/v1/api/lib/delete-book?file=${book.filepath}&book_id=${book.book_id}`, {
+                                            fetch(`http://${host}:3055/v1/api/lib/delete-book?file=${book.filepath}&book_id=${book.book_id}`, {
                                                 method: 'delete',
                                                 credentials: 'include'
                                             }).then((res) => {
@@ -252,7 +253,7 @@ export const updateAction = async ({ request }) => {
     payload.append("pdf", formData.get('pdf'))
     payload.append("thumbnail", formData.get('thumbnail'))
 
-    const URL = 'http://localhost:3055/v1/api/lib/update-book'
+    const URL = `http://${host}:3055/v1/api/lib/update-book`
 
     let res = await fetch(URL, {
         method: "PUT",
@@ -295,7 +296,7 @@ export default function UpdateBook() {
 
 
     useEffect(() => {
-        checkAuth('http://localhost:3055/v1/api/lib').then((res) => {
+        checkAuth(`http://${host}:3055/v1/api/lib`).then((res) => {
             if (res == false) {
                 setValid(false)
             } else {

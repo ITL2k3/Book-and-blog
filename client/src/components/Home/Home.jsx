@@ -5,6 +5,7 @@ import checkAuth from '../../Auth/checkAuth';
 import ReactPaginate from 'react-paginate';
 import InfiniteScroll from 'react-infinite-scroll-component'
 import './Home.css';
+import { host } from '../../host';
 
 function Items() {
     const [data, setData] = useState(["default"]);
@@ -34,7 +35,7 @@ function Items() {
     const fetchDataList = async () => {
 
 
-        fetch(`http://localhost:3055/v1/api/Library/search?page=${page}&option=Home&${queryString}`, {
+        fetch(`http://${host}:3055/v1/api/Library/search?page=${page}&option=Home&${queryString}`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -86,7 +87,7 @@ function Items() {
     const fetchDataGrid = async () => {
         console.log('grid still');
         try {
-            const res = await fetch(`http://localhost:3055/v1/api/Library/search?page=${page}&option=Home&${queryString}`, {
+            const res = await fetch(`http://${host}:3055/v1/api/Library/search?page=${page}&option=Home&${queryString}`, {
                 method: 'get',
                 credentials: 'include'
             });
@@ -397,7 +398,7 @@ function Items() {
                                                 <td><p>{ book.author }</p></td>
                                                 <td><p>{ book.description }</p></td>
                                                 <td><button onClick={ () => {
-                                                    fetch(`http://localhost:3055/v1/api/delete-book-from-storage?book_id=${book.book_id}`, {
+                                                    fetch(`http://${host}:3055/v1/api/delete-book-from-storage?book_id=${book.book_id}`, {
                                                         method: 'delete',
                                                         credentials: 'include'
                                                     }).then(async (res) => {

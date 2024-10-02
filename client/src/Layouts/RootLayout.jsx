@@ -10,6 +10,7 @@ import checkAuth from '../Auth/checkAuth'
 
 //import css
 import './RootLayout.css'
+import { host } from '../host'
 
 
 
@@ -30,7 +31,7 @@ export default function RootLayout() {
 
     const handleLogout = () => {
         
-        fetch('http://localhost:3055/v1/api/logout', {
+        fetch(`http://${host}:3055/v1/api/logout`, {
             credentials: 'include'
         }).then(async res => {
             const messageText = await res.text()
@@ -71,7 +72,7 @@ export default function RootLayout() {
     useEffect(() => {
        
         
-        checkAuth('http://localhost:3055/v1/api/')
+        checkAuth(`http://${host}:3055/v1/api/`)
             .then((res) => {
                 setIsLogin(res)
                 setIsFirstLoad(false)
@@ -79,7 +80,7 @@ export default function RootLayout() {
 
 
 
-                fetch('http://localhost:3055/v1/api/get-info', {
+                fetch(`http://${host}:3055/v1/api/get-info`, {
                     method: 'get',
 
                     credentials: 'include'

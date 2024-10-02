@@ -5,12 +5,13 @@ import { useEffect, useState } from "react"
 import checkAuth from "../../Auth/checkAuth"
 
 import './access.css'
+import { host } from "../../host"
 const Login_registerElement = () => {
     const navigate = useNavigate()
     const [isLogin, setIsLogin] = useState(null)
     const [option, setOption] = useState(1)
     useEffect(() => {
-        checkAuth('http://localhost:3055/v1/api/')
+        checkAuth(`http://${host}:3055/v1/api/`)
         .then((res) => {
             setIsLogin(res)
         }).catch((error) => {

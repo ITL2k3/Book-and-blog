@@ -5,6 +5,7 @@ import checkAuth from '../../Auth/checkAuth'
 
 
 import './detail.css'
+import { host } from '../../host'
 
 export default function Detail() {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function Detail() {
 
     useEffect(() => {
 
-        // checkAuth('http://localhost:3055/v1/api/').then((res) => {
+        // checkAuth('http://${host}:3055/v1/api/').then((res) => {
         //     if (res == false) {
         //         setValid(false)
         //     } else {
@@ -42,7 +43,7 @@ export default function Detail() {
         // })
 
 
-        fetch(`http://localhost:3055/v1/api/book-detail/${BookId}`, {
+        fetch(`http://${host}:3055/v1/api/book-detail/${BookId}`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -112,7 +113,7 @@ export default function Detail() {
 
                                 <button onClick={ () => {
                                     // /add-book-to-storage
-                                    fetch(`http://localhost:3055/v1/api/add-book-to-storage`, {
+                                    fetch(`http://${host}:3055/v1/api/add-book-to-storage`, {
                                         method: 'post',
                                         headers: {
                                             'Content-Type': 'application/json',

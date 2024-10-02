@@ -12,7 +12,7 @@ const app = express()
 //init middleware
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: `http://172.18.34.69:5173`,
     credentials: true
 }))
 app.use(cookieParser())

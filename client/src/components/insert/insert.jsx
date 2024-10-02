@@ -2,6 +2,7 @@ import Login from '../Login/Login'
 import { useEffect, useRef, useState } from 'react'
 import { Form, NavLink, Outlet, useActionData } from 'react-router-dom'
 import checkAuth from '../../Auth/checkAuth'
+import { host } from '../../host'
 
 
 export default function Insert() {
@@ -10,7 +11,7 @@ export default function Insert() {
     const [data, setData] = useState(null)
     useEffect(() => {
         
-        checkAuth('http://localhost:3055/v1/api/lib').then((res) => {
+        checkAuth(`http://${host}:3055/v1/api/lib`).then((res) => {
             if (res == false) {
                 setValid(false)
             } else {
@@ -113,7 +114,7 @@ export const insertAction = async ({request}) => {
     payload.append("pdf", formData.get('pdf'))
     payload.append("thumbnail", formData.get('thumbnail'))
 
-    const URL = 'http://localhost:3055/v1/api/lib/post-book'
+    const URL = `http://${host}:3055/v1/api/lib/post-book`
   
     let res = await fetch(URL, {
         method: "POST",

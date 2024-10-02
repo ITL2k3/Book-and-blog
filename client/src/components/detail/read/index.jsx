@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import Login from '../../Login/Login';
 import checkAuth, { checkDevTool } from '../../../Auth/checkAuth';
 import PDFViewer from './pdfviewer';
+import { host } from '../../../host';
 
 
 export default function Read() {
@@ -44,7 +45,7 @@ export default function Read() {
         // const checkdev = setInterval(checkDevTool, 500)
         
 
-        checkAuth('http://localhost:3055/v1/api/').then((res) => {
+        checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
             if (res == false) {
                 setValid(false)
             } else {
@@ -52,7 +53,7 @@ export default function Read() {
             }
         })
 
-        fetch(`http://localhost:3055/v1/api/read-book/${filename}`, {
+        fetch(`http://${host}:3055/v1/api/read-book/${filename}`, {
             method: 'get',
             credentials: 'include'
         }).then((res) => {

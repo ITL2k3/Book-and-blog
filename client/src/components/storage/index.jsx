@@ -10,6 +10,7 @@ import ReactPaginate from 'react-paginate'
 
 // }
 import './storage.css'
+import { host } from '../../host'
 
 
 
@@ -30,7 +31,7 @@ function Items() {
     const fetchBooks = async () => {
 
         
-        fetch(`http://localhost:3055/v1/api/get-books-from-storage?page=${page}`, {
+        fetch(`http://${host}:3055/v1/api/get-books-from-storage?page=${page}`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -146,7 +147,7 @@ function Items() {
                                                             navigate(`/read/${book.title}_${book.book_id}_${filename}`)
                                                         } }>Đọc sách</button>
                                                         <button onClick={ () => {
-                                                        fetch(`http://localhost:3055/v1/api/delete-book-from-storage?book_id=${book.book_id}`, {
+                                                        fetch(`http://${host}:3055/v1/api/delete-book-from-storage?book_id=${book.book_id}`, {
                                                             method: 'delete',
                                                             credentials: 'include'
                                                         }).then(async (res) => {
@@ -211,7 +212,7 @@ function Items() {
                                         <td><p>{ book.author }</p></td>
                                         <td><p>{ book.description }</p></td>
                                         <td><button onClick={ () => {
-                                            fetch(`http://localhost:3055/v1/api/delete-book-from-storage?book_id=${book.book_id}`, {
+                                            fetch(`http://${host}:3055/v1/api/delete-book-from-storage?book_id=${book.book_id}`, {
                                                 method: 'delete',
                                                 credentials: 'include'
                                             }).then(async (res) => {
@@ -252,7 +253,7 @@ export default function Storage() {
 
 
     useEffect(() => {
-        checkAuth('http://localhost:3055/v1/api/').then((res) => {
+        checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
             if (res == false) {
                 setValid(false)
             } else {

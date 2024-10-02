@@ -1,4 +1,5 @@
 import { Form, redirect, useActionData } from "react-router-dom"
+import { host } from "../../host";
 
 
 
@@ -54,9 +55,10 @@ export default function Login() {
 
 }
 
+
 export const loginAction = async (submission) => {
 
-    const loginURL = 'http://localhost:3055/v1/api/login'
+    const loginURL = `http://${host}:3055/v1/api/login`
     console.log(submission)
     const res = await fetch(loginURL, {
         method: "POST",

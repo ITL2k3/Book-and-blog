@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 import WebViewer from '@pdftron/pdfjs-express';
+import { host } from '../../../host';
 const content = document.getElementsByClassName('content')
 //class: content: document
+
 const PDFViewer = ({ buffer, bookId }) => {
   const viewerRef = useRef(null);
 
@@ -33,7 +35,7 @@ const PDFViewer = ({ buffer, bookId }) => {
       docViewer.on('documentLoaded', async () => {
         try {
           // Fetch annotations từ server ngay sau khi tài liệu được load
-          const response = await fetch(`http://localhost:3055/v1/api/load-anotation?bookId=${bookId}`, {
+          const response = await fetch(`http://${host}:3055/v1/api/load-anotation?bookId=${bookId}`, {
             method: 'get',
             credentials: 'include'
           });
@@ -85,7 +87,7 @@ const PDFViewer = ({ buffer, bookId }) => {
 
            
             const xfdfString = await annotManager.exportAnnotations();
-            fetch('http://localhost:3055/v1/api/save-anotation', {
+            fetch(`http://${host}:3055/v1/api/save-anotation`, {
               method: 'post',
               headers: {
                 'Content-Type': 'application/json',
