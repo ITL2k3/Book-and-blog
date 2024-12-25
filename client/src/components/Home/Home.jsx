@@ -85,7 +85,6 @@ function Items() {
 
 
     const fetchDataGrid = async () => {
-        console.log('grid still');
         try {
             const res = await fetch(`http://${host}:3055/v1/api/Library/search?page=${page}&option=Home&${queryString}`, {
                 method: 'get',
