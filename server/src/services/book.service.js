@@ -74,10 +74,10 @@ class BookService {
 
 
     static insertBook = async(payload) => {
-
+        
         //insert book and get bookId 
         const bookId = await bookHelper.insertIntoBookTableValues(payload)
-
+        console.log('err');
         //take key of not null value
         const categories = Object.entries(payload.categories).filter(([key, value]) => value != 'null')
             .map(([key]) => key)
@@ -85,6 +85,7 @@ class BookService {
         categories.forEach(async(category) => {
             await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: bookId.Id })
         })
+        console.log('serrvice is');
         console.log(categories);
         //not throw error <=> add success
 

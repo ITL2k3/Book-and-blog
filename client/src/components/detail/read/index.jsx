@@ -42,7 +42,7 @@ export default function Read() {
           window.addEventListener('keydown', handleKeyDown);
       
           
-        // const checkdev = setInterval(checkDevTool, 500)
+        const checkdev = setInterval(checkDevTool, 500)
         
 
         checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
@@ -66,7 +66,7 @@ export default function Read() {
     
         // Dọn dẹp sự kiện khi component unmount
         return () => {
-            // clearInterval(checkdev)
+            clearInterval(checkdev)
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('beforeunload', handleBeforeUnload);
 

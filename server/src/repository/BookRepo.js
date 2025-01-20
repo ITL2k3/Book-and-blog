@@ -13,16 +13,26 @@ class BookRepo extends BaseRepo {
     insertIntoBookTableValues = async(payload) => {
         //convert DTO -> Domain Model
         let newBook = new BookEntity(payload)
-
+       
         const newBookQueryString = newBook.getQueryString()
-
-        const [results, fields] = await connection.query(
-            `INSERT INTO ${table.BOOK} VALUES ${newBookQueryString};
-            SELECT LAST_INSERT_ID() as Id;
-            `
-        )
-        const [bookId] = results[1]
-        return bookId
+        
+        try{
+            const [results, fields] = await connection.query(
+                `INSERT INTO ${table.BOOK} VALUES ${newBookQueryString};
+                SELECT LAST_INSERT_ID() as Id;
+                `
+            )
+          
+        
+            const [bookId] = results[1]
+            
+            return bookId
+           
+        }catch(err){
+            console.log(err);
+        }
+        
+        
     }
 
     updateIntoBookTableValues = async(payload) => {

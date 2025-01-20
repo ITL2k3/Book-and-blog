@@ -107,7 +107,6 @@ class BookController {
                 isValidBook["error"].message
             )
         }
-        
         new CREATED({
             message: 'insert Book success',
             metadata: await BookService.insertBook({
@@ -128,7 +127,7 @@ class BookController {
             })
 
         }).send(res)
-
+        console.log('hello');
     }
 
     updateBook = async (req, res, next) => {
