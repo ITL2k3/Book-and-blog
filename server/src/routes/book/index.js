@@ -9,11 +9,13 @@ const bookRouter = Router()
 
 
 
-// check auth
+
 bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
 bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
+bookRouter.get('/search-doc', asyncHandler(BookController.searchBooks))
 
 
+// check auth
 
 bookRouter.use('/', asyncHandler(authentication))
 //passed
@@ -36,6 +38,8 @@ bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
 
 //check permission
 bookRouter.use('/lib', checkPermission(permission["LIBRARIAN"]))
+
+//search 
 
 
 bookRouter.get('/lib', async (req, res) => {

@@ -1,10 +1,27 @@
 import { BadRequestError } from "../common/error.response.js"
 import table from "../configs/config.table.js"
+import client from "../dbs/init.elastic.js"
 import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
 const bookHelper = new BookRepo()
 class BookService {
+
+    static searchBooks = async(query) => {
+       
+        const result = await client.search({
+            index: 'docs',
+            query: {
+                multi_match: {
+                    query: query,
+                    fields: ["title", "author"]
+                }
+            }
+        })
+        console.log(result.hits.hits);
+        return result.hits.hits
+
+    }
 
     static countBooks = async(Filter) => {
         if (Filter) {
@@ -74,19 +91,38 @@ class BookService {
 
 
     static insertBook = async(payload) => {
-        
+        console.log(payload);
         //insert book and get bookId 
         const bookId = await bookHelper.insertIntoBookTableValues(payload)
-        console.log('err');
+        console.log('first success');
         //take key of not null value
         const categories = Object.entries(payload.categories).filter(([key, value]) => value != 'null')
             .map(([key]) => key)
-
+        
         categories.forEach(async(category) => {
             await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: bookId.Id })
         })
-        console.log('serrvice is');
-        console.log(categories);
+
+        
+        // add to elastic
+       
+        try{
+            const result = await client.index({
+                index: "docs",
+                id: `${bookId.Id}`,
+                document: {
+                    title: payload.title,
+                    author: payload.author,
+                    thumbnail: payload.thumbnail,
+                    filepath: payload.filepath,
+                    
+                }
+            })
+        }catch(err){
+            console.log(err);
+        }
+        
+        
         //not throw error <=> add success
 
         return {
