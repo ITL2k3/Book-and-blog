@@ -1,24 +1,30 @@
 class BookEntity {
     book_id
+    user_id
     title
     author
+    isPublic
+    num_of_views
     description
     thumbnail
     filepath
 
-    constructor({ bookId, title, author, description, thumbnail, filepath }) {
+
+    constructor({ bookId, userId, title, author, isPublic, num_of_views, description, thumbnail, filepath }) {
         this.book_id = bookId ? bookId : 'default'
+        this.user_id = userId ? userId : null
         this.title = title ? title : null
         this.author = author ? author : null
+        this.isPublic = isPublic ? isPublic : false
+        this.num_of_views = num_of_views ? num_of_views : 0
         this.description = description ? description : null
         this.thumbnail = thumbnail ? thumbnail : null
         this.filepath = filepath ? filepath : null
     }
 
     getQueryString() {
-        return `(${this.book_id},'${this.title}', '${this.author}','${this.description}'
-        ,'${this.thumbnail}', '${this.filepath}'
-        )`
+        return `(${this.book_id}, ${this.user_id}, '${this.title}', '${this.author}', ${this.isPublic}, ${this.num_of_views}, '${this.description}'
+        ,'${this.thumbnail}', '${this.filepath}', default, default)`
     }
 
     getUpdateQueryString() {

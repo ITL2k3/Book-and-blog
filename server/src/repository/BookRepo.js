@@ -13,26 +13,27 @@ class BookRepo extends BaseRepo {
     insertIntoBookTableValues = async(payload) => {
         //convert DTO -> Domain Model
         let newBook = new BookEntity(payload)
-       
+
         const newBookQueryString = newBook.getQueryString()
-        
-        try{
+
+        try {
             const [results, fields] = await connection.query(
                 `INSERT INTO ${table.BOOK} VALUES ${newBookQueryString};
                 SELECT LAST_INSERT_ID() as Id;
+                
                 `
             )
-          
-        
+
+
             const [bookId] = results[1]
-            
+
             return bookId
-           
-        }catch(err){
+
+        } catch (err) {
             console.log(err);
         }
-        
-        
+
+
     }
 
     updateIntoBookTableValues = async(payload) => {
@@ -58,16 +59,16 @@ class BookRepo extends BaseRepo {
     insertIntoBookCategoryTableValues = async(payload) => {
         let newBookCategory = new Book_CategoryEntity(payload)
         let queryString = newBookCategory.getQueryString()
-        try{
+        try {
             const [results, fields] = await connection.query(
                 `INSERT INTO ${table.BOOK_CATEGORY} VALUES ${queryString};
                 `
             )
             return results
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
-        
+
 
     }
 
@@ -80,16 +81,16 @@ class BookRepo extends BaseRepo {
         return results
     }
     deleteBookCategory = async(bookId) => {
-        
-       
-            const [results, fields] = await connection.query(
-                `DELETE FROM ${table.BOOK_CATEGORY}
+
+
+        const [results, fields] = await connection.query(
+            `DELETE FROM ${table.BOOK_CATEGORY}
                 WHERE book_id = ${bookId};
                 `
-            )
-            return results
-        
-        
+        )
+        return results
+
+
     }
 
 
@@ -150,7 +151,7 @@ class BookRepo extends BaseRepo {
     }
 
     getOneBookById = async(field, bookId) => {
-        
+
         const [results, fields] = await connection.query(
             `SELECT ${field}
             FROM ${table.BOOK}

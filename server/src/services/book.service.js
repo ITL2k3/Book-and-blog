@@ -89,7 +89,7 @@ class BookService {
 
 
 
-
+    //for Librarian
     static insertBook = async(payload) => {
         console.log(payload);
         //insert book and get bookId 

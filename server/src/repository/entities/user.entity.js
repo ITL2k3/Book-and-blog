@@ -22,7 +22,7 @@ class UserEntity  {
     }
     getQueryString(){
         return `(${this._userId}, '${this._name}', '${this._email}', '${this._password}',
-        ${this._role}, ${this._createAt},${this._lastUpdate})`
+        ${this._role},false, ${this._createAt},${this._lastUpdate})`
     }
 }
 

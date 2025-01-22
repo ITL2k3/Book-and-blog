@@ -100,6 +100,8 @@ class BookController {
 
     }
 
+    
+
 
 
 
@@ -107,7 +109,7 @@ class BookController {
 
 
     insertBook = async(req, res, next) => {
-
+        console.log(req.body);
         const newBook = new BookDTO(req.body)
         const isValidBook = newBook.validateBook()
         if (isValidBook && isValidBook["error"]) {
@@ -119,6 +121,7 @@ class BookController {
             message: 'insert Book success',
             metadata: await BookService.insertBook({
                 ...isValidBook.value,
+                userId: req.user.userId,
                 categories: {
                     kns: req.body.kns,
                     kt: req.body.kt,
@@ -128,6 +131,7 @@ class BookController {
                     dc: req.body.dc,
                     gt: req.body.gt
                 },
+                isPublic: req.body.isPublic,
                 thumbnail: req.body.thumbnail,
                 description: req.body.description,
                 filepath: req.filePdfPath,

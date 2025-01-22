@@ -22,7 +22,8 @@ bookRouter.use('/', asyncHandler(authentication))
 bookRouter.get('/', async (req, res) => {
     res.send({
         statusCode: 200,
-        statusText: 'authen success'
+        statusText: 'authen success',
+        userId: req.user.userId
     })
 })
 
@@ -33,6 +34,24 @@ bookRouter.get('/', async (req, res) => {
 bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
 bookRouter.get('/load-anotation', asyncHandler(BookController.loadAnotation))
 bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
+
+
+//manage doc for user
+
+
+bookRouter.post('/user/post-book',upload.fields([{
+    name: 'pdf', maxCount: 1}, 
+    {
+    name: 'img', maxCount: 1
+}]),asyncHandler(BookController.insertBook))
+
+bookRouter.put('/user/update-book',upload.fields([{
+    name: 'pdf', maxCount: 1}, 
+    {
+    name: 'img', maxCount: 1
+}]),asyncHandler(BookController.updateBook))
+
+bookRouter.delete('/user/delete-book', asyncHandler(BookController.deleteBook))
 
 
 
@@ -48,6 +67,8 @@ bookRouter.get('/lib', async (req, res) => {
         statusText: 'authen success'
     })
 })
+//
+
 bookRouter.post('/lib/post-book',upload.fields([{
     name: 'pdf', maxCount: 1}, 
     {
@@ -61,6 +82,9 @@ bookRouter.put('/lib/update-book',upload.fields([{
 }]),asyncHandler(BookController.updateBook))
 
 bookRouter.delete('/lib/delete-book', asyncHandler(BookController.deleteBook))
+
+
+
 
 
 export default bookRouter

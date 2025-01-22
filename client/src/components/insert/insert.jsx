@@ -3,18 +3,21 @@ import { useEffect, useRef, useState } from 'react'
 import { Form, NavLink, Outlet, useActionData } from 'react-router-dom'
 import checkAuth from '../../Auth/checkAuth'
 import { host } from '../../host'
-
+import Cookies from 'js-cookie';
+import './insert.css';
 
 export default function Insert() {
     const actionData = useActionData()
     const [isValid, setValid] = useState(null)
     const [data, setData] = useState(null)
+    
     useEffect(() => {
         
-        checkAuth(`http://${host}:3055/v1/api/lib`).then((res) => {
+        checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
             if (res == false) {
-                setValid(false)
+                window.location.href="/access"
             } else {
+             
                 setValid(true)
                 setData(res)
             }
@@ -56,7 +59,7 @@ export default function Insert() {
                             <label for='category07'>Giáo trình</label> <br />
                         </div>
                         
-                        <br />
+                      
                         <label>
                             <span>Mô tả</span>
                             <input type='text' name='description' />
@@ -70,6 +73,14 @@ export default function Insert() {
                         <label>
                             <span>File sách: </span>
                             <input type='file' accept=".pdf" name='pdf' required />
+                        </label>
+                        <br />
+                        <label>
+                            <span>bạn muốn tài liệu của bạn: </span><br />
+                            <input type='radio' name='isPublic' id= 'public' value="true" />
+                            <label for='public'>Công khai</label> <br />
+                            <input type='radio' name='isPublic' id= 'nopublic' value="false" />
+                            <label for='nopublic'>Riêng tư</label> <br />
                         </label>
                         <br />
 
@@ -96,9 +107,10 @@ export default function Insert() {
 export const insertAction = async ({request}) => {
     const formData = await request.formData()
   
-
+    
     //append formdata
     const payload = new FormData()
+
     payload.append("title",formData.get('title') )
     payload.append("author", formData.get('author'))
     payload.append("kns", formData.get('categories01'))
@@ -110,11 +122,16 @@ export const insertAction = async ({request}) => {
     payload.append("gt", formData.get('categories07'))
 
     payload.append("description", formData.get('description'))
-
+    payload.append("isPublic", formData.get('isPublic'))
     payload.append("pdf", formData.get('pdf'))
-    payload.append("thumbnail", formData.get('thumbnail'))
+    if(!formData.get('thumbnail')){
+        payload.append("thumbnail","https://play-lh.googleusercontent.com/1EgLFchHT9oQb3KME8rzIab7LrOIBfC14DSfcK_Uzo4vuK-WYFs9dhI-1kDI7J0ZNTDr")
+    }else{
+        payload.append("thumbnail", formData.get('thumbnail'))
+    }
+   
 
-    const URL = `http://${host}:3055/v1/api/lib/post-book`
+    const URL = `http://${host}:3055/v1/api/user/post-book`
   
     let res = await fetch(URL, {
         method: "POST",
@@ -128,9 +145,9 @@ export const insertAction = async ({request}) => {
 
     console.log(data);
     if (data.statusCode == 201) {
-        setTimeout(() => {
-            window.location.reload()
-        }, 2000)
+        // setTimeout(() => {
+        //     window.location.reload()
+        // }, 2000)
         return {
             success: "Thêm sách thành công"
         }
