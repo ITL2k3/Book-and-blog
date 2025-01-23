@@ -18,6 +18,8 @@ import SearchBar from './searchbar'
 export default function RootLayout() {
     const location = useLocation()
     const isStoragePage = location.pathname === '/storage';
+    const isInsertPage = location.pathname === '/insert-book';
+    const isUpdatePage = location.pathname === '/update-book'
     const isReadPage = location.pathname.substring(0, 6) === '/read/'
     const isDetailPage = location.pathname.substring(0, 8) === '/detail/'
     const isAccessPage = location.pathname === '/access';
@@ -110,7 +112,10 @@ export default function RootLayout() {
                 <NavLink to='/' className="logo">LibOnl</NavLink>
                 <SearchBar/>
                 <div className="left-of-NavBar">
-                    { isLogin && <NavLink to='/storage' className={ isStoragePage ? 'active' : '' } id="storageicon"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32"><path fill="currentColor" d="m25.707 17.293l-5-5A1 1 0 0 0 20 12h-6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V18a1 1 0 0 0-.293-.707M23.586 18H20v-3.586ZM14 28V14h4v4a2 2 0 0 0 2 2h4v8Z" /><path fill="currentColor" d="M8 27H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.586A2 2 0 0 1 13 3.586L16.414 7H28a2 2 0 0 1 2 2v8h-2V9H15.586l-4-4H4v20h4Z" /></svg></NavLink> }
+                { isLogin && <NavLink to='/insert-book' className={ isInsertPage ? 'active' : '' } id="storageicon"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M23 18h-3v-3h-2v3h-3v2h3v3h2v-3h3M6 2a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h7.81c-.36-.62-.61-1.3-.73-2H6V4h7v5h5v4.08c.33-.05.67-.08 1-.08c.34 0 .67.03 1 .08V8l-6-6M8 12v2h8v-2m-8 4v2h5v-2Z"/></svg></NavLink> }
+
+                { isLogin && <NavLink to='/update-book' className={ isUpdatePage ? 'active' : '' } id="storageicon"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 2c-.53 0-1.04.21-1.41.59C4.21 2.96 4 3.47 4 4v16c0 .53.21 1.04.59 1.41c.37.38.88.59 1.41.59h7c-.37-.6-.66-1.28-.83-2H6V4h7v5h5v3h.5c.5 0 1 .06 1.5.17V8l-6-6zm6 16c.07-.7.24-1.38.5-2H8v2zm1.81-4c.62-.64 1.36-1.15 2.19-1.5V12H8v2zm4.19.5c1.11 0 2.11.45 2.83 1.17L22 14.5v4h-4l1.77-1.77A2.5 2.5 0 1 0 20 20h1.71A3.99 3.99 0 0 1 18 22.5c-2.21 0-4-1.79-4-4s1.79-4 4-4"/></svg></NavLink> }
+                    { isLogin && <NavLink to='/storage' className={ isStoragePage ? 'active' : '' } id="storageicon"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4s8-1.79 8-4s-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg></NavLink> }
                     { isLogin && (<div className="profile-container" onClick={ () => {
                         setOpenProfile(!openProfile)
                     } }><img className="profile" src="https://th.bing.com/th/id/OIP.ROcugbff3Ni9CaUl7PnW-AHaHa?rs=1&pid=ImgDetMain" /></div>) }

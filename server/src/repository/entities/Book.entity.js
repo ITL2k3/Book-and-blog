@@ -31,11 +31,15 @@ class BookEntity {
         let result = `  `
         Object.entries(this).map(([key, value]) => {
             if (key != 'book_id') {
-                if (value != null)
+                if(key == 'isPublic'){
+                    result += `${key} = ${value}, `
+                }else if (value != null){
                     result += `${key} = '${value}', `
+                }
+                    
             }
         })
-
+        
 
 
 

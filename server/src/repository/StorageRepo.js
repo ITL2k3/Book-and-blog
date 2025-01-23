@@ -28,7 +28,7 @@ class StorageRepo extends BaseRepo {
         const [result, fields] = await connection.query(`
             SELECT book_id, title, author, thumbnail,filepath, description FROM
             ${table.STORAGE} join ${table.BOOK} using (book_id)
-            WHERE user_id = ${userId}
+            WHERE storage.user_id = ${userId}
             LIMIT ${LIMIT}
             OFFSET ${OFFSET}
             

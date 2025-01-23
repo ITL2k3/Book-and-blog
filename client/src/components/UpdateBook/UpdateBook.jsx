@@ -25,12 +25,12 @@ function Items() {
     // following the API or data you're working with.
     const [itemOffset, setItemOffset] = useState(0);
     const [booksLength, setbooksLength] = useState(null)
-    let itemsPerPage = 5;
+    let itemsPerPage = 8;
 
 
 
     useEffect(() => {
-        fetch(`http://${host}:3055/v1/api/Library/search?page=${page}&option=update-book`, {
+        fetch(`http://${host}:3055/v1/api/user/get-book?page=${page}`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -53,7 +53,7 @@ function Items() {
 
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-        fetch(`http://${host}:3055/v1/api/Library/search?page=${event.selected + 1}&option=update-book`, {
+        fetch(`http://${host}:3055/v1/api/user/get-book?page=${event.selected + 1}`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
@@ -90,7 +90,7 @@ function Items() {
     if (data != null) {
         return (
             <>
-                <div className="library-container">
+                <div className="Library-container">
                     <table>
                         <thead>
                             <tr>
@@ -103,18 +103,20 @@ function Items() {
                         </thead>
                         <tbody>
                             { data.map((book) => {
+                                
                                 return (
                                     <tr key={ book.book_id }>
-                                        <td><img src={ book.thumbnail } alt="" width="200" height="200" /></td>
+                                        <td><img src={ book.thumbnail } alt="" width="100" height="100" /></td>
                                         <td><p>{ book.title }</p></td>
                                         <td><p>{ book.author }</p></td>
                                         <td><p>{ book.description }</p></td>
                                         <td><button onClick={ () => {
-                                            fetch(`http://${host}:3055/v1/api/lib/delete-book?file=${book.filepath}&book_id=${book.book_id}`, {
+                                            fetch(`http://${host}:3055/v1/api/user/delete-book?file=${book.filepath}&book_id=${book.book_id}`, {
                                                 method: 'delete',
                                                 credentials: 'include'
                                             }).then((res) => {
-                                                window.location.reload()
+                                                console.log(res);
+                                                // window.location.reload()
                                             })
                                         } }>Xóa</button>
                                             <button onClick={ () => {
@@ -218,6 +220,22 @@ function Items() {
                             <span>File sách: </span>
                             <input type='file' accept=".pdf" name='pdf' />
                         </label>
+                        <label>
+                            <span>bạn muốn tài liệu của bạn: </span><br />
+                            {dataForm.isPublic ? <>
+                                <input type='radio' name='isPublic' id= 'public' value="true" defaultChecked />
+                            <label for='public'>Công khai</label> <br />
+                            <input type='radio' name='isPublic' id= 'nopublic' value="false"  />
+                            <label for='nopublic'>Riêng tư</label> <br />
+                            </> : <>
+                            <input type='radio' name='isPublic' id= 'public' value="true" />
+                            <label for='public'>Công khai</label> <br />
+                            <input type='radio' name='isPublic' id= 'nopublic' value="false" defaultChecked/>
+                            <label for='nopublic'>Riêng tư</label> <br />
+                            </>}
+                             
+                            
+                        </label>
                         <br />
                         <button>Cập Nhật</button>
                         { actionData && actionData.error && <p>{ actionData.error }</p> }
@@ -249,11 +267,15 @@ export const updateAction = async ({ request }) => {
     payload.append("gt", formData.get('categories07'))
 
     payload.append("description", formData.get('description'))
-
+    payload.append("isPublic", formData.get('isPublic'))
     payload.append("pdf", formData.get('pdf'))
-    payload.append("thumbnail", formData.get('thumbnail'))
-
-    const URL = `http://${host}:3055/v1/api/lib/update-book`
+    if(!formData.get('thumbnail')){
+        payload.append("thumbnail","https://play-lh.googleusercontent.com/1EgLFchHT9oQb3KME8rzIab7LrOIBfC14DSfcK_Uzo4vuK-WYFs9dhI-1kDI7J0ZNTDr")
+    }else{
+        payload.append("thumbnail", formData.get('thumbnail'))
+    }
+   
+    const URL = `http://${host}:3055/v1/api/user/update-book`
 
     let res = await fetch(URL, {
         method: "PUT",
@@ -296,7 +318,7 @@ export default function UpdateBook() {
 
 
     useEffect(() => {
-        checkAuth(`http://${host}:3055/v1/api/lib`).then((res) => {
+        checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
             if (res == false) {
                 setValid(false)
             } else {
@@ -315,7 +337,7 @@ export default function UpdateBook() {
         <p>Loading...</p>
 
     } else {
-        if (isValid) {
+       
 
 
 
@@ -327,9 +349,6 @@ export default function UpdateBook() {
             )
 
 
-        } else {
-            // return <p>Loading...</p>
-            return <p>Forbidden !!</p>
         }
-    }
+    
 }

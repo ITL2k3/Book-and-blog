@@ -53,7 +53,7 @@ export default function Read() {
             }
         })
 
-        fetch(`http://${host}:3055/v1/api/read-book/${filename}`, {
+        fetch(`http://${host}:3055/v1/api/read-book/${filename}_${bookId}`, {
             method: 'get',
             credentials: 'include'
         }).then((res) => {

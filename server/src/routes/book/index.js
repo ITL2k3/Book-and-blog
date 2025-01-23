@@ -38,7 +38,7 @@ bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
 
 //manage doc for user
 
-
+bookRouter.get('/user/get-book', asyncHandler(BookController.getUserBook))
 bookRouter.post('/user/post-book',upload.fields([{
     name: 'pdf', maxCount: 1}, 
     {

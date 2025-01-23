@@ -212,7 +212,18 @@ main {
 }
 .search_input{
     border-radius: 15px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
+
+.search_input:hover {
+    transform: translateY(-0.5px); /* Di chuyển lên trên 2px */
+    box-shadow: 0 0px 8px rgba(0, 123, 255, 0.4);
+    border-color: #00a9a1; /* Đổi màu border */
+  }
+ 
+
+
+
 /* Container của ul */
 .search_item_container {
 

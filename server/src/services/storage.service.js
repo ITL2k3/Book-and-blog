@@ -10,9 +10,11 @@ class StorageService {
         const LIMIT = 15;
         const OFFSET = (page - 1) * LIMIT
         const books = await storageHelper.getBooksFromStorage({userId, LIMIT, OFFSET})
+       
         const bookIds = books.map((book) => {
             return book.book_id
         })
+       
         if(books.length != 0){
             
             const categories = await storageHelper.getCategoriesFromBooks(bookIds)

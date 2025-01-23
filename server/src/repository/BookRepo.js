@@ -10,6 +10,22 @@ import UserEntity from "./entities/user.entity.js";
 
 class BookRepo extends BaseRepo {
 
+    upNumViewBook = async(bookId) => {
+        
+      
+            const [results, fields] = await connection.query(
+                `UPDATE ${table.BOOK} SET
+            num_of_views = num_of_views + 1
+            WHERE book_id = ${bookId}
+            `
+            )
+
+
+            return 1
+
+       
+    }
+
     insertIntoBookTableValues = async(payload) => {
         //convert DTO -> Domain Model
         let newBook = new BookEntity(payload)
@@ -73,27 +89,59 @@ class BookRepo extends BaseRepo {
     }
 
     deleteBook = async(bookId) => {
-        const [results, fields] = await connection.query(
-            `DELETE FROM ${table.BOOK}
-            WHERE book_id = ${bookId};
-            `
-        )
-        return results
+        try{
+            const [results, fields] = await connection.query(
+                `DELETE FROM ${table.BOOK}
+                WHERE book_id = ${bookId};
+                `
+            )
+            return results
+        }catch(err){
+            console.log(err);
+        }
+        
+    }
+
+    deleteBookStorage = async(bookId) => {
+        try{
+            const [results, fields] = await connection.query(
+                `DELETE FROM ${table.STORAGE}
+                    WHERE book_id = ${bookId};
+                    `
+            )
+            return results
+        }catch(err){
+            console.log(err);
+            throw new InternalServerError("errror in DB")
+        }
     }
     deleteBookCategory = async(bookId) => {
 
-
-        const [results, fields] = await connection.query(
-            `DELETE FROM ${table.BOOK_CATEGORY}
-                WHERE book_id = ${bookId};
-                `
-        )
-        return results
+        try{
+            const [results, fields] = await connection.query(
+                `DELETE FROM ${table.BOOK_CATEGORY}
+                    WHERE book_id = ${bookId};
+                    `
+            )
+            return results
+        }catch(err){
+            console.log(err);
+            throw new InternalServerError("errror in DB")
+        }
+        
 
 
     }
 
+    countBookWithUserId = async(userId) => {
+        const [result, fields] = await connection.query(`
+            SELECT COUNT(*) AS SUM
+            FROM Book 
+            WHERE user_id = ${userId}
+        `)
 
+        return result
+    }
     countEntitiesWithFilter = async(category) => {
 
         const [result, fields] = await connection.query(`
@@ -114,13 +162,29 @@ class BookRepo extends BaseRepo {
     getBooks = async(field, LIMIT, OFFSET) => {
         const [results, fields] = await connection.query(
             `SELECT ${field} FROM ${table.BOOK}
+             WHERE isPublic = true
              LIMIT ${LIMIT}
              OFFSET ${OFFSET} 
             `
         )
         return results
     }
+    countBooksWithUserId = async(userId) => {
 
+    }
+    //get only user's book
+    getUserBooksWithFilter = async( LIMIT, OFFSET, userId) => {
+        console.log('LOL');
+        const [results, fields] = await connection.query(
+            `SELECT * 
+            FROM book
+            WHERE user_id = ${userId}
+            LIMIT ${LIMIT}
+            OFFSET ${OFFSET};
+            `)
+        return results
+    }
+    //get All book
     getBooksWithFilter = async(field, category, LIMIT, OFFSET) => {
         const [results, fields] = await connection.query(
             `SELECT ${field} 
@@ -131,7 +195,7 @@ class BookRepo extends BaseRepo {
                 WHERE category_id IN (?)
                 GROUP BY book_id
                 HAVING COUNT(DISTINCT category_id) = ?
-            )
+            ) AND isPublic = true
             LIMIT ${LIMIT}
             OFFSET ${OFFSET};
             `, [category, category.length])

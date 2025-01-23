@@ -1,28 +1,47 @@
 import { BadRequestError } from "../common/error.response.js"
 import table from "../configs/config.table.js"
 import client from "../dbs/init.elastic.js"
+import { filterNonNullProperties } from "../Helpers/asynchandler.js"
 import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
 const bookHelper = new BookRepo()
 class BookService {
+    static upViewsBook = async(bookId) => {
 
+        await bookHelper.upNumViewBook(bookId);
+        return true
+    }
     static searchBooks = async(query) => {
-       
+
         const result = await client.search({
             index: 'docs',
             query: {
-                multi_match: {
-                    query: query,
-                    fields: ["title", "author"]
+                bool: {
+                    must: {
+                        multi_match: {
+                            query: query,
+                            fields: ["title", "author"]
+                        }
+                    },
+                    filter: {
+                        term: {
+                            isPublic: true // Lọc các tài liệu có isPublic là true
+                        }
+                    }
                 }
             }
-        })
+        });
+
         console.log(result.hits.hits);
         return result.hits.hits
 
     }
-
+    static countBooksWithUserId = async(userId) => {
+        const [results] = await bookHelper.countBookWithUserId(userId)
+        console.log('book is', results);
+        return results
+    }
     static countBooks = async(Filter) => {
         if (Filter) {
             if (typeof Filter == 'string') {
@@ -33,6 +52,21 @@ class BookService {
         }
         const [results] = await bookHelper.countAllEntities(table.BOOK)
         return results
+    }
+    static getUserBooks = async(page, userId) => {
+
+        const LIMIT = 8;
+        const OFFSET = (page - 1) * LIMIT
+
+
+        let books = await bookHelper.getUserBooksWithFilter(LIMIT, OFFSET, userId)
+
+
+
+
+
+
+        return books
     }
 
     static getBooks = async(page, option, Filter) => {
@@ -98,15 +132,15 @@ class BookService {
         //take key of not null value
         const categories = Object.entries(payload.categories).filter(([key, value]) => value != 'null')
             .map(([key]) => key)
-        
+
         categories.forEach(async(category) => {
             await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: bookId.Id })
         })
 
-        
+
         // add to elastic
-       
-        try{
+
+        try {
             const result = await client.index({
                 index: "docs",
                 id: `${bookId.Id}`,
@@ -115,14 +149,15 @@ class BookService {
                     author: payload.author,
                     thumbnail: payload.thumbnail,
                     filepath: payload.filepath,
-                    
+                    isPublic: payload.isPublic
+
                 }
             })
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
-        
-        
+
+
         //not throw error <=> add success
 
         return {
@@ -153,20 +188,20 @@ class BookService {
         if (payload.filepath) {
             //delete old file
             const [linkOldFilePath] = await bookHelper.getOneBookById('filepath', payload.bookId)
-            try{
+            try {
                 fs.unlink(`uploads/files_pdf/${getFilepathFromString(linkOldFilePath.filepath)}`)
-                .catch((err) => {
-                    console.log('file Not Found');
-                })
-            }catch(err){
+                    .catch((err) => {
+                        console.log('file Not Found');
+                    })
+            } catch (err) {
                 console.log(err);
             }
-            
+
 
         }
 
-        //update book record
-       
+        //update book record mysql
+
         await bookHelper.updateIntoBookTableValues(payload)
             //update categories record
         await bookHelper.deleteBookCategory(payload.bookId)
@@ -174,10 +209,16 @@ class BookService {
             .map(([key]) => key)
 
         categories.forEach(async(category) => {
-                await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: payload.bookId })
-            })
-            //not throw error <=> add success
+            await bookHelper.insertIntoBookCategoryTableValues({ categoryId: category, bookId: payload.bookId })
+        })
 
+        //update book record elastic
+        const updateDoc = filterNonNullProperties(payload, ['title', 'author', 'isPublic', 'filepath', 'thumbnail'])
+        await client.update({
+            index: 'docs',
+            id: payload.bookId,
+            doc: updateDoc
+        })
         return {
             payload
         }
@@ -193,15 +234,26 @@ class BookService {
 
 
     static deleteBook = async(payload) => {
+
         const { book_id, file } = payload
         fs.unlink(`uploads/files_pdf/${getFilepathFromString(file)}`)
             .catch((err) => {
                 console.log('file Not Found');
             })
-            //delete record
+            //delete record in mysql
+        await bookHelper.deleteBookStorage(book_id)
+
         await bookHelper.deleteBookCategory(book_id)
+
         await bookHelper.deleteBook(book_id)
-            //delete file
+            //delete record in elastic
+        await client.delete({
+            index: 'docs',
+            id: book_id
+
+        })
+
+
         return book_id
     }
 

@@ -16,6 +16,28 @@ class BookController {
             metadata: await BookService.searchBooks(query)
         }).send(res)
     }
+    getUserBook = async(req, res, next) => {
+        
+        const page = req.query.page
+        
+        const results = await BookService.getUserBooks(page, req.user.userId)
+
+        let sumOfBooks
+
+        const { SUM } = await BookService.countBooksWithUserId(req.user.userId)
+        sumOfBooks = SUM
+
+      
+        new OK({
+            message: 'get success',
+            metadata: {
+                results: results,
+                sumOfBooks: sumOfBooks,
+
+            }
+        }).send(res)
+
+    }
 
     getBooks = async(req, res, next) => {
 
@@ -61,9 +83,15 @@ class BookController {
 
 
     getPdfBook = async(req, res, next) => {
+        
         const { path } = req.params
-        const filename = basename(path)
+        const parts = path.split('_');
 
+        // path có dạng filename_bookid
+        const filename = parts[0]
+        const bookId = parts[1]
+
+        await BookService.upViewsBook(bookId)
         const stream = fs.createReadStream(`uploads/files_pdf/${filename}.pdf`)
         stream.on('error', (err) => {
             console.log('Error reading file: ', err);

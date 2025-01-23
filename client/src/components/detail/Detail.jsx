@@ -78,9 +78,10 @@ export default function Detail() {
                             <img src={ data.thumbnail } alt="" />
                         </div>
                         <div className="book-text">
-                            <h2>Sách: { data.title }</h2>
+                            <h2>{ data.title }</h2>
                             <h5>Tác giả: <span id="author">{ data.author }</span></h5>
                             <h5 id="cate">Thể loại: { data.categories.join(', ') }</h5>
+                            <h5 id="cate">Lượt đọc: {data.num_of_views/2}</h5>
                             <hr />
                             <p>{ isExpanded ? data.description : truncateDescription(data.description) }
                                 { data.description.split(' ').length > 200 && (
