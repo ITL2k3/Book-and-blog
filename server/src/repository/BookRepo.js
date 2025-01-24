@@ -9,7 +9,18 @@ import UserEntity from "./entities/user.entity.js";
 
 
 class BookRepo extends BaseRepo {
+    getSourceId = async(bookId) => {
+        const [results, fields] = await connection.query(
+            `SELECT source_id_chatPDF FROM ${table.BOOK}
+            WHERE book_id = ${bookId}
+        `
+        )
 
+
+
+        return results
+
+    }
     upNumViewBook = async(bookId) => {
         
       

@@ -5,19 +5,20 @@ import checkAuth from '../../Auth/checkAuth'
 import { host } from '../../host'
 import Cookies from 'js-cookie';
 import './insert.css';
+import axios from 'axios'
 
 export default function Insert() {
     const actionData = useActionData()
     const [isValid, setValid] = useState(null)
     const [data, setData] = useState(null)
-    
+
     useEffect(() => {
-        
+
         checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
             if (res == false) {
-                window.location.href="/access"
+                window.location.href = "/access"
             } else {
-             
+
                 setValid(true)
                 setData(res)
             }
@@ -43,23 +44,23 @@ export default function Insert() {
                         </label>
                         <div>
                             <span>Thể loại: </span><br />
-                            <input type='checkbox' name='categories01' value = 'kns' id= 'category01' />
+                            <input type='checkbox' name='categories01' value='kns' id='category01' />
                             <label for='category01'>Kỹ năng sống</label> <br />
-                            <input type='checkbox' name='categories02' value = 'kt' id= 'category02' />
+                            <input type='checkbox' name='categories02' value='kt' id='category02' />
                             <label for='category02'>Kinh tế</label> <br />
-                            <input type='checkbox' name='categories03' value = 'tc' id= 'category03' />
+                            <input type='checkbox' name='categories03' value='tc' id='category03' />
                             <label for='category03'>Tài chính</label> <br />
-                            <input type='checkbox' name='categories04' value = 'cn' id= 'category04' />
+                            <input type='checkbox' name='categories04' value='cn' id='category04' />
                             <label for='category04'>Công nghệ</label> <br />
-                            <input type='checkbox' name='categories05' value = 'nn' id= 'category05' />
+                            <input type='checkbox' name='categories05' value='nn' id='category05' />
                             <label for='category05'>Ngoại ngữ</label> <br />
-                            <input type='checkbox' name='categories06' value = 'dc' id= 'category06' />
+                            <input type='checkbox' name='categories06' value='dc' id='category06' />
                             <label for='category06'>Đề cương</label> <br />
-                            <input type='checkbox' name='categories07' value = 'gt' id= 'category07' />
+                            <input type='checkbox' name='categories07' value='gt' id='category07' />
                             <label for='category07'>Giáo trình</label> <br />
                         </div>
-                        
-                      
+
+
                         <label>
                             <span>Mô tả</span>
                             <input type='text' name='description' />
@@ -67,7 +68,7 @@ export default function Insert() {
                         <br />
                         <label>
                             <span>link Ảnh: </span>
-                            <input type='text' name='thumbnail'  />
+                            <input type='text' name='thumbnail' />
                         </label>
                         <br />
                         <label>
@@ -77,17 +78,17 @@ export default function Insert() {
                         <br />
                         <label>
                             <span>bạn muốn tài liệu của bạn: </span><br />
-                            <input type='radio' name='isPublic' id= 'public' value="true" />
+                            <input type='radio' name='isPublic' id='public' value="true" />
                             <label for='public'>Công khai</label> <br />
-                            <input type='radio' name='isPublic' id= 'nopublic' value="false" />
+                            <input type='radio' name='isPublic' id='nopublic' value="false" />
                             <label for='nopublic'>Riêng tư</label> <br />
                         </label>
                         <br />
 
                         <button>upload</button>
-                        
-                        {actionData && actionData.error  &&<p>{actionData.error}</p>}
-                        {actionData && actionData.success && <p>{actionData.success}, tải lại trang sau 2s </p> }
+
+                        { actionData && actionData.error && <p>{ actionData.error }</p> }
+                        { actionData && actionData.success && <p>{ actionData.success }, tải lại trang sau 2s </p> }
                     </Form>
 
 
@@ -96,7 +97,7 @@ export default function Insert() {
 
 
 
-        } else  {
+        } else {
             // return <p>Loading...</p>
             return <p>Forbidden !!</p>
         }
@@ -104,14 +105,34 @@ export default function Insert() {
 
 }
 
-export const insertAction = async ({request}) => {
+export const insertAction = async ({ request }) => {
     const formData = await request.formData()
-  
-    
-    //append formdata
+
+    const categories = [
+        formData.get('categories01'),
+        formData.get('categories02'),
+        formData.get('categories03'),
+        formData.get('categories04'),
+        formData.get('categories05'),
+        formData.get('categories06'),
+        formData.get('categories07')
+    ];
+
+    // Kiểm tra nếu tất cả giá trị đều null
+    if (categories.every(category => category === null)) {
+        return {
+            error: "Phải chọn ít nhất 1 thể loại."
+        };
+    }
+    // Kiểm tra loại file
+    if (formData.get('pdf').type != 'application/pdf') {
+        return {
+            error: "phải là file pdf"
+        }
+    }
     const payload = new FormData()
 
-    payload.append("title",formData.get('title') )
+    payload.append("title", formData.get('title'))
     payload.append("author", formData.get('author'))
     payload.append("kns", formData.get('categories01'))
     payload.append("kt", formData.get('categories02'))
@@ -124,19 +145,38 @@ export const insertAction = async ({request}) => {
     payload.append("description", formData.get('description'))
     payload.append("isPublic", formData.get('isPublic'))
     payload.append("pdf", formData.get('pdf'))
-    if(!formData.get('thumbnail')){
-        payload.append("thumbnail","https://play-lh.googleusercontent.com/1EgLFchHT9oQb3KME8rzIab7LrOIBfC14DSfcK_Uzo4vuK-WYFs9dhI-1kDI7J0ZNTDr")
-    }else{
+    
+    if (!formData.get('thumbnail')) {
+        payload.append("thumbnail", "https://play-lh.googleusercontent.com/1EgLFchHT9oQb3KME8rzIab7LrOIBfC14DSfcK_Uzo4vuK-WYFs9dhI-1kDI7J0ZNTDr")
+    } else {
         payload.append("thumbnail", formData.get('thumbnail'))
     }
-   
+
+
+     // Tạo form data để gửi tệp PDF
+     const formData2 = new FormData();
+     formData2.append("file", formData.get('pdf'));
+
+     const options = {
+         headers: {
+             "x-api-key": "sec_jrP8IC3O6fPFk3wZMi0UNdSShrYXcEut",
+
+         },
+     };
+     
+
+    const response = await axios.post("https://api.chatpdf.com/v1/sources/add-file", formData2, options)
+    payload.append("source_id_chatPDF", response.data.sourceId)
+         
+
 
     const URL = `http://${host}:3055/v1/api/user/post-book`
-  
+
+    //
     let res = await fetch(URL, {
         method: "POST",
         body: payload,
-       
+
         credentials: 'include'
     })
     console.log(res);
@@ -151,10 +191,10 @@ export const insertAction = async ({request}) => {
         return {
             success: "Thêm sách thành công"
         }
-    }else if(data.statusCode == 401) {
-        
+    } else if (data.statusCode == 401) {
+
         window.location.reload()
-    }else if(data.statusCode == 400){
+    } else if (data.statusCode == 400) {
         return {
             error: data.message
         }
@@ -164,6 +204,9 @@ export const insertAction = async ({request}) => {
             error: "Sai format dữ liệu, đề nghị xem lại file Ảnh hoặc file sách."
         }
     }
-   
+
+    //append formdata
+
+
 
 }

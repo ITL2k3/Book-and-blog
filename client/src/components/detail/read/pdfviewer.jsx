@@ -7,7 +7,10 @@ const content = document.getElementsByClassName('content')
 const PDFViewer = ({ buffer, bookId }) => {
   const viewerRef = useRef(null);
 
+  const docViewerRef = useRef(null); // Tham chiếu tới docViewer
 
+
+  
   useEffect(() => {
 
 
@@ -15,25 +18,31 @@ const PDFViewer = ({ buffer, bookId }) => {
       {
         path: '/public',
         licenseKey: 'YOUR_KEY_HERE',
+        config: "/src/components/detail/read/config.js"
       },
       viewerRef.current
     ).then(async (instance) => {
       const { docViewer, documentViewer, annotManager, UI, Core } = instance;
-    
+
+      docViewerRef.current = docViewer; // Lưu tham chiếu vào docViewer
+
+
       const blob = new Blob([buffer], { type: 'application/pdf' });
       docViewer.loadDocument(blob, { filename: 'document.pdf' });
 
 
-
-      
-      
+      //instance.Core.documentViewer.setCurrentPage(5)
+      // Theo dõi sự thay đổi của nội dung <p>
 
    
 
 
 
+
+
       docViewer.on('documentLoaded', async () => {
         try {
+
           // Fetch annotations từ server ngay sau khi tài liệu được load
           const response = await fetch(`http://${host}:3055/v1/api/load-anotation?bookId=${bookId}`, {
             method: 'get',
@@ -50,42 +59,42 @@ const PDFViewer = ({ buffer, bookId }) => {
         }
       });
 
-      UI.disableElements(['toggleNotesButton', 
-        'notesPanelButton','notesPanel','printButton', 
-        'downloadButton','printButton','fileAttachmentDownload',
-        'linkButton','annotationCommentButton','copy', 'copyTextButton',
-      'annotationNoteConnectorLine','filePickerButton',
-      'annotationCommentButton','polygonToolButton','imageSignaturePanelButton',
-      'fileAttachmentToolGroupButton','notesToolButton', 'commentToolButton'
-    ,'stickyToolGroupButton','stickyToolButton'])
-      
-        // Core.documentViewer.addEventListener('documentLoaded', () => {
+      UI.disableElements(['toggleNotesButton',
+        'notesPanelButton', 'notesPanel', 'printButton',
+        'downloadButton', 'printButton', 'fileAttachmentDownload',
+        'linkButton', 'annotationCommentButton', 'copy', 'copyTextButton',
+        'annotationNoteConnectorLine', 'filePickerButton',
+        'annotationCommentButton', 'polygonToolButton', 'imageSignaturePanelButton',
+        'fileAttachmentToolGroupButton', 'notesToolButton', 'commentToolButton'
+        , 'stickyToolGroupButton', 'stickyToolButton'])
 
-        //   const checkForNewBookmarks = async () => {
-        //     const bookmarks = await Core.documentViewer.getDocument().getBookmarks();
-        //     Core.documentViewer.displayBookmark(bookmarks[5])
-            
-        //     console.log(bookmarks);
-        //   }
-        //   setInterval(checkForNewBookmarks, 2000);
-          
-        // })
+      // Core.documentViewer.addEventListener('documentLoaded', () => {
 
+      //   const checkForNewBookmarks = async () => {
+      //     const bookmarks = await Core.documentViewer.getDocument().getBookmarks();
+      //     Core.documentViewer.displayBookmark(bookmarks[5])
 
+      //     console.log(bookmarks);
+      //   }
+      //   setInterval(checkForNewBookmarks, 2000);
+
+      // })
 
 
-     
+
+      UI.loadDocument
+
       UI.setHeaderItems(header => {
         header.push({
           type: 'actionButton',
           img: 'icon-save',
           onClick: async () => {
-            
 
 
 
 
-           
+
+
             const xfdfString = await annotManager.exportAnnotations();
             fetch(`http://${host}:3055/v1/api/save-anotation`, {
               method: 'post',
@@ -108,20 +117,20 @@ const PDFViewer = ({ buffer, bookId }) => {
         });
 
       });
-      UI.addEventListener('keydown', (e) => {
-       
-        if(e.key == 'F12' || e.key == "Control" || e.key == 'Shift' || e.key == 'Alt'){
-          console.log('blocked!');
-          e.preventDefault();
-        }
-      
-        
-      })
-      UI.addEventListener('copy', (e) => {
-        e.preventDefault()
-      })
-      
-      UI.hotkeys.off()
+      // UI.addEventListener('keydown', (e) => {
+
+      //   if(e.key == 'F12' || e.key == "Control" || e.key == 'Shift' || e.key == 'Alt'){
+      //     console.log('blocked!');
+      //     e.preventDefault();
+      //   }
+
+
+      // })
+      // UI.addEventListener('copy', (e) => {
+      //   e.preventDefault()
+      // })
+
+      // UI.hotkeys.off()
       // // UI.hotkeys.off()
       // UI.hotkeys
 
@@ -134,7 +143,7 @@ const PDFViewer = ({ buffer, bookId }) => {
 
   }, [buffer]);
 
-  
+
 
   return (
     <div>

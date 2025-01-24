@@ -7,6 +7,12 @@ import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
 const bookHelper = new BookRepo()
 class BookService {
+
+    static getSourceIdPDF = async(bookId) => {
+        const [result] = await bookHelper.getSourceId(bookId)
+        return result.source_id_chatPDF
+    }
+
     static upViewsBook = async(bookId) => {
 
         await bookHelper.upNumViewBook(bookId);
@@ -123,8 +129,9 @@ class BookService {
 
 
 
-    //for Librarian
+    //for user
     static insertBook = async(payload) => {
+
         console.log(payload);
         //insert book and get bookId 
         const bookId = await bookHelper.insertIntoBookTableValues(payload)
@@ -157,6 +164,8 @@ class BookService {
             console.log(err);
         }
 
+
+        //
 
         //not throw error <=> add success
 

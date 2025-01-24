@@ -164,3 +164,11 @@
     
     margin-bottom: 2px;
 }
+
+
+ #current-page{
+    font-size: 0px;
+} 
+#page_changed{
+    display: none;
+}

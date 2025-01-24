@@ -12,7 +12,13 @@
   },
   "dependencies": {
     "@pdftron/pdfjs-express": "^8.7.5",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
+    "@react-pdf-viewer/page-navigation": "^3.12.0",
+    "@react-pdf-viewer/zoom": "^3.12.0",
+    "axios": "^1.7.9",
     "js-cookie": "^3.0.5",
+    "pdfjs-dist": "^3.11.174",
     "react": "^18.3.1",
     "react-cookie": "^7.2.2",
     "react-dom": "^18.3.1",

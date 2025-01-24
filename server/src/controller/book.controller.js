@@ -7,7 +7,21 @@ import fs from 'fs'
 
 
 class BookController {
+    getSourceId = async(req, res, next) => {
+         
+        const { path } = req.params
+        const parts = path.split('_');
 
+        // path có dạng filename_bookid
+        const filename = parts[0]
+        const bookId = parts[1]
+
+        new OK({
+            messsage: "get source success",
+            metadata: await BookService.getSourceIdPDF(bookId)
+        }).send(res)
+
+    }
     searchBooks = async(req, res, next) => {
         const { query } = req.query
 
@@ -159,6 +173,7 @@ class BookController {
                     dc: req.body.dc,
                     gt: req.body.gt
                 },
+                source_id_chatPDF: req.body.source_id_chatPDF,
                 isPublic: req.body.isPublic,
                 thumbnail: req.body.thumbnail,
                 description: req.body.description,

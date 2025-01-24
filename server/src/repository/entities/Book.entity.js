@@ -3,6 +3,7 @@ class BookEntity {
     user_id
     title
     author
+    source_id_chatPDF
     isPublic
     num_of_views
     description
@@ -10,11 +11,12 @@ class BookEntity {
     filepath
 
 
-    constructor({ bookId, userId, title, author, isPublic, num_of_views, description, thumbnail, filepath }) {
+    constructor({ bookId, userId, title, author, source_id_chatPDF,isPublic, num_of_views, description, thumbnail, filepath }) {
         this.book_id = bookId ? bookId : 'default'
         this.user_id = userId ? userId : null
         this.title = title ? title : null
         this.author = author ? author : null
+        this.source_id_chatPDF = source_id_chatPDF ? source_id_chatPDF : 'notFound'
         this.isPublic = isPublic ? isPublic : false
         this.num_of_views = num_of_views ? num_of_views : 0
         this.description = description ? description : null
@@ -23,7 +25,7 @@ class BookEntity {
     }
 
     getQueryString() {
-        return `(${this.book_id}, ${this.user_id}, '${this.title}', '${this.author}', ${this.isPublic}, ${this.num_of_views}, '${this.description}'
+        return `(${this.book_id}, ${this.user_id}, '${this.title}', '${this.author}','${this.source_id_chatPDF}', ${this.isPublic}, ${this.num_of_views}, '${this.description}'
         ,'${this.thumbnail}', '${this.filepath}', default, default)`
     }
 

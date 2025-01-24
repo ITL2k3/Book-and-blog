@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import Login from '../../Login/Login';
 import checkAuth, { checkDevTool } from '../../../Auth/checkAuth';
 import PDFViewer from './pdfviewer';
+import ChatPDF from '../../chatPDF';
 import { host } from '../../../host';
 
 
@@ -22,28 +23,31 @@ export default function Read() {
     //setBuffer
     const [buffer, setBuffer] = useState(null);
 
-    
-   
+
+
+    const [currentPage, setCurrentPage] = useState(''); // State để lưu trang hiện tại
+
+
     useEffect(() => {
-       
 
-        const handleKeyDown = (event) => {
-            event.preventDefault(); // Ngăn chặn hành động mặc định
-          };
-          const handleBeforeUnload = (event) => {
-            event.preventDefault();
-            event.returnValue = ''; // Trả về một chuỗi để hiển thị hộp thoại xác nhận
-          };
-      
-      
-          // Thêm sự kiện keydown
-          window.addEventListener('beforeunload', handleBeforeUnload);
 
-          window.addEventListener('keydown', handleKeyDown);
-      
-          
-        const checkdev = setInterval(checkDevTool, 500)
-        
+        // const handleKeyDown = (event) => {
+        //     event.preventDefault(); // Ngăn chặn hành động mặc định
+        //   };
+        //   const handleBeforeUnload = (event) => {
+        //     event.preventDefault();
+        //     event.returnValue = ''; // Trả về một chuỗi để hiển thị hộp thoại xác nhận
+        //   };
+
+
+        // Thêm sự kiện keydown
+        //   window.addEventListener('beforeunload', handleBeforeUnload);
+
+        //   window.addEventListener('keydown', handleKeyDown);
+
+
+        // const checkdev = setInterval(checkDevTool, 500)
+
 
         checkAuth(`http://${host}:3055/v1/api/`).then((res) => {
             if (res == false) {
@@ -63,29 +67,45 @@ export default function Read() {
         }).catch((err) => {
 
         })
-    
+
         // Dọn dẹp sự kiện khi component unmount
         return () => {
-            clearInterval(checkdev)
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('beforeunload', handleBeforeUnload);
+            // clearInterval(checkdev)
+            // window.removeEventListener('keydown', handleKeyDown);
+            // window.removeEventListener('beforeunload', handleBeforeUnload);
 
-          };
+        };
 
     }, [])
 
+    const selectElement = document.getElementById('page_changed')
 
+    const handlePageChange = (pageNumber) => {
+
+        setCurrentPage(`${pageNumber}`); // Cập nhật nội dung khi nhấp vào trang
+        const event = new Event('change');
+                selectElement.dispatchEvent(event);
+    };
 
     if (isValid == null) {
-       
+
         <p>Loading...</p>
 
     } else {
         if (isValid) {
-          
+
             return (
                 <div>
-                    { buffer ? <PDFViewer buffer={ buffer } bookId={ bookId } /> : <p>Loading PDF...</p> }
+                    <p id="current-page"  >{ currentPage }</p> {/* Hiển thị nội dung trang hiện tại */ }
+                    <select id="page_changed" >
+                        <option value="">--Chọn--</option>
+                        <option value="1">Giá trị 1</option>
+                        <option value="2">Giá trị 2</option>
+                        
+                    </select>
+                    <ChatPDF onPageChange={ handlePageChange } />
+
+                    { buffer ? <PDFViewer buffer={ buffer } bookId={ bookId } onPageChange={ handlePageChange } /> : <p>Loading PDF...</p> }
                 </div>
             )
 

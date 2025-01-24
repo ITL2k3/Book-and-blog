@@ -32,6 +32,7 @@ bookRouter.get('/', async (req, res) => {
 
 
 bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
+bookRouter.get('/read-book/sourceId/:path', asyncHandler(BookController.getSourceId))
 bookRouter.get('/load-anotation', asyncHandler(BookController.loadAnotation))
 bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
 
