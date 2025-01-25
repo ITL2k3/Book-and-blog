@@ -4,7 +4,7 @@ import { Form, Link, NavLink, Outlet, useActionData } from 'react-router-dom'
 import checkAuth from '../../Auth/checkAuth'
 import ReactPaginate from 'react-paginate'
 import { host } from '../../host'
-
+import axios from 'axios'
 
 // const useCookieState(){
 
@@ -111,7 +111,7 @@ function Items() {
                                         <td><p>{ book.author }</p></td>
                                         <td><p>{ book.description }</p></td>
                                         <td><button onClick={ () => {
-                                            fetch(`http://${host}:3055/v1/api/user/delete-book?file=${book.filepath}&book_id=${book.book_id}`, {
+                                            fetch(`http://${host}:3055/v1/api/user/delete-book?file=${book.filepath}&book_id=${book.book_id}&src_id=${book.source_id_chatPDF}`, {
                                                 method: 'delete',
                                                 credentials: 'include'
                                             }).then((res) => {
@@ -187,6 +187,7 @@ function Items() {
                             <span>Tác giả</span>
                             <input type='text' placeholder={ dataForm.author } name='author' />
                         </label>
+                        <input type='text' value={dataForm.source_id_chatPDF} style = {{display: "none"}} name='source_id_chatPDF' />
                         <div>
                             <span>Thể loại: </span><br />
                             <input type='checkbox' name='categories01' value='kns' id='category01' />
@@ -269,6 +270,26 @@ export const updateAction = async ({ request }) => {
     payload.append("description", formData.get('description'))
     payload.append("isPublic", formData.get('isPublic'))
     payload.append("pdf", formData.get('pdf'))
+    payload.append("source_id_chatPDF", formData.get("source_id_chatPDF"))
+
+
+    if(formData.get('pdf').size){
+        console.log('contain file');
+        const formData2 = new FormData();
+        formData2.append("file", formData.get('pdf'));
+   
+        const options = {
+            headers: {
+                "x-api-key": "sec_jrP8IC3O6fPFk3wZMi0UNdSShrYXcEut",
+   
+            },
+        };
+        
+   
+       const response = await axios.post("https://api.chatpdf.com/v1/sources/add-file", formData2, options)
+       payload.append("source_id_chatPDF_new", response.data.sourceId)
+            
+    }
     if(!formData.get('thumbnail')){
         payload.append("thumbnail","https://play-lh.googleusercontent.com/1EgLFchHT9oQb3KME8rzIab7LrOIBfC14DSfcK_Uzo4vuK-WYFs9dhI-1kDI7J0ZNTDr")
     }else{
@@ -287,6 +308,8 @@ export const updateAction = async ({ request }) => {
 
     const data = await JSON.parse(res)
     if (data.statusCode == 200) {
+        console.log(data.metadata);
+        localStorage.removeItem(data.metadata)
         setTimeout(() => {
             window.location.reload()
         }, 2000)

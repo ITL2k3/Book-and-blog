@@ -146,8 +146,8 @@ const PDFViewer = ({ buffer, bookId }) => {
 
 
   return (
-    <div>
-      <div ref={ viewerRef } style={ { height: '100vh' } }></div>
+    <div className="pdf-bounder">
+      <div ref={ viewerRef } className="pdf-display"></div>
     </div>
   );
 };

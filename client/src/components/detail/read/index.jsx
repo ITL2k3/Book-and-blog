@@ -95,7 +95,7 @@ export default function Read() {
         if (isValid) {
 
             return (
-                <div>
+                <div className = "page-bounder-read">
                     <p id="current-page"  >{ currentPage }</p> {/* Hiển thị nội dung trang hiện tại */ }
                     <select id="page_changed" >
                         <option value="">--Chọn--</option>
@@ -103,9 +103,10 @@ export default function Read() {
                         <option value="2">Giá trị 2</option>
                         
                     </select>
-                    <ChatPDF onPageChange={ handlePageChange } />
 
                     { buffer ? <PDFViewer buffer={ buffer } bookId={ bookId } onPageChange={ handlePageChange } /> : <p>Loading PDF...</p> }
+                    <ChatPDF onPageChange={ handlePageChange } />
+
                 </div>
             )
 

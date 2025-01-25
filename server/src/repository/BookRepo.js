@@ -21,6 +21,18 @@ class BookRepo extends BaseRepo {
         return results
 
     }
+
+
+    countAllEntities = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT COUNT(*) as SUM
+            FROM book 
+            WHERE isPublic = true
+            `
+        )
+        
+        return results
+    }
     upNumViewBook = async(bookId) => {
         
       

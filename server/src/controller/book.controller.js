@@ -188,6 +188,7 @@ class BookController {
     updateBook = async(req, res, next) => {
 
         //set null for '' string
+        
         Object.entries(req.body).forEach(([key, value]) => {
                 if (value == '') {
                     req.body[key] = null
@@ -220,7 +221,6 @@ class BookController {
     }
 
     deleteBook = async(req, res, next) => {
-
         new OK({
             message: 'Delete success',
             metadata: await BookService.deleteBook(req.query)

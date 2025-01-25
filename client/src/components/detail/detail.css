@@ -167,8 +167,28 @@
 
 
  #current-page{
-    font-size: 0px;
+    display: none;
 } 
 #page_changed{
     display: none;
+}
+
+
+
+
+
+/*  */
+.page-bounder-read{
+    display: flex;
+}
+
+.chat_container{
+    width: 40%;
+}
+.pdf-bounder{
+    width: 60%;
+    height: 100vh;
+}
+.pdf-display{
+    height: 100%;
 }

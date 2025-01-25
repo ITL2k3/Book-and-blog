@@ -2,6 +2,7 @@ import { BadRequestError } from "../common/error.response.js"
 import table from "../configs/config.table.js"
 import client from "../dbs/init.elastic.js"
 import { filterNonNullProperties } from "../Helpers/asynchandler.js"
+import { deleteDataFromChatPDFAPI } from "../Helpers/fetchdata.js"
 import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
@@ -56,7 +57,7 @@ class BookService {
             const [results] = await bookHelper.countEntitiesWithFilter(Filter)
             return results
         }
-        const [results] = await bookHelper.countAllEntities(table.BOOK)
+        const [results] = await bookHelper.countAllEntities()
         return results
     }
     static getUserBooks = async(page, userId) => {
@@ -192,9 +193,14 @@ class BookService {
 
 
     static updateBook = async(payload) => {
-        console.log(payload);
         //if update filepath required:  
+        let old_src_id_PDF
         if (payload.filepath) {
+
+
+
+
+
             //delete old file
             const [linkOldFilePath] = await bookHelper.getOneBookById('filepath', payload.bookId)
             try {
@@ -206,8 +212,20 @@ class BookService {
                 console.log(err);
             }
 
+            //delete old source Id from chatPDF
 
+            //delete soucrce id from chatPDF API 
+            await deleteDataFromChatPDFAPI(payload.source_id_chatPDF)//link pdf cũ
+            
+
+
+            //cập nhật lại payload: thay giá trị src_id_chatPDF hiện tại, xóa trường src_id_chatPDF_new
+            old_src_id_PDF = payload.source_id_chatPDF
+            payload.source_id_chatPDF = payload.source_id_chatPDF_new
+            delete payload.source_id_chatPDF_new
         }
+
+
 
         //update book record mysql
 
@@ -228,9 +246,10 @@ class BookService {
             id: payload.bookId,
             doc: updateDoc
         })
-        return {
-            payload
-        }
+
+        //delete 
+        return old_src_id_PDF
+        
 
     }
 
@@ -261,6 +280,12 @@ class BookService {
             id: book_id
 
         })
+
+
+
+        //delete soucrce id from chatPDF API 
+        deleteDataFromChatPDFAPI(payload.src_id)
+        
 
 
         return book_id

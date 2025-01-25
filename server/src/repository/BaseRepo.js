@@ -9,7 +9,7 @@ class BaseRepo {
     countAllEntities = async (table) => {
         const [results, fields] = await connection.query(
             `SELECT COUNT(*) as SUM
-            FROM ${table}`
+            FROM ${table} `
         )
         
         return results

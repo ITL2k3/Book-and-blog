@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"
+import axios from "axios";
 import { host } from "../../host";
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 
 const ChatPDF = ({ onPageChange }) => {
     const [file, setFile] = useState(null); // File PDF
@@ -9,52 +9,50 @@ const ChatPDF = ({ onPageChange }) => {
     const [messages, setMessages] = useState([]); // Danh sách tin nhắn (người dùng & bot)
     const [input, setInput] = useState(""); // Nội dung câu hỏi
 
-
-
-    const { query } = useParams()
-    const queryArray = query.split('_')
-    const arrayLength = queryArray.length
-    const filename = queryArray[arrayLength - 1]
-    const bookId = queryArray[arrayLength - 2]
+    const { query } = useParams();
+    const queryArray = query.split('_');
+    const arrayLength = queryArray.length;
+    const filename = queryArray[arrayLength - 1];
+    const bookId = queryArray[arrayLength - 2];
 
     useEffect(() => {
+        // Tải tin nhắn từ local storage
+
+
         fetch(`http://${host}:3055/v1/api/read-book/sourceId/${filename}_${bookId}`, {
             method: 'get',
             credentials: 'include'
         }).then(async (res) => {
-
-            setSourceId(await JSON.parse(await res.text()).metadata)
+            const sourceid = await JSON.parse(await res.text()).metadata
+            const savedMessages = localStorage.getItem(sourceid);
+            if (savedMessages) {
+                setMessages(JSON.parse(savedMessages));
+            }
+            
+            setSourceId(sourceid);
+            
         }).catch((err) => {
-
-        })
-    }, [])
-
+            console.error(err);
+        });
+    }, []);
 
     const handleMessageClick = (pageNumber) => {
-        // Gọi hàm để điều hướng đến trang PD
-        onPageChange(pageNumber)
-        // if (window.PDFViewer) {
-        //     window.PDFViewer.goToPage(pageNumber); // Giả sử bạn đã định nghĩa goToPage trong PDFViewer
-        // }
+        onPageChange(pageNumber);
     };
 
-
-
-
     const handleSendMessage = async () => {
-
         if (!sourceId || !input.trim()) return;
 
         // Tin nhắn mới từ người dùng
         const newMessage = { role: "user", content: input };
-
-        // Tạo một bản sao của messages, bao gồm cả tin nhắn mới
         const updatedMessages = [...messages, newMessage];
 
         // Cập nhật giao diện với tin nhắn mới
         setMessages(updatedMessages);
 
-        // Cấu hình headers
+        // Lưu tin nhắn vào local storage
+        localStorage.setItem(sourceId, JSON.stringify(updatedMessages));
+
         const config = {
             headers: {
                 "x-api-key": "sec_jrP8IC3O6fPFk3wZMi0UNdSShrYXcEut", // Thay bằng API key của bạn
@@ -62,17 +60,14 @@ const ChatPDF = ({ onPageChange }) => {
             },
         };
 
-        // Dữ liệu gửi API
         const data = {
-
             "referenceSources": true,
-            sourceId: sourceId, // Thay bằng sourceId của bạn
+            sourceId: sourceId,
             messages: updatedMessages,
         };
 
         console.log("Data gửi API:", data);
 
-        // Gửi yêu cầu API
         fetch("https://api.chatpdf.com/v1/chats/message", {
             method: "POST",
             headers: config.headers,
@@ -87,28 +82,29 @@ const ChatPDF = ({ onPageChange }) => {
             .then((responseData) => {
                 console.log("Result:", responseData);
 
-                // Tin nhắn trả lời từ bot
-                const botReply = { role: "assistant", content: responseData.content, references: responseData.references }
-                setMessages((prev) => [...prev, botReply]);
+                const botReply = { role: "assistant", content: responseData.content, references: responseData.references };
+                const updatedMessagesWithBot = [...updatedMessages, botReply];
+
+                setMessages(updatedMessagesWithBot);
+                // Cập nhật lại local storage
+                localStorage.setItem(sourceId, JSON.stringify(updatedMessagesWithBot));
+
             })
             .catch((error) => {
                 console.error("Error:", error.message);
             });
 
-        // Xóa input sau khi gửi
         setInput("");
     };
 
     return (
-
-        <div style={ { maxWidth: "600px", margin: "0 auto", textAlign: "center" } }>
+        <div className="chat_container">
             <h1>ChatPDF</h1>
-            <div style={ { margin: "20px 0", border: "1px solid #ccc", padding: "10px", minHeight: "200px", overflowY: "scroll" } }>
+            <div >
                 { messages.map((msg, index) => (
-                    <div key={ index } style={ { textAlign: msg.role === "user" ? "right" : "left", margin: "5px 0" } }>
+                    <div key={ index } >
                         <strong>{ msg.role === "user" ? "You" : "Bot" }:</strong>
                         { msg.content.split(' ').map((word, idx) => {
-                            // Kiểm tra nếu từ có dạng [P2] hoặc [P5]
                             const match = word.match(/\[P(\d+)\]/);
                             if (match) {
                                 const pageNumber = match[1];
@@ -129,15 +125,14 @@ const ChatPDF = ({ onPageChange }) => {
                     value={ input }
                     onChange={ (e) => setInput(e.target.value) }
                     placeholder="Ask a question..."
-                    style={ { width: "70%", padding: "10px" } }
+                    className="chat-input"
+                   
                 />
-                <button onClick={ handleSendMessage } style={ { padding: "10px", marginLeft: "5px" } }>
+                <button onClick={ handleSendMessage } className="chat-send">
                     Send
                 </button>
             </div>
         </div>
-
-
     );
 };
 
