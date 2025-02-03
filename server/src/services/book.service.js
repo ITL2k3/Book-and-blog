@@ -1,4 +1,4 @@
-import { BadRequestError } from "../common/error.response.js"
+import { BadRequestError, InternalServerError } from "../common/error.response.js"
 import table from "../configs/config.table.js"
 import client from "../dbs/init.elastic.js"
 import { filterNonNullProperties } from "../Helpers/asynchandler.js"
@@ -6,8 +6,25 @@ import { deleteDataFromChatPDFAPI } from "../Helpers/fetchdata.js"
 import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
+
+
+import Fs from 'fs'
+import pdf from 'pdf-parse'
+
 const bookHelper = new BookRepo()
 class BookService {
+
+    static getReferenceDoc = async(category) => {
+
+
+
+        const limitRecord = 10
+        const result = await bookHelper.getReferencesDoc(category, limitRecord)
+
+        console.log('res: ', result)
+
+        return result
+    }
 
     static getSourceIdPDF = async(bookId) => {
         const [result] = await bookHelper.getSourceId(bookId)
@@ -19,8 +36,9 @@ class BookService {
         await bookHelper.upNumViewBook(bookId);
         return true
     }
-    static searchBooks = async(query) => {
 
+
+    static searchBooks = async(query) => {
         const result = await client.search({
             index: 'docs',
             query: {
@@ -44,6 +62,70 @@ class BookService {
         return result.hits.hits
 
     }
+
+    static searchBooksAdvance = async({ content, numPages, creationDate }) => {
+
+
+        const query = {
+                bool: {
+                    must: [],
+                    filter: []
+                }
+            }
+            //if request contain content
+        if (content) {
+            query.bool.must.push({
+                match_phrase: {
+                    "content.text": content
+                }
+            })
+        }
+        //if request contain numpages
+        if (numPages) {
+            query.bool.filter.push({
+                range: {
+                    "content.info.numpages": {
+                        "gte": numPages.min, // Số trang tối thiểu
+                        "lte": numPages.max // Số trang tối đa
+                    }
+                }
+            })
+        }
+        //if request contain creationDate
+        if (creationDate) {
+            query.bool.filter.push({
+                range: {
+                    "content.info.CreationDate": {
+                        "gte": creationDate.start, // Ngày bắt đầu
+                        "lte": creationDate.end // Ngày kết thúc
+                    }
+                }
+            })
+        }
+
+
+        const result = await client.search({
+            index: 'docs', // Tên index
+            body: {
+                query: query
+            }
+        });
+
+        const totalOfRecord = (await client.count({
+            index: 'docs'
+        })).count
+
+
+        return {
+            totalOfRecord,
+            numOfRecordHit: result.hits.total.value,
+            records: result.hits.hits
+        }
+
+    }
+
+
+
     static countBooksWithUserId = async(userId) => {
         const [results] = await bookHelper.countBookWithUserId(userId)
         console.log('book is', results);
@@ -125,11 +207,6 @@ class BookService {
 
 
 
-
-
-
-
-
     //for user
     static insertBook = async(payload) => {
 
@@ -148,7 +225,14 @@ class BookService {
 
         // add to elastic
 
-        try {
+
+        //read file pdf and transfer to text
+        let dataBuffer = await fs.readFile(`uploads/files_pdf/${payload.fileName}`)
+        const stats = await fs.stat(`uploads/files_pdf/${payload.fileName}`)
+       
+
+
+        pdf(dataBuffer).then(async function(data) {
             const result = await client.index({
                 index: "docs",
                 id: `${bookId.Id}`,
@@ -157,13 +241,21 @@ class BookService {
                     author: payload.author,
                     thumbnail: payload.thumbnail,
                     filepath: payload.filepath,
-                    isPublic: payload.isPublic
+                    isPublic: payload.isPublic,
+                    content: {
+                        info: {
+                            numpages: data.numpages,
+                            CreationDate: stats.birthtime
+                        },
+                        text: data.text
+                    }
 
                 }
             })
-        } catch (err) {
-            console.log(err);
-        }
+
+        })
+
+
 
 
         //
@@ -188,17 +280,10 @@ class BookService {
 
 
 
-
-
-
-
     static updateBook = async(payload) => {
         //if update filepath required:  
         let old_src_id_PDF
         if (payload.filepath) {
-
-
-
 
 
             //delete old file
@@ -215,8 +300,8 @@ class BookService {
             //delete old source Id from chatPDF
 
             //delete soucrce id from chatPDF API 
-            await deleteDataFromChatPDFAPI(payload.source_id_chatPDF)//link pdf cũ
-            
+            await deleteDataFromChatPDFAPI(payload.source_id_chatPDF) //link pdf cũ
+
 
 
             //cập nhật lại payload: thay giá trị src_id_chatPDF hiện tại, xóa trường src_id_chatPDF_new
@@ -249,7 +334,7 @@ class BookService {
 
         //delete 
         return old_src_id_PDF
-        
+
 
     }
 
@@ -273,8 +358,11 @@ class BookService {
 
         await bookHelper.deleteBookCategory(book_id)
 
+        await bookHelper.deleteBookAnotation(book_id)
+
         await bookHelper.deleteBook(book_id)
             //delete record in elastic
+
         await client.delete({
             index: 'docs',
             id: book_id
@@ -285,7 +373,7 @@ class BookService {
 
         //delete soucrce id from chatPDF API 
         deleteDataFromChatPDFAPI(payload.src_id)
-        
+
 
 
         return book_id

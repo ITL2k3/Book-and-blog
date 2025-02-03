@@ -25,7 +25,9 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "mysql2": "^3.11.0"
+    "mysql2": "^3.11.0",
+    "pdf-parse": "^1.1.0",
+    "pdf2json": "^3.1.5"
   },
   "devDependencies": {
     "helmet": "^7.1.0",

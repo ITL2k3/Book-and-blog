@@ -13,6 +13,16 @@ const bookRouter = Router()
 bookRouter.get('/Library/search', asyncHandler(BookController.getBooks))
 bookRouter.get('/book-detail/:id', asyncHandler(BookController.getDetailBook))
 bookRouter.get('/search-doc', asyncHandler(BookController.searchBooks))
+bookRouter.get('/search-doc-advance', asyncHandler(BookController.searchBooksAdvance))
+
+
+
+bookRouter.get('/text-doc/:id', asyncHandler(BookController.readTextDoc))
+
+//tài liệu tham khảo
+bookRouter.get('/references-doc', asyncHandler(BookController.referenceDoc))
+
+//tài liệu đề xuất
 
 
 // check auth

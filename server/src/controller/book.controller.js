@@ -6,9 +6,12 @@ import path, { basename } from 'path'
 import fs from 'fs'
 
 
+import { convertUpperCateToLowerCate, parseDateRange, parseNumRange } from "../utils/index.js"
+
+
 class BookController {
     getSourceId = async(req, res, next) => {
-         
+
         const { path } = req.params
         const parts = path.split('_');
 
@@ -30,10 +33,25 @@ class BookController {
             metadata: await BookService.searchBooks(query)
         }).send(res)
     }
+    searchBooksAdvance = async(req, res, next) => {
+        const content = req.query.content ? req.query.content : null
+        const numPages = req.query.numpages ?  parseNumRange(req.query.numpages) : null
+       
+        const creationDate = req.query.creationdate ? parseDateRange(req.query.creationdate) : null
+
+
+        
+        new OK({
+            message: "search success",
+            metadata: await BookService.searchBooksAdvance({content, numPages, creationDate})
+        }).send(res)
+    }
+
+
     getUserBook = async(req, res, next) => {
-        
+
         const page = req.query.page
-        
+
         const results = await BookService.getUserBooks(page, req.user.userId)
 
         let sumOfBooks
@@ -41,7 +59,7 @@ class BookController {
         const { SUM } = await BookService.countBooksWithUserId(req.user.userId)
         sumOfBooks = SUM
 
-      
+
         new OK({
             message: 'get success',
             metadata: {
@@ -97,7 +115,7 @@ class BookController {
 
 
     getPdfBook = async(req, res, next) => {
-        
+
         const { path } = req.params
         const parts = path.split('_');
 
@@ -142,7 +160,7 @@ class BookController {
 
     }
 
-    
+
 
 
 
@@ -173,6 +191,7 @@ class BookController {
                     dc: req.body.dc,
                     gt: req.body.gt
                 },
+                fileName: req.fileName,
                 source_id_chatPDF: req.body.source_id_chatPDF,
                 isPublic: req.body.isPublic,
                 thumbnail: req.body.thumbnail,
@@ -186,9 +205,7 @@ class BookController {
     }
 
     updateBook = async(req, res, next) => {
-
         //set null for '' string
-        
         Object.entries(req.body).forEach(([key, value]) => {
                 if (value == '') {
                     req.body[key] = null
@@ -225,6 +242,44 @@ class BookController {
             message: 'Delete success',
             metadata: await BookService.deleteBook(req.query)
         }).send(res)
+    }
+
+
+
+    referenceDoc = async(req, res, next) => {
+
+        const query = req.query.categories
+
+        const book_id = req.query.book_id
+            //convert 'Tài chính, công nghệ, ngoại ngữ' -> ['tc', 'cn', 'nn']
+
+        console.log('ct', query);
+        const categories = convertUpperCateToLowerCate(query)
+        const result = await BookService.getReferenceDoc(categories)
+            //delete book detail from succest doc
+        const resultAfterFilter = result.filter(book => book.book_id != book_id)
+        new SuccessResponse({
+            message: 'Get reference Doc success',
+            metadata: resultAfterFilter
+        }).send(res)
+    }
+
+
+
+    readTextDoc = async(req, res, next) => {
+        const {id} = req.params
+
+        let dataBuffer = fs.readFileSync(`uploads/files_pdf/${id}.pdf`)
+        pdf(dataBuffer).then(function(data) {
+
+            new OK({
+                message: "text",
+                metadata: data.text
+            }).send(res)
+                
+        }).catch(err => {
+            res.send(err.message)
+        });
     }
 
 

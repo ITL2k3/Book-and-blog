@@ -9,6 +9,24 @@ import UserEntity from "./entities/user.entity.js";
 
 
 class BookRepo extends BaseRepo {
+
+    getReferencesDoc = async(categories, limit) => {
+        //query that find record base on exactly their category id 
+        const [result, fields] = await connection.query(`
+            SELECT b.*
+            FROM book b
+            JOIN book_category bc ON b.book_id = bc.book_id
+            WHERE bc.category_id IN (?)  -- Thay thế bằng các category_id cụ thể
+            AND b.isPublic = true        -- Chỉ lấy sách có trường isPublic = true
+            GROUP BY b.book_id
+            HAVING COUNT(DISTINCT bc.category_id) = 3  -- Đảm bảo sách thuộc cả 3 danh mục
+            ORDER BY b.num_of_views DESC
+            LIMIT ?;
+        `, [categories, limit])
+        
+        return result
+    }
+
     getSourceId = async(bookId) => {
         const [results, fields] = await connection.query(
             `SELECT source_id_chatPDF FROM ${table.BOOK}
@@ -16,12 +34,9 @@ class BookRepo extends BaseRepo {
         `
         )
 
-
-
         return results
 
     }
-
 
     countAllEntities = async() => {
         const [results, fields] = await connection.query(
@@ -30,23 +45,23 @@ class BookRepo extends BaseRepo {
             WHERE isPublic = true
             `
         )
-        
+
         return results
     }
     upNumViewBook = async(bookId) => {
-        
-      
-            const [results, fields] = await connection.query(
-                `UPDATE ${table.BOOK} SET
+
+
+        const [results, fields] = await connection.query(
+            `UPDATE ${table.BOOK} SET
             num_of_views = num_of_views + 1
             WHERE book_id = ${bookId}
             `
-            )
+        )
 
 
-            return 1
+        return 1
 
-       
+
     }
 
     insertIntoBookTableValues = async(payload) => {
@@ -111,47 +126,60 @@ class BookRepo extends BaseRepo {
 
     }
 
+    deleteBookAnotation = async(bookId) => {
+        try {
+            const [results, fields] = await connection.query(
+                `DELETE FROM ${table.ANOTATION}
+                WHERE book_id = ${bookId};
+                `
+            )
+            return results
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     deleteBook = async(bookId) => {
-        try{
+        try {
             const [results, fields] = await connection.query(
                 `DELETE FROM ${table.BOOK}
                 WHERE book_id = ${bookId};
                 `
             )
             return results
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
-        
+
     }
 
     deleteBookStorage = async(bookId) => {
-        try{
+        try {
             const [results, fields] = await connection.query(
                 `DELETE FROM ${table.STORAGE}
                     WHERE book_id = ${bookId};
                     `
             )
             return results
-        }catch(err){
+        } catch (err) {
             console.log(err);
             throw new InternalServerError("errror in DB")
         }
     }
     deleteBookCategory = async(bookId) => {
 
-        try{
+        try {
             const [results, fields] = await connection.query(
                 `DELETE FROM ${table.BOOK_CATEGORY}
                     WHERE book_id = ${bookId};
                     `
             )
             return results
-        }catch(err){
+        } catch (err) {
             console.log(err);
             throw new InternalServerError("errror in DB")
         }
-        
+
 
 
     }
@@ -194,20 +222,20 @@ class BookRepo extends BaseRepo {
     }
     countBooksWithUserId = async(userId) => {
 
-    }
-    //get only user's book
-    getUserBooksWithFilter = async( LIMIT, OFFSET, userId) => {
-        console.log('LOL');
-        const [results, fields] = await connection.query(
-            `SELECT * 
+        }
+        //get only user's book
+    getUserBooksWithFilter = async(LIMIT, OFFSET, userId) => {
+            console.log('LOL');
+            const [results, fields] = await connection.query(
+                `SELECT * 
             FROM book
             WHERE user_id = ${userId}
             LIMIT ${LIMIT}
             OFFSET ${OFFSET};
             `)
-        return results
-    }
-    //get All book
+            return results
+        }
+        //get All book
     getBooksWithFilter = async(field, category, LIMIT, OFFSET) => {
         const [results, fields] = await connection.query(
             `SELECT ${field} 

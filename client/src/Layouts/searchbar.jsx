@@ -80,6 +80,7 @@ const SearchBar = () => {
                     marginBottom: "5px",
                 } }
             />
+            
             {/* Danh sách kết quả tìm kiếm */ }
             { isFocused && results.length > 0 && (
                 <div className="search_item_container">

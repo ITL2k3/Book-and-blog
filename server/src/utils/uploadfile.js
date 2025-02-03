@@ -27,6 +27,7 @@ const storage = multer.diskStorage({
         if (req.filetype == 'pdf') {
             fileName = uniqueSuffix + ".pdf"
             req.filePdfPath = `../../uploads/files_pdf/${fileName}`
+            req.fileName = fileName
         } else {
             fileName = uniqueSuffix + `.${req.filetype}`
             req.fileThumbnailPath = `../../uploads/files_thumbnail_img/${fileName}`
