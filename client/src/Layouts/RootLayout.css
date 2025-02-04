@@ -355,7 +355,8 @@ main {
 
 }
 
-.advance-search-form p {
+.advance-search-p {
+    margin-bottom: 50xp;;
 }
 
 
@@ -371,10 +372,22 @@ main {
     background-color: white;
     padding: 10px;
     width: 50vw;
-    min-height: 500px;
+   
 
 }
 
+.advance-search-form .Nav-TB h2{
+    margin-left: -2px;
+}
+
+.advance-search-form .Nav-TB {
+   margin-top: -5px;
+}
+
+.advance-search-form .Nav-TB button{
+    margin-right:-8px;
+    
+}
 #search-refresh-btn{
     margin-top: 14px;
     width: 100%;
@@ -405,4 +418,58 @@ main {
     background-color: #18d9c2;
     transform: translateY(12px);
 
+}
+
+
+.btn-search-advance-page{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #2596BE;
+}
+.btn-search-advance-page:hover{
+    background-color: #0ba8e1;
+}
+
+.btn-search-advance-page svg{
+    color: black;
+}
+
+
+.btn-search-advance-page-disable{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #74b0c6;
+    
+    pointer-events: none;
+}
+
+.searched-item {
+    display: flex;
+}
+
+.searched-doc-img {
+    margin-right: 10px;
+}
+
+.searched-doc-info a {
+    text-decoration: none;
+}
+
+.searched-doc-info p{
+    font-size: small;
+}
+
+.searched-advance-doc-resbar p:first-child {
+    margin-bottom: 1px;
+    color: rgb(113, 113, 113);
+}
+
+
+.searched-advance-doc-resbar p:nth-child(2) {
+    margin-bottom: 10px;
+    color: rgb(113, 113, 113);
+    font-size: 15px;
+    font-style: italic
 }

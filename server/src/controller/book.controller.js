@@ -39,11 +39,11 @@ class BookController {
        
         const creationDate = req.query.creationdate ? parseDateRange(req.query.creationdate) : null
 
-
+        const page = req.query.page ? req.query.page : 1
         
         new OK({
             message: "search success",
-            metadata: await BookService.searchBooksAdvance({content, numPages, creationDate})
+            metadata: await BookService.searchBooksAdvance({content, numPages, creationDate, page})
         }).send(res)
     }
 

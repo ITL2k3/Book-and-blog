@@ -63,12 +63,15 @@ class BookService {
 
     }
 
-    static searchBooksAdvance = async({ content, numPages, creationDate }) => {
+    static searchBooksAdvance = async({ content, numPages, creationDate, page = 1 }) => {
 
-
+        const size = 1;
+        const from = (page-1)*size
         const query = {
                 bool: {
-                    must: [],
+                    must: [{
+                        term: {"isPublic": "true"} //doc must be public
+                    }],
                     filter: []
                 }
             }
@@ -106,8 +109,12 @@ class BookService {
 
         const result = await client.search({
             index: 'docs', // Tên index
+        
             body: {
-                query: query
+                query: query,
+                _source: ["title", "author", "thumbnail"],
+                from, //start record
+                size //record number 
             }
         });
 
@@ -119,7 +126,9 @@ class BookService {
         return {
             totalOfRecord,
             numOfRecordHit: result.hits.total.value,
-            records: result.hits.hits
+            page: page,
+            records: result.hits.hits,
+            
         }
 
     }

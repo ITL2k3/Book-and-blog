@@ -12,6 +12,7 @@ import checkAuth from '../Auth/checkAuth'
 import './RootLayout.css'
 import { host } from '../host'
 import SearchBar from './searchbar'
+import AdvancedSearch from './advanceSearchBar'
 
 
 
@@ -28,11 +29,11 @@ export default function RootLayout() {
     const [account, setAccount] = useState(null)
     const [openProfile, setOpenProfile] = useState(false)
     const [isFirstLoad, setIsFirstLoad] = useState(true)
-
+    
     //tìm kiếm nâng cao
+    const [showAdvancedSearch, setShowAdvancedSearch] = useState()
+   
 
-    const [showAdvancedSearch, setShowAdvancedSearch] = useState(false) // State cho form tìm kiếm nâng cao
-    const [searchKeyword, setSearchKeyword] = useState('') // State cho từ khóa tìm kiếm
 
 
     const handleLogout = () => {
@@ -119,6 +120,49 @@ export default function RootLayout() {
     const handleLogin = () => {
         navigate('/access')
     }
+
+    const handleRefresh = () => {
+        setSearchPhrase('');
+        setTotalPages('');
+        setCreationDate('');
+    };
+
+    const validateTotalPages = (input) => {
+        const pagesPattern = /^\d+-\d+$/;
+        if (!pagesPattern.test(validateTot)) {
+            setError('Định dạng tổng số trang không hợp lệ. Vui lòng nhập X-Y (ví dụ: 5-10).');
+        } else {
+            setTotalPages(input)
+            setError('');
+        }
+    };
+
+   
+
+    const validateCreationDate = () => {
+        const datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}_\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
+        if (!datePattern.test(creationDate)) {
+            setError('Định dạng ngày tạo không hợp lệ. Vui lòng nhập (ngày tạo)T(giờ tạo)_(ngày tạo)T(giờ tạo) (ví dụ: 2020-01-01T00:00:00_2025-11-11T23:59:59).');
+        } else {
+            setError('');
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Kiểm tra định dạng tổng số trang
+        validateTotalPages();
+        // Kiểm tra định dạng ngày tạo tài liệu
+        validateCreationDate();
+
+        // Nếu không có lỗi, xử lý tìm kiếm
+        if (!error) {
+            console.log('Tìm kiếm với:', { searchPhrase, totalPages, creationDate });
+        }
+    };
+
     return (
 
         <div>
@@ -129,7 +173,7 @@ export default function RootLayout() {
                 <div className="left-of-NavBar">
 
 
-                    <button id="advance-icon" onClick={ handleAdvancedSearchToggle }><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"><path fill="currentColor" d="M5 5h2v3h10V5h2v5h2V5c0-1.1-.9-2-2-2h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h5v-2H5zm7-2c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1" /><path fill="currentColor" d="M20.3 18.9c.4-.7.7-1.5.7-2.4c0-2.5-2-4.5-4.5-4.5S12 14 12 16.5s2 4.5 4.5 4.5c.9 0 1.7-.3 2.4-.7l2.7 2.7l1.4-1.4zm-3.8.1c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5" /></svg></button>
+                    <button id="advance-icon" className={showAdvancedSearch ? 'active': ''} onClick={ handleAdvancedSearchToggle }><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"><path fill="currentColor" d="M5 5h2v3h10V5h2v5h2V5c0-1.1-.9-2-2-2h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h5v-2H5zm7-2c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1" /><path fill="currentColor" d="M20.3 18.9c.4-.7.7-1.5.7-2.4c0-2.5-2-4.5-4.5-4.5S12 14 12 16.5s2 4.5 4.5 4.5c.9 0 1.7-.3 2.4-.7l2.7 2.7l1.4-1.4zm-3.8.1c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5" /></svg></button>
 
 
 
@@ -155,46 +199,7 @@ export default function RootLayout() {
                 { openProfile && <DropDownProfile /> }
             </header> }
 
-            { showAdvancedSearch && (
-                <div className="overlay">
-
-                    <div className="advance-search-form">
-                        <div className="Nav-TB">
-                            <h2>Tìm kiếm nâng cao</h2>
-                            <button onClick={ (event) => { setShowAdvancedSearch(false) } }>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
-                        </div>
-
-                        <p>Chức năng này sẽ giúp bạn tìm kiếm một cụm từ hoặc một đoạn văn từ nội dung của tất cả các văn bản</p>
-                        <p>Lưu ý: từ khóa tìm kiếm <i style={ { color: "red" } }><b>không</b></i> bao gồm tiêu đề hoặc tên tác giả! </p>
-                        <div className="advance-search-input" style={ { display: 'flex' } }>
-                            <div style={ { flex: 0.5, paddingRight: '10px' } }>
-                                <label>
-                                    Nhập cụm từ:
-                                    <textarea name="message" rows="4" cols="50" placeholder="Nhập đoạn văn tại đây..." style={ { width: '100%' } }></textarea>
-                                </label>
-                            </div>
-
-                            <div style={ { flex: 0.4, paddingLeft: '10px' } }>
-                                <label>
-                                    Lọc tổng số trang:
-                                    <input type="text" placeholder="Nhập số trang..." style={ { width: '100%', maxWidth: '400px', marginBottom: "18px" } } />
-                                </label>
-
-                                <label>
-                                    Lọc ngày tạo tài liệu:
-                                    <input type="text" placeholder="Nhập ngày tạo (VD: YYYY-MM-DD)..." style={ { width: '100%', maxWidth: '317px' } } />
-                                </label>
-                            </div>
-
-                            <div style={ { flex: 0.1, display: 'flex', flexDirection: 'column', justifyContent: 'center' } }>
-                                <button id="search-refresh-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20q-3.35 0-5.675-2.325T4 12t2.325-5.675T12 4q1.725 0 3.3.712T18 6.75V5q0-.425.288-.712T19 4t.713.288T20 5v5q0 .425-.288.713T19 11h-5q-.425 0-.712-.288T13 10t.288-.712T14 9h3.2q-.8-1.4-2.187-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.7 0 3.113-.862t2.187-2.313q.2-.35.563-.487t.737-.013q.4.125.575.525t-.025.75q-1.025 2-2.925 3.2T12 20"/></svg></button>
-                                <button id="search-advance-btn" type="submit"><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="24x" height="24px"><path d="M 22.205078 2 C 21.715078 2 21.29775 2.3558438 21.21875 2.8398438 L 20.263672 8.6933594 C 19.063672 9.0383594 17.911172 9.5114688 16.826172 10.105469 L 11.996094 6.6542969 C 11.597094 6.3692969 11.054031 6.4167188 10.707031 6.7617188 L 6.8203125 10.648438 C 6.4773125 10.991437 6.4280312 11.530734 6.7070312 11.927734 L 10.107422 16.791016 C 9.5024219 17.886016 9.0209219 19.045953 8.6699219 20.251953 L 2.8378906 21.222656 C 2.3558906 21.302656 2.0019531 21.719031 2.0019531 22.207031 L 2.0019531 27.707031 C 2.0019531 28.192031 2.3491719 28.608359 2.8261719 28.693359 L 8.6582031 29.726562 C 9.0072031 30.929562 9.4887031 32.0895 10.095703 33.1875 L 6.6542969 38 C 6.3702969 38.397 6.4167188 38.942063 6.7617188 39.289062 L 10.648438 43.179688 C 10.991437 43.522688 11.532688 43.571969 11.929688 43.292969 L 16.800781 39.880859 C 17.893781 40.481859 19.047141 40.958687 20.244141 41.304688 L 21.220703 47.166016 C 21.299703 47.647016 21.716078 48 22.205078 48 L 27.705078 48 C 28.190078 48 28.605453 47.652781 28.689453 47.175781 L 29.007812 45.386719 C 25.420813 43.311719 23 39.442 23 35 C 23 33.897 23.160453 32.833359 23.439453 31.818359 C 20.325453 31.108359 18 28.329 18 25 C 18 21.134 21.134 18 25 18 C 28.329 18 31.108359 20.325453 31.818359 23.439453 C 32.833359 23.160453 33.897 23 35 23 C 39.442 23 43.310766 25.418859 45.384766 29.005859 L 47.171875 28.693359 C 47.650875 28.609359 47.998047 28.192031 47.998047 27.707031 L 47.998047 22.207031 C 47.999047 21.717031 47.644156 21.299703 47.160156 21.220703 L 41.25 20.255859 C 40.904 19.069859 40.431844 17.928609 39.839844 16.849609 L 43.289062 11.933594 C 43.568063 11.536594 43.520734 10.994391 43.177734 10.650391 L 39.287109 6.7636719 C 38.940109 6.4176719 38.394094 6.3731563 37.996094 6.6601562 L 33.154297 10.140625 C 32.065297 9.538625 30.915656 9.0618437 29.722656 8.7148438 L 28.691406 2.828125 C 28.607406 2.350125 28.191078 2 27.705078 2 L 22.205078 2 z M 35 25 C 29.488997 25 25 29.488997 25 35 C 25 40.511003 29.488997 45 35 45 C 37.396508 45 39.597385 44.148986 41.322266 42.736328 L 47.292969 48.707031 L 48.707031 47.292969 L 42.736328 41.322266 C 44.148986 39.597385 45 37.396508 45 35 C 45 29.488997 40.511003 25 35 25 z M 35 27 C 39.430123 27 43 30.569877 43 35 C 43 39.430123 39.430123 43 35 43 C 30.569877 43 27 39.430123 27 35 C 27 30.569877 30.569877 27 35 27 z"/></svg></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ) }
+            { showAdvancedSearch && <AdvancedSearch setShowAdvancedSearch={setShowAdvancedSearch}/> }
 
 
             <main className={ isReadPage ? "main_active" : (isStoragePage ? "storage-p" : (isDetailPage ? "detail-p" : (isAccessPage ? "access-p" : ""))) }>
