@@ -80,7 +80,7 @@ export default function Insert() {
                             <span>bạn muốn tài liệu của bạn: </span><br />
                             <input type='radio' name='isPublic' id='public' value="true" />
                             <label for='public'>Công khai</label> <br />
-                            <input type='radio' name='isPublic' id='nopublic' value="false" />
+                            <input type='radio' name='isPublic' id='nopublic' value="false" defaultChecked/>
                             <label for='nopublic'>Riêng tư</label> <br />
                         </label>
                         <br />

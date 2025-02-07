@@ -33,17 +33,18 @@ class BookController {
             metadata: await BookService.searchBooks(query)
         }).send(res)
     }
-    searchBooksAdvance = async(req, res, next) => {
-        const content = req.query.content ? req.query.content : null
-        const numPages = req.query.numpages ?  parseNumRange(req.query.numpages) : null
-       
-        const creationDate = req.query.creationdate ? parseDateRange(req.query.creationdate) : null
 
+    searchBooksAdvance = async(req, res, next) => {
+
+        //get query
+        const content = req.query.content ? req.query.content : null
+        const numPages = req.query.numpages ? parseNumRange(req.query.numpages) : null
+        const creationDate = req.query.creationdate ? parseDateRange(req.query.creationdate) : null
         const page = req.query.page ? req.query.page : 1
-        
+
         new OK({
             message: "search success",
-            metadata: await BookService.searchBooksAdvance({content, numPages, creationDate, page})
+            metadata: await BookService.searchBooksAdvance({ content, numPages, creationDate, page })
         }).send(res)
     }
 
@@ -245,6 +246,21 @@ class BookController {
     }
 
 
+    suggestDoc = async(req, res, next) => {
+        const bookId = req.query.book_id
+
+
+
+        new SuccessResponse({
+            message: 'Get suggest doc success',
+            metadata: await BookService.getSuggestDoc(bookId)
+        }).send(res)
+    }
+
+
+
+
+
 
     referenceDoc = async(req, res, next) => {
 
@@ -267,7 +283,7 @@ class BookController {
 
 
     readTextDoc = async(req, res, next) => {
-        const {id} = req.params
+        const { id } = req.params
 
         let dataBuffer = fs.readFileSync(`uploads/files_pdf/${id}.pdf`)
         pdf(dataBuffer).then(function(data) {
@@ -276,7 +292,7 @@ class BookController {
                 message: "text",
                 metadata: data.text
             }).send(res)
-                
+
         }).catch(err => {
             res.send(err.message)
         });

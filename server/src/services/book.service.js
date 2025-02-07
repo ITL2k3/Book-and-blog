@@ -2,7 +2,7 @@ import { BadRequestError, InternalServerError } from "../common/error.response.j
 import table from "../configs/config.table.js"
 import client from "../dbs/init.elastic.js"
 import { filterNonNullProperties } from "../Helpers/asynchandler.js"
-import { deleteDataFromChatPDFAPI } from "../Helpers/fetchdata.js"
+import { deleteDataFromChatPDFAPI, fetchVectorFromMBertHost } from "../Helpers/fetchdata.js"
 import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
@@ -17,13 +17,54 @@ class BookService {
     static getReferenceDoc = async(category) => {
 
 
-
         const limitRecord = 10
-        const result = await bookHelper.getReferencesDoc(category, limitRecord)
+        const result = await bookHelper.getReferencesDoc(category, limitRecord, category.length)
 
         console.log('res: ', result)
 
         return result
+    }
+
+    static getDocVector = async(bookId) => {
+        try {
+            // Lấy vector của một quyển sách theo bookId
+            const response = await client.get({
+                index: 'docs', // Thay 'docs' bằng tên index của bạn
+                id: bookId // Dùng bookId để lấy tài liệu
+            });
+
+            const bookVector = response._source.content.vector; // Lấy vector từ trường 'content.vector'
+            return bookVector;
+        } catch (error) {
+            console.error('Error fetching book vector:', error);
+            return null;
+        }
+    }
+
+    static getSuggestDoc = async(bookId) => {
+
+        try {
+
+            const queryVector = await this.getDocVector(bookId)
+                // Truy vấn k-NN tìm các tài liệu gần nhất
+            const response = await client.search({
+                index: 'docs', // Tên index
+                knn: {
+                    field: "content.vector",
+                    query_vector: queryVector,
+                    k: 20,
+                    num_candidates: 100
+                },
+                _source: ["title", "author"]
+            });
+
+            //filter record score>0.85
+            //const filteredResults = response.hits.hits.filter(hit => hit._score > 0.8);
+            return response;
+        } catch (error) {
+            console.error('Error searching for similar books:', error);
+            return [];
+        }
     }
 
     static getSourceIdPDF = async(bookId) => {
@@ -66,11 +107,11 @@ class BookService {
     static searchBooksAdvance = async({ content, numPages, creationDate, page = 1 }) => {
 
         const size = 1;
-        const from = (page-1)*size
+        const from = (page - 1) * size
         const query = {
                 bool: {
                     must: [{
-                        term: {"isPublic": "true"} //doc must be public
+                        term: { "isPublic": "true" } //doc must be public
                     }],
                     filter: []
                 }
@@ -109,7 +150,7 @@ class BookService {
 
         const result = await client.search({
             index: 'docs', // Tên index
-        
+
             body: {
                 query: query,
                 _source: ["title", "author", "thumbnail"],
@@ -128,7 +169,7 @@ class BookService {
             numOfRecordHit: result.hits.total.value,
             page: page,
             records: result.hits.hits,
-            
+
         }
 
     }
@@ -238,10 +279,13 @@ class BookService {
         //read file pdf and transfer to text
         let dataBuffer = await fs.readFile(`uploads/files_pdf/${payload.fileName}`)
         const stats = await fs.stat(`uploads/files_pdf/${payload.fileName}`)
-       
+
 
 
         pdf(dataBuffer).then(async function(data) {
+
+            const book_vector = await fetchVectorFromMBertHost(data.text)
+
             const result = await client.index({
                 index: "docs",
                 id: `${bookId.Id}`,
@@ -256,7 +300,8 @@ class BookService {
                             numpages: data.numpages,
                             CreationDate: stats.birthtime
                         },
-                        text: data.text
+                        text: data.text,
+                        vector: book_vector
                     }
 
                 }

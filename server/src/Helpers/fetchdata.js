@@ -22,7 +22,22 @@ const deleteDataFromChatPDFAPI = async (src_id) => {
 }
 
 
+const fetchVectorFromMBertHost = async (text) => {
+    const response = await fetch('http://localhost:8000/get_book_vector/',{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({text: text})
+    })
+        
+    const {book_vector} = JSON.parse(await response.text());
+
+    return book_vector
+}
+
 
 export {
-    deleteDataFromChatPDFAPI
+    deleteDataFromChatPDFAPI,
+    fetchVectorFromMBertHost
 }

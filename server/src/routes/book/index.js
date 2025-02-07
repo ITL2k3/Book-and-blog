@@ -23,6 +23,7 @@ bookRouter.get('/text-doc/:id', asyncHandler(BookController.readTextDoc))
 bookRouter.get('/references-doc', asyncHandler(BookController.referenceDoc))
 
 //tài liệu đề xuất
+bookRouter.get('/suggest-docs', asyncHandler(BookController.suggestDoc))
 
 
 // check auth

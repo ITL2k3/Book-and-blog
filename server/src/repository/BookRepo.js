@@ -10,7 +10,7 @@ import UserEntity from "./entities/user.entity.js";
 
 class BookRepo extends BaseRepo {
 
-    getReferencesDoc = async(categories, limit) => {
+    getReferencesDoc = async(categories, limit, numOfCategories) => {
         //query that find record base on exactly their category id 
         const [result, fields] = await connection.query(`
             SELECT b.*
@@ -19,10 +19,10 @@ class BookRepo extends BaseRepo {
             WHERE bc.category_id IN (?)  -- Thay thế bằng các category_id cụ thể
             AND b.isPublic = true        -- Chỉ lấy sách có trường isPublic = true
             GROUP BY b.book_id
-            HAVING COUNT(DISTINCT bc.category_id) = 3  -- Đảm bảo sách thuộc cả 3 danh mục
+            HAVING COUNT(DISTINCT bc.category_id) = ?  -- Đảm bảo sách thuộc cả 3 danh mục
             ORDER BY b.num_of_views DESC
             LIMIT ?;
-        `, [categories, limit])
+        `, [categories, numOfCategories ,limit])
         
         return result
     }
