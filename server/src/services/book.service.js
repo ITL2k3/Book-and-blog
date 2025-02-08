@@ -59,8 +59,8 @@ class BookService {
             });
 
             //filter record score>0.85
-            //const filteredResults = response.hits.hits.filter(hit => hit._score > 0.8);
-            return response;
+            const filteredResults = response.hits.hits.filter(hit => hit._score > 0.85);
+            return filteredResults;
         } catch (error) {
             console.error('Error searching for similar books:', error);
             return [];

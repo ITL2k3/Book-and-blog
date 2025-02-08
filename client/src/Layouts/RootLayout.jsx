@@ -202,7 +202,14 @@ export default function RootLayout() {
             { showAdvancedSearch && <AdvancedSearch setShowAdvancedSearch={setShowAdvancedSearch}/> }
 
 
-            <main className={ isReadPage ? "main_active" : (isStoragePage ? "storage-p" : (isDetailPage ? "detail-p" : (isAccessPage ? "access-p" : ""))) }>
+            <main className={ isReadPage ? "main_active" : 
+                (isStoragePage ? "storage-p" : 
+                (isDetailPage ? "detail-p" : 
+                (isAccessPage ? "access-p" : 
+                (isInsertPage ? "insert-p":
+                    ""
+
+                )))) }>
                 <Outlet />
             </main>
         </div>

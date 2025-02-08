@@ -237,7 +237,7 @@
 .ref-Doc-body {
     width: 90%;
     /* Giới hạn chiều dài */
-    max-height: 400px;
+    height: 350px;
     /* Giới hạn chiều cao */
     overflow-y: auto;
     /* Kéo xuống khi tràn */

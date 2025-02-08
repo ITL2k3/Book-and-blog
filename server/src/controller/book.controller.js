@@ -250,10 +250,11 @@ class BookController {
         const bookId = req.query.book_id
 
 
-
+        const result = await BookService.getSuggestDoc(bookId)
+        const resultAfterFilter = result.filter(book => book._id != bookId)
         new SuccessResponse({
             message: 'Get suggest doc success',
-            metadata: await BookService.getSuggestDoc(bookId)
+            metadata: resultAfterFilter
         }).send(res)
     }
 
