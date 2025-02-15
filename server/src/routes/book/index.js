@@ -31,11 +31,19 @@ bookRouter.get('/suggest-docs', asyncHandler(BookController.suggestDoc))
 bookRouter.use('/', asyncHandler(authentication))
 //passed
 bookRouter.get('/', async (req, res) => {
-    res.send({
-        statusCode: 200,
-        statusText: 'authen success',
-        userId: req.user.userId
-    })
+    try{
+        res.send({
+            statusCode: 200,
+            statusText: 'authen success',
+            userId: req.user.userId
+        })
+    }catch(err){
+        res.send({
+            statusCode: 500,
+            statusText: 'internal server err, Not sign in!'
+        })
+    }
+   
 })
 
 

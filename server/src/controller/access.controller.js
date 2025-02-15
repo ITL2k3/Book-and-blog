@@ -64,7 +64,7 @@ class AccessController {
         const validUser = isValidUser.value
         const {user, token} = await AccessService.login(validUser)
 
-    
+        
         //set token cookies and send request
         let setHeaderArray = [
             {

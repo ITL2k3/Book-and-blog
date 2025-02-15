@@ -242,7 +242,11 @@ class BookService {
         return books
     }
 
-
+    static checkDocExists = async(bookId) => {
+        console.log('you are in!', bookId);
+        const result = await bookHelper.getOneBookById('*', bookId)
+        console.log(result);
+    }
 
     static getOneBook = async(id) => {
         const [result] = await bookHelper.getOneBookById('*', id)

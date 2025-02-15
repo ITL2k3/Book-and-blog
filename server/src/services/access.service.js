@@ -2,6 +2,7 @@ import { setToken } from '../Auth/authUtils.js'
 import { AuthFailureError, BadRequestError } from '../common/error.response.js'
 import UserRepo from '../repository/UserRepo.js'
 import { createRandKey, getInfoData } from '../utils/index.js'
+import FolderService from './folder.service.js'
 import { getKeyToken, saveKeyToken } from './keytoken.service.js'
 import bcrypt from 'bcrypt'
 
@@ -28,7 +29,8 @@ class AccessService {
             const token = setToken(signedValue, keyToken)
             const { userId } = signedValue
             saveKeyToken({ keyToken, userId })
-
+            //init folder
+            await FolderService.initFolder(userId)
 
 
 

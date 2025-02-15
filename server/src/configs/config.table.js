@@ -6,7 +6,10 @@ const table = {
     ANOTATION: "anotation",
     STORAGE: "storage",
     CATEGORY: "category",
-    BOOK_CATEGORY: "book_category"
+    BOOK_CATEGORY: "book_category",
+    FOLDER: "folder",
+    FOLDER_BOOK: "folder_book",
+    BOOK_LOVE_USER: "user_love_book"
 }
 
 export default table

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import accessRouter from './access/index.js'
 import bookRouter from './book/index.js'
 import storageRouter from './storage/index.js'
+import folderRouter from './folder/index.js'
 
 const router = Router()
 
@@ -10,7 +11,9 @@ const router = Router()
 //
 router.use('/v1/api', accessRouter)
 router.use('/v1/api', bookRouter)
+router.use('/v1/api', folderRouter)
 router.use('/v1/api',storageRouter)
+
 
 
 
