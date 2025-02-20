@@ -47,25 +47,32 @@ class BookController {
             metadata: await BookService.searchBooksAdvance({ content, numPages, creationDate, page })
         }).send(res)
     }
+    
+    searchBooksUpload = async(req, res, next) => {
+
+        const {title} = req.query
+        const { userId } = req.user
+
+        new OK({
+            message: "search success",
+            metadata: await BookService.searchBooksFromUpload(userId, title)
+        }).send(res)
+    }
 
 
     getUserBook = async(req, res, next) => {
 
-        const page = req.query.page
 
-        const results = await BookService.getUserBooks(page, req.user.userId)
+        const results = await BookService.getUserBooks(req.user.userId)
 
-        let sumOfBooks
-
-        const { SUM } = await BookService.countBooksWithUserId(req.user.userId)
-        sumOfBooks = SUM
-
+     
+        // const { SUM } = await BookService.countBooksWithUserId(req.user.userId)
+        // sumOfBooks = SUM
 
         new OK({
             message: 'get success',
             metadata: {
-                results: results,
-                sumOfBooks: sumOfBooks,
+                results
 
             }
         }).send(res)

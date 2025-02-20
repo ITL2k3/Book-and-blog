@@ -40,7 +40,8 @@ folderRouter.delete('/delete-doc-from-folder', asyncHandler(FolderController.del
 folderRouter.get('/get-love-doc', asyncHandler(FolderController.getDocLove))
 folderRouter.post('/add-doc-love', asyncHandler(FolderController.addDocLove))
 folderRouter.delete('/delete-doc-love/:bookId', asyncHandler(FolderController.deleteDocLove))
-
+//method for manage share folder
+folderRouter.post('/share-doc', asyncHandler(FolderController.shareDocToAnotherAccount))
 
 
 

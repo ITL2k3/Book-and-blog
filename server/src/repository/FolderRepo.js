@@ -15,6 +15,15 @@ class FolderRepo extends BaseRepo {
             ;`, [userId])
         return result
     }
+    getOneFolder = async(userId, folderId) => {
+        const [result, fields] = await connection.query(`
+                SELECT * FROM ${table.FOLDER} 
+                WHERE user_id = ?
+                AND folder_id = ?
+               
+            ;`, [userId, folderId])
+        return result
+    }
     getDateCreateOfFolder = async(folderId) => {
         // Truy vấn lại để lấy `create_at`
         const [folder] = await connection.query(`
@@ -54,7 +63,20 @@ class FolderRepo extends BaseRepo {
 
 
     }
+    checkDefaultFolder = async(folderId) => {
+        const [result, fields] = await connection.query(`
+                SELECT * FROM ${table.FOLDER}
+                WHERE folder_id = ${folderId}
+            `)
+        const [folder] = result
 
+        if(folder.is_shared_folder == 0 && folder.is_loved_folder == 0 && folder.is_root_folder == 0){
+            return false
+        }else{
+            return true
+        }
+      
+    }
     updateNameFolder = async(nameFolder, folderId, userId) => {
 
         const [result, fields] = await connection.query(`
@@ -113,6 +135,15 @@ class FolderRepo extends BaseRepo {
             WHERE book_id = ${bookId} AND folder_id = ${folderId}
         `)
         return result
+    }
+
+    getShareFolderId = async(userId) => {
+        const [result, fields] = await connection.query(`
+            SELECT * FROM ${table.FOLDER}
+            WHERE user_id = ? AND is_shared_folder = 1
+            `, [userId])
+            
+        return result[0].folder_id
     }
 
     // addDocToLoveFolder = async(bookId, userId) => {

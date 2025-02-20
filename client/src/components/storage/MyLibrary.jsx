@@ -15,8 +15,27 @@ const MyLibrary = () => {
     const [isAddPdfModalOpen, setIsAddPdfModalOpen] = useState(false)
     const [pdfIdToAdd, setPPdfIdToAdd] = useState('')
     const [folderId, setFolderId] = useState('')
-    //
+    const [isModalWarningPdfOpen, setIsModalWarningPdfOpen] = useState(false)
+    const [statusCodeAddPdf, setStatusCodeAddPdf] = useState(null)
+    //setting folder
     const [isModalFolderOpen, setIsModalFolderOpen] = useState(false)
+    //delete folder
+    const [deleteFolderQuery, setDeleteFolderQuery] = useState(null)
+    const [isModalWarningDeleteFolder, setisModalWarningDeleteFolder] = useState(false)
+    //rename folder
+    const [isModalRenameFolderOpen, setIsModalRenameFolderOpen] = useState(false)
+    const [renameFolder, setRenameFolder] = useState('')
+    const [isModalWarningRenameFolder, setisModalWarningRenameFolder] = useState(false)
+    //set current folder for delete file
+    const [currentFolder, setCurrentFolder] = useState('')
+    const [currentPdf, setCurrentPdf] = useState('')
+    const [isModalWarningDeletePdfFromFolder, setisModalWarningDeletePdfFromFolder] = useState(false)
+    //set share pdf to another account
+    const [destUserId, setDestUserId] = useState('')
+    const [isSharePdfModalOpen, setIsSharePdfModalOpen] = useState(false)
+    const [isModalWarningSharePdfOpen, setIsModalWarningSharePdfOpen] = useState(false)
+
+
     const [newFolderName, setNewFolderName] = useState('');
     const modalRef = useRef(null);
     const navigate = useNavigate();
@@ -31,13 +50,24 @@ const MyLibrary = () => {
 
     const refreshFolder = async () => {
         try {
-            const response = await fetch(`http://${host}:3055/v1/api/get-folder`, {
-                method: "GET",
-                credentials: "include"
-            });
-            const result = await response.json();
-            console.log(result);
-            setFolders(result.metadata);
+            if (currentPath == 'Drive') {
+                const response = await fetch(`http://${host}:3055/v1/api/get-folder`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const result = await response.json();
+                console.log(result);
+                setFolders(result.metadata);
+            } else {
+                const response = await fetch(`http://${host}:3055/v1/api/get-doc-from-folder/${currentFolder}`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const result = await response.json();
+                console.log(result);
+                setFiles(result.metadata)
+            }
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -52,19 +82,31 @@ const MyLibrary = () => {
                 credentials: "include"
             });
             const result = await response.json();
+            setCurrentFolder(folderId)
+            setFolderId(folderId)
             setFiles(result.metadata);
         } catch (error) {
             console.error('Error fetching files:', error);
         }
     };
 
-    const handleAddFolder = async () => {
-        setIsAddFolderModalOpen(true);
+    const handleAdd = async () => {
+        if (currentPath == 'Drive') {
+            setIsAddFolderModalOpen(true);
+        } else {
+            setIsAddPdfModalOpen(true)
+        }
+
     }
 
     const handleAddPdfModal = async () => {
         setIsAddPdfModalOpen(true)
     }
+
+    const handleRenameModal = async () => {
+        setIsModalRenameFolderOpen(true)
+    }
+
 
     const handleCreateFolder = async () => {
         if (!newFolderName) return; // Kiểm tra nếu tên thư mục không rỗng
@@ -88,6 +130,30 @@ const MyLibrary = () => {
             console.error('Error creating folder:', error);
         }
     };
+    ///delete-doc-from-folder
+    const handleDeleteFolder = async () => {
+
+        try {
+            const response = await fetch(`http://${host}:3055/v1/api/delete-folder?${deleteFolderQuery}`, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+
+            });
+            const result = await response.json();
+
+            setStatusCodeAddPdf(result.statusCode)
+            setisModalWarningDeleteFolder(true)
+            // Cập nhật danh sách thư mục
+            if (result.statusCode == 200) setFolders(folders.filter(folder => folder.folder_id != folderId))
+
+
+        } catch (error) {
+            console.error('Error creating folder:', error);
+        }
+    };
 
 
     const handleAddPdf = async () => {
@@ -99,13 +165,17 @@ const MyLibrary = () => {
                     'Content-Type': 'application/json'
                 },
                 credentials: "include",
-                body: JSON.stringify({ folderId, bookId: pdfIdToAdd})
+                body: JSON.stringify({ folderId, bookId: pdfIdToAdd })
             });
             const result = await response.json();
-            setFolderId(null)
+
+            setStatusCodeAddPdf(result.statusCode)
             setPPdfIdToAdd(null)
-            // Cập nhật danh sách thư mục
-           
+
+            refreshFolder()
+
+            //mở modal thông báo
+            setIsModalWarningPdfOpen(true)
             setIsAddPdfModalOpen(false); // Đóng modal
         } catch (error) {
             console.error('Error creating folder:', error);
@@ -113,8 +183,102 @@ const MyLibrary = () => {
     };
 
 
+    const handleSharePdf = async () => {
+
+        try {
+            const response = await fetch(`http://${host}:3055/v1/api/share-doc`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+                body: JSON.stringify({ bookId: currentPdf, destUserId })
+            });
+            const result = await response.json();
+            console.log(result);
+            setStatusCodeAddPdf(result.statusCode)
+            setCurrentPdf(null)
+
+
+            //mở modal thông báo
+            setIsModalWarningSharePdfOpen(true)
+            setIsSharePdfModalOpen(false) // Đóng modal
+        } catch (error) {
+            console.error('Error creating folder:', error);
+        }
+    };
+
+
+    const handleDeletePdfFromFolder = async (bookId) => {
+
+        try {
+            const response = await fetch(`http://${host}:3055/v1/api/delete-doc-from-folder?folderId=${currentFolder}&bookId=${currentPdf}`, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+
+            });
+            const result = await response.json();
+            if (result.statusCode == 200) {
+                setFiles(files.filter(file => {
+                    if (file.book_id != currentPdf) return file
+                }))
+                setCurrentPdf('')
+            }
+            console.log(result);
+            setStatusCodeAddPdf(result.statusCode)
+            setisModalWarningDeletePdfFromFolder(true)
+            // // Cập nhật danh sách thư mục
+
+
+        } catch (error) {
+            console.error('Error creating folder:', error);
+        }
+    };
+
+
+    const handleRenameFolder = async () => {
+
+        try {
+            const response = await fetch(`http://${host}:3055/v1/api/update-name-folder`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+                body: JSON.stringify({ folderId, nameFolder: renameFolder })
+            });
+            const result = await response.json();
+
+            setStatusCodeAddPdf(result.statusCode)
+            console.log(result);
+            //mở modal thông báo
+            if (result.statusCode == 200) {
+                setFolders(folders.map(folder => {
+                    if (folder.folder_id == folderId) {
+                        return { ...folder, name: renameFolder }
+                    }
+                    return folder
+                }))
+            }
+
+            setisModalWarningRenameFolder(true)
+            setIsModalRenameFolderOpen(false)
+            setRenameFolder(null)
+            setFolderId(null)
+
+        } catch (error) {
+            console.error('Error creating folder:', error);
+        }
+    };
+
+
+
     const handleBackClick = () => {
         setCurrentPath('Drive');
+        setCurrentFolder('')
         setFiles([]);
     };
 
@@ -128,11 +292,11 @@ const MyLibrary = () => {
             top: `${(rect.bottom + window.scrollY) / window.innerHeight * 100}%`, // Tính toán top theo phần trăm chiều cao
             left: `${(rect.left + window.scrollX) / window.innerWidth * 100}%` // Tính toán left theo phần trăm chiều rộng
         });
-
+        setCurrentPdf(file.book_id)
         setIsModalOpen(!isModalOpen);
     };
 
-    const handleIconFolderClick = (event, folderId) => {
+    const handleIconFolderClick = (event, folderId, isRootFolder, isLovedFolder, isSharedFolder) => {
         event.stopPropagation();
 
         const rect = event.currentTarget.getBoundingClientRect();
@@ -141,11 +305,13 @@ const MyLibrary = () => {
             left: `${(rect.left + window.scrollX) / window.innerWidth * 100}%` // Tính toán left theo phần trăm chiều rộng
         });
         setFolderId(folderId)
+
+        setDeleteFolderQuery(`folderId=${folderId}&isLovedFolder=${isLovedFolder}&isRootFolder=${isRootFolder}&isSharedFolder=${isSharedFolder}`)
         setIsModalFolderOpen(!isModalFolderOpen);
     }
 
-    
- 
+
+
     const handleOutsideClick = (event) => {
         if (modalRef.current && !modalRef.current.contains(event.target)) {
             setIsModalOpen(false);
@@ -170,7 +336,7 @@ const MyLibrary = () => {
                 </div>
 
             </div>
-            <button id="add-folder-btn" onClick={ handleAddFolder }><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2m-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3z" /></svg> Thêm</button>
+            <button id={ currentPath == 'Drive' ? "add-folder-btn" : "add-pdf-btn" } onClick={ handleAdd }><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2m-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3z" /></svg> Thêm</button>
             <div className="folder-header">
                 <div className="folder-column">Tên</div>
                 <div className="folder-column">Tác giả </div>
@@ -194,7 +360,7 @@ const MyLibrary = () => {
                                 { folder.name }</div>
                             <div className="folder-column">Tôi</div>
                             <div className="folder-column">{ new Date(folder.last_update).toLocaleString() }</div>
-                            <div className="folder-column" onClick={ (e) => handleIconFolderClick(e, folder.folder_id) }>
+                            <div className="folder-column" onClick={ (e) => handleIconFolderClick(e, folder.folder_id, folder.is_root_folder, folder.is_loved_folder, folder.is_shared_folder) }>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
                                 </svg>
@@ -226,16 +392,33 @@ const MyLibrary = () => {
                 </div>
             ) }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             {/* Modal for folder */ }
             { isModalFolderOpen && (
                 <div className="modal2" ref={ modalRef } style={ { top: modalPosition.top, left: modalPosition.left } }>
                     <div className="modal-content2">
 
-                        <div onClick = {handleAddPdfModal} > <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="M19 11c.17 0 .33.01.49.02L15 3H9l5.68 9.84A6 6 0 0 1 19 11M8.15 4.52L2 15.5L5 21l6.33-10.97zM13.2 15.5H9.9L6.73 21h7.81A5.93 5.93 0 0 1 13 17c0-.52.07-1.02.2-1.5m6.8.5v-3h-2v3h-3v2h3v3h2v-3h3v-2z" /></svg>
+                        <div onClick={ handleAddPdfModal }  > <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="M19 11c.17 0 .33.01.49.02L15 3H9l5.68 9.84A6 6 0 0 1 19 11M8.15 4.52L2 15.5L5 21l6.33-10.97zM13.2 15.5H9.9L6.73 21h7.81A5.93 5.93 0 0 1 13 17c0-.52.07-1.02.2-1.5m6.8.5v-3h-2v3h-3v2h3v3h2v-3h3v-2z" /></svg>
                             Thêm tài liệu</div>
-                        <div> <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="m15 16l-4 4h10v-4zm-2.94-8.81L3 16.25V20h3.75l9.06-9.06zM5.92 18H5v-.92l7.06-7.06l.92.92zm12.79-9.96a.996.996 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z" /></svg>
+                        <div onClick={ handleRenameModal }>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="m15 16l-4 4h10v-4zm-2.94-8.81L3 16.25V20h3.75l9.06-9.06zM5.92 18H5v-.92l7.06-7.06l.92.92zm12.79-9.96a.996.996 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z" /></svg>
                             Đổi tên</div>
-                        <div> <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12l1.41 1.41L13.41 14l2.12 2.12l-1.41 1.41L12 15.41l-2.12 2.12l-1.41-1.41L10.59 14zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" /></svg>
+                        <div onClick={ handleDeleteFolder }>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12l1.41 1.41L13.41 14l2.12 2.12l-1.41 1.41L12 15.41l-2.12 2.12l-1.41-1.41L10.59 14zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" /></svg>
                             Xóa</div>
                     </div>
                 </div>
@@ -245,10 +428,42 @@ const MyLibrary = () => {
             { isModalOpen && (
                 <div className="modal2" ref={ modalRef } style={ { top: modalPosition.top, left: modalPosition.left } }>
                     <div className="modal-content2">
-                        <div>Chia sẻ</div>
-                        <div>Xóa khỏi thư mục</div>
+                        <div onClick={ () => setIsSharePdfModalOpen(true) }  > <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81c1.66 0 3-1.34 3-3s-1.34-3-3-3s-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65c0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92M18 4c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1M6 13c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1m12 7.02c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1" /></svg>
+                            Chia sẻ</div>
+
+                        <div onClick={ handleDeletePdfFromFolder }>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="#606060" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12l1.41 1.41L13.41 14l2.12 2.12l-1.41 1.41L12 15.41l-2.12 2.12l-1.41-1.41L10.59 14zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" /></svg>
+                            Xóa</div>
                     </div>
                 </div>
+            ) }
+
+            {/* share pdf modal */ }
+            { isSharePdfModalOpen && (
+                <div className="modal-add-ovl">
+                    <div className="modal3" style={ { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } }>
+                        <div className="modal-content3">
+                            <h4>Nhập Id người dùng </h4>
+                            <input
+                                type="text"
+                                value={ destUserId }
+                                onChange={ (e) => setDestUserId(e.target.value) }
+                                placeholder="Id người dùng "
+                            />
+                            <div className="btn-md-ctn">
+                                <button onClick={ () => {
+                                    setIsSharePdfModalOpen(false);
+                                 
+                              
+                                } }>Hủy</button>
+                                <button onClick={ handleSharePdf }>Thêm</button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
             ) }
 
 
@@ -256,20 +471,21 @@ const MyLibrary = () => {
 
             { isAddPdfModalOpen && (
                 <div className="modal-add-ovl">
-                    <div className="modal3"  style={ { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } }>
+                    <div className="modal3" style={ { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } }>
                         <div className="modal-content3">
                             <h4>Nhập Id tài liệu </h4>
                             <input
                                 type="text"
-                                value={ pdfIdToAdd}
+                                value={ pdfIdToAdd }
                                 onChange={ (e) => setPPdfIdToAdd(e.target.value) }
                                 placeholder="id tài liệu"
                             />
                             <div className="btn-md-ctn">
                                 <button onClick={ () => {
-                                    setIsAddPdfModalOpen(false);  
+                                    setIsAddPdfModalOpen(false);
                                     setFolderId(null)
-                                    setPPdfIdToAdd(null)} }>Hủy</button>
+                                    setPPdfIdToAdd(null)
+                                } }>Hủy</button>
                                 <button onClick={ handleAddPdf }>Thêm</button>
                             </div>
 
@@ -279,6 +495,144 @@ const MyLibrary = () => {
                 </div>
 
             ) }
+
+            {/* rename folder */ }
+
+            { isModalRenameFolderOpen && (
+                <div className="modal-add-ovl">
+                    <div className="modal3" style={ { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } }>
+                        <div className="modal-content3">
+                            <h4>Nhập tên tài liệu </h4>
+                            <input
+                                type="text"
+                                value={ renameFolder }
+                                onChange={ (e) => setRenameFolder(e.target.value) }
+                                placeholder="tên muốn chỉnh sửa"
+                            />
+                            <div className="btn-md-ctn">
+                                <button onClick={ () => {
+                                    setIsModalRenameFolderOpen(false);
+                                    setFolderId(null)
+                                    setRenameFolder(null)
+                                } }>Hủy</button>
+                                <button onClick={ handleRenameFolder }>Sửa</button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            ) }
+
+            {/* warning share folder */ }
+            { isModalWarningSharePdfOpen && (
+                <div className="tb-overlay">
+                    <div className="Modal-tb">
+                        <div className="Nav-TB">
+                            <h2>Thông báo</h2>
+                            <button onClick={ (event) => { setIsModalWarningSharePdfOpen(false) } }>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                        </div>
+                        <p>
+                            { statusCodeAddPdf == 200 ? "Chia sẻ tài liệu thành công" :
+                                statusCodeAddPdf == 400 ? "Tài liệu không tồn tại!" :
+                                    statusCodeAddPdf == 400.1 ? "Người dùng không tồn tại!":
+                                    "Tài liệu đã ở trong folder của người dùng"
+
+                            }
+                        </p>
+                    </div>
+                </div>) }
+
+
+
+
+            {/* warning pdf to folder */ }
+            { isModalWarningPdfOpen && (
+                <div className="tb-overlay">
+                    <div className="Modal-tb">
+                        <div className="Nav-TB">
+                            <h2>Thông báo</h2>
+                            <button onClick={ (event) => { setIsModalWarningPdfOpen(false) } }>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                        </div>
+                        <p>
+                            { statusCodeAddPdf == 200 ? "Thêm tài liệu thành công" :
+                                statusCodeAddPdf == 400 ? "Tài liệu không tồn tại!" :
+                                    statusCodeAddPdf == 400.1 ? "Thư mục chia sẻ chỉ dùng để nhận tài liệu từ người khác!" :
+                                        "Tài liệu đã tồn tại trong folder!"
+
+                            }
+                        </p>
+                    </div>
+                </div>) }
+
+            {/* modal warrning delete folder result */ }
+            { isModalWarningDeleteFolder && (
+                <div className="tb-overlay">
+                    <div className="Modal-tb">
+                        <div className="Nav-TB">
+                            <h2>Thông báo</h2>
+                            <button onClick={ (event) => { setisModalWarningDeleteFolder(false) } }>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                        </div>
+                        <p>
+                            { statusCodeAddPdf == 200 ? "Xóa thư mục thành công!" : "Không thể xóa thư mục mặc định!"
+
+
+                            }
+                        </p>
+                    </div>
+                </div>) }
+
+            {/* modal warrning delete pdf from folder result */ }
+            { isModalWarningDeletePdfFromFolder && (
+                <div className="tb-overlay">
+                    <div className="Modal-tb">
+                        <div className="Nav-TB">
+                            <h2>Thông báo</h2>
+                            <button onClick={ (event) => { setisModalWarningDeletePdfFromFolder(false) } }>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                        </div>
+                        <p>
+                            { statusCodeAddPdf == 200 ? "Xóa tài liệu thành công!" : "Lỗi!"
+
+
+                            }
+                        </p>
+                    </div>
+                </div>) }
+
+
+
+
+            {/* modal warrning rename folder result */ }
+            { isModalWarningRenameFolder && (
+                <div className="tb-overlay">
+                    <div className="Modal-tb">
+                        <div className="Nav-TB">
+                            <h2>Thông báo</h2>
+                            <button onClick={ (event) => { setisModalWarningRenameFolder(false) } }>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                        </div>
+                        <p>
+                            { statusCodeAddPdf == 200 ? "Đổi tên thư mục thành công!" : "Không thể đổi tên thư mục mặc định!"
+
+
+                            }
+                        </p>
+                    </div>
+                </div>) }
+
+
+
+
             {/* add folder */ }
             { isAddFolderModalOpen && (
                 <div className="modal-add-ovl">

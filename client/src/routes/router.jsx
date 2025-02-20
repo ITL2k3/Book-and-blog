@@ -34,9 +34,9 @@ const router = createBrowserRouter(
             <Route path='detail/:query' element={<Detail/>} errorElement={<ErrorBoundary/>}/>
             <Route path='read/:query' element={<Read/>}/>
             <Route path='about' element={<About />}/>
-            <Route path='storage' element={<Storage/>}/>
+            <Route path='storage' element={<Storage/>} action={updateAction}/>
             <Route path='insert-book' element={<Insert/>} action={insertAction}/>
-            <Route path='update-book' element={<UpdateBook/>} action={updateAction}/>
+           
             <Route path='chatPDF' element={<ChatPDF/>}/>
         </Route>
     )

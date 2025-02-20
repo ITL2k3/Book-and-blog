@@ -31,6 +31,7 @@ class FolderController{
 
     updateNameFolder = async(req, res, next) => {
         const {nameFolder, folderId} = req.body
+      
         const userId = req.user.userId
         new SuccessResponse({
             message: "update name success",
@@ -39,24 +40,40 @@ class FolderController{
     }
 
     deleteFolder = async(req, res, next) => {
-        const {folderId, isSharedFolder} = req.query
+        const {folderId, isSharedFolder, isLovedFolder, isRootFolder} = req.query
+        console.log( isSharedFolder, isLovedFolder, isRootFolder);
+        //if information is not enough, throw error
+        if(isSharedFolder === undefined || isLovedFolder === undefined || isRootFolder === undefined){
+            throw new BadRequestError("Đề nghị truyền đẩy đủ thông tin!")
+        }
         const userId = req.user.userId
         
         new SuccessResponse({
             message: "update name success",
-            metadata: await FolderService.deleteFolder(userId,folderId, isSharedFolder)
+            metadata: await FolderService.deleteFolder(userId,folderId, isSharedFolder, isRootFolder, isLovedFolder)
         }).send(res)
     }
 
 
     addDocToFolder = async(req, res, next) => {
         const {folderId, bookId} = req.body
+        const userId = req.user.userId
 
         new SuccessResponse({
             message: "post doc to folder success",
-            metadata: await FolderService.addDocToFolder(bookId, folderId)
+            metadata: await FolderService.addDocToFolder(bookId, folderId, userId)
         }).send(res)
     }
+
+    shareDocToAnotherAccount = async(req, res, next) => {
+        const {destUserId, bookId} = req.body
+        new SuccessResponse({
+            message: "Share doc success",
+            metadata: await FolderService.shareDocToAnotherAccount(bookId, destUserId)
+        }).send(res)
+    }
+
+
 
     getDocFromFolder = async(req, res, next) => {
         const folderId = req.params.id

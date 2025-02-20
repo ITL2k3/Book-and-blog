@@ -104,6 +104,14 @@ class BookService {
 
     }
 
+
+    static searchBooksFromUpload = async(userId, title) => {
+        const [result] = await bookHelper.getBooksUpload(userId, title)
+
+        return result
+
+    }
+
     static searchBooksAdvance = async({ content, numPages, creationDate, page = 1 }) => {
 
         const size = 1;
@@ -192,13 +200,13 @@ class BookService {
         const [results] = await bookHelper.countAllEntities()
         return results
     }
-    static getUserBooks = async(page, userId) => {
+    static getUserBooks = async(userId) => {
 
-        const LIMIT = 8;
-        const OFFSET = (page - 1) * LIMIT
+        // const LIMIT = 8;
+        // const OFFSET = (page - 1) * LIMIT
+        console.log('hello', userId);
 
-
-        let books = await bookHelper.getUserBooksWithFilter(LIMIT, OFFSET, userId)
+        let books = await bookHelper.getUserBookAll(userId)
 
 
 
@@ -243,9 +251,10 @@ class BookService {
     }
 
     static checkDocExists = async(bookId) => {
-        console.log('you are in!', bookId);
+    
         const result = await bookHelper.getOneBookById('*', bookId)
-        console.log(result);
+       
+        return result
     }
 
     static getOneBook = async(id) => {
@@ -384,12 +393,14 @@ class BookService {
 
         //update book record elastic
         const updateDoc = filterNonNullProperties(payload, ['title', 'author', 'isPublic', 'filepath', 'thumbnail'])
+        console.log(updateDoc);
+       
         await client.update({
             index: 'docs',
             id: payload.bookId,
             doc: updateDoc
         })
-
+  
         //delete 
         return old_src_id_PDF
 
@@ -407,7 +418,8 @@ class BookService {
     static deleteBook = async(payload) => {
 
         const { book_id, file } = payload
-        fs.unlink(`uploads/files_pdf/${getFilepathFromString(file)}`)
+        try{
+            fs.unlink(`uploads/files_pdf/${getFilepathFromString(file)}`)
             .catch((err) => {
                 console.log('file Not Found');
             })
@@ -434,7 +446,11 @@ class BookService {
 
 
 
-        return book_id
+        return book_idF
+        }catch(err){
+            console.log(err);
+        }
+       
     }
 
 

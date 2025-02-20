@@ -209,6 +209,15 @@ class BookRepo extends BaseRepo {
         return result
     }
 
+    getBooksUpload = async(userId, title) => {
+        const [results, fields] = await connection.query(
+            `CALL GetBooksByUserAndTitle(${userId}, '${title}');
+
+            `)
+           
+        return results
+    }
+
 
     getBooks = async(field, LIMIT, OFFSET) => {
         const [results, fields] = await connection.query(
@@ -235,6 +244,22 @@ class BookRepo extends BaseRepo {
             `)
             return results
         }
+
+    getUserBookAll = async (userId) => {
+        try{
+            const [results, fields] = await connection.query(
+                `SELECT * 
+            FROM book
+            WHERE user_id = ${userId}
+          
+            `)
+            return results
+        }catch(err){
+            console.log(err);
+        }
+       
+    }
+
         //get All book
     getBooksWithFilter = async(field, category, LIMIT, OFFSET) => {
         const [results, fields] = await connection.query(

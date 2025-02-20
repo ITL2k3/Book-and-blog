@@ -1,15 +1,17 @@
-const deleteDataFromChatPDFAPI = async (src_id) => {
+import { InternalServerError } from "../common/error.response.js";
+
+const deleteDataFromChatPDFAPI = async(src_id) => {
     //delete soucrce id from chatPDF API 
 
     const config = {
         headers: {
-            "x-api-key": process.env.API_KEY_CHATPDF ,
+            "x-api-key": process.env.API_KEY_CHATPDF,
             "Content-Type": "application/json",
         },
     };
 
     const data = {
-        sources: [src_id],//link pdf cũ
+        sources: [src_id], //link pdf cũ
     };
 
     // Sử dụng fetch để gửi yêu cầu POST
@@ -22,18 +24,23 @@ const deleteDataFromChatPDFAPI = async (src_id) => {
 }
 
 
-const fetchVectorFromMBertHost = async (text) => {
-    const response = await fetch('http://localhost:8000/get_book_vector/',{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({text: text})
-    })
-        
-    const {book_vector} = JSON.parse(await response.text());
+const fetchVectorFromMBertHost = async(text) => {
+    try {
+        const response = await fetch('http://localhost:8000/get_book_vector/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: text })
+        })
 
-    return book_vector
+        const { book_vector } = JSON.parse(await response.text());
+
+        return book_vector
+    } catch (err) {
+        throw new InternalServerError('failed to fetch mBertServer')
+    }
+
 }
 
 

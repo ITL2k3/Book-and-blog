@@ -131,7 +131,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(143, 167, 197, 0.7);
+    background: rgba(0, 0, 0, 0.4); /* Màu nền mờ */
     /* Màu nền tối với độ trong suốt */
     display: flex;
     justify-content: center;
@@ -265,4 +265,8 @@
 
 .ref-doc-info p{
     font-size: 13px;
+}
+
+#display-bookId{
+    color:  #6E8CC6;
 }
