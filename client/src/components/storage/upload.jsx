@@ -50,7 +50,6 @@ const Upload = () => {
         }
     }, [actionData]);
     const handleSubmitbtn = (event) => {
-
         setUploadButtonText('loading');
         setIsUploading(true);
     };

@@ -23,7 +23,7 @@ export const authentication = async (req,res,next) => {
     if(!decodeUser) throw new AuthFailureError('Wrong token')
     req.user = decodeUser
     
-
+    
 
     return next()
 

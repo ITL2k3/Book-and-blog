@@ -21,7 +21,10 @@ class BookController {
 
         new OK({
             messsage: "get source success",
-            metadata: await BookService.getSourceIdPDF(bookId)
+            metadata: {
+                source_id_chatPDF: await BookService.getSourceIdPDF(bookId),
+                userId: req.user.userId
+            }
         }).send(res)
 
     }
