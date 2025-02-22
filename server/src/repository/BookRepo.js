@@ -10,6 +10,14 @@ import UserEntity from "./entities/user.entity.js";
 
 class BookRepo extends BaseRepo {
 
+    insertReport = async (authorId, userId, message, bookId) => {
+        const [result, fields] = await connection.query(`
+            INSERT INTO report VALUE
+            (default, ?, ?, ?, ?,default, default)
+            `, [message, userId, bookId, authorId])
+        return result
+    }
+
     getReferencesDoc = async(categories, limit, numOfCategories) => {
         //query that find record base on exactly their category id 
         const [result, fields] = await connection.query(`

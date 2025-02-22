@@ -1,4 +1,4 @@
-import { BadRequestError } from "../common/error.response.js"
+import { BadRequestError, InternalServerError } from "../common/error.response.js"
 import { CREATED, OK, SuccessResponse } from "../common/success.response.js"
 import BookDTO from "../dtos/BookDTO.js"
 import BookService from "../services/book.service.js"
@@ -7,9 +7,43 @@ import fs from 'fs'
 
 
 import { convertUpperCateToLowerCate, parseDateRange, parseNumRange } from "../utils/index.js"
+import io from "../../server.js"
 
 
 class BookController {
+
+    insertReport = async(req, res, next) => {
+        const { message, author_id, book_id } = req.body
+        const { userId } = req.user
+        try {
+            const result = await BookService.insertReport(userId, author_id, message, book_id)
+                //now throw error => insert success
+                //
+
+            const notification = {
+                book_id,
+                author_id,
+                message,
+                userId,
+                created_at: new Date().toISOString()
+            }
+
+            io.emit('receive_notification', notification)
+
+            new SuccessResponse({
+                message: "report success",
+                metadata: result
+            }).send(res)
+
+
+        } catch (err) {
+            throw new InternalServerError(err)
+        }
+
+
+
+    }
+
     getSourceId = async(req, res, next) => {
 
         const { path } = req.params
@@ -50,10 +84,10 @@ class BookController {
             metadata: await BookService.searchBooksAdvance({ content, numPages, creationDate, page })
         }).send(res)
     }
-    
+
     searchBooksUpload = async(req, res, next) => {
 
-        const {title} = req.query
+        const { title } = req.query
         const { userId } = req.user
 
         new OK({
@@ -68,7 +102,7 @@ class BookController {
 
         const results = await BookService.getUserBooks(req.user.userId)
 
-     
+
         // const { SUM } = await BookService.countBooksWithUserId(req.user.userId)
         // sumOfBooks = SUM
 

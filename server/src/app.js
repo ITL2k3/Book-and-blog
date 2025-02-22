@@ -24,7 +24,7 @@ app.use(compression())
 
 
 
-app.use(writeLog)
+// app.use(writeLog)
 switch (app.get('env')) {
     case 'development':
 

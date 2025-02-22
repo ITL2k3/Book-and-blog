@@ -13,7 +13,13 @@ import pdf from 'pdf-parse'
 
 const bookHelper = new BookRepo()
 class BookService {
+    static insertReport = async (userId, authorId, message, bookId) => {
+     
+        const result = await bookHelper.insertReport(authorId, userId, message, bookId)
 
+       
+        return result.insertId
+    }
     static getReferenceDoc = async(category) => {
 
 
