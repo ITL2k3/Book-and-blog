@@ -1,0 +1,475 @@
+.NavBar {
+    padding: 5px;
+    height: 60px;
+    width: 100%;
+    background-color: #FFFFFF;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.NavBar.activebar {
+    position: relative;
+}
+
+.NavBar a {
+    padding: 10px;
+    background-color: #E6EBF4;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    display: block;
+    color: black;
+}
+
+
+/* .NavBar a svg{
+    padding: auto;
+} */
+
+.NavBar .logo {
+    font-family: "Playwrite CU", sans-serif;
+    background-color: #FFFFFF;
+    color: #2596be;
+    font-size: x-large;
+    font-weight: normal;
+    text-decoration: none;
+    /* font-optical-sizing: auto; */
+}
+
+
+/* .NavBar a > svg {
+    width: 100px;
+} */
+
+.left-of-NavBar {
+    display: flex;
+    align-items: center;
+}
+
+.left-of-NavBar .active {
+    background-color: rgb(223, 223, 223);
+    color: #0077f7;
+}
+
+#storageicon:hover {
+    background-color: rgb(223, 223, 223)
+}
+
+.left-of-NavBar a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.profile-container {
+    width: 40px;
+    height: 40px;
+}
+
+.profile {
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+    display: block;
+    user-select: none;
+}
+
+.drop-down-container {
+    position: absolute;
+    top: 3.5rem;
+    right: 0.5rem;
+    width: 200px;
+    height: 150px;
+    border-radius: 5px;
+    /* padding-right: 15px; */
+    background-color: white;
+    /* border: 1px solid gray; */
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.1);
+    user-select: none;
+}
+
+.drop-down-container li:first-child {
+    padding-top: 0px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(211, 211, 211);
+    border-radius: 0px;
+}
+
+.drop-down-container li:first-child:hover {
+    background-color: white;
+}
+
+.option-container {
+    content: '';
+    position: absolute;
+    /* top: -1rem; */
+    right: .5rem;
+    /* width: 25px;
+    height: 25px; */
+    /* background-color: white; */
+    list-style: none;
+}
+
+.option-container>li {
+    cursor: pointer;
+    display: flex;
+    border-radius: 5px;
+    width: 190px;
+    align-items: center;
+    padding: 5px 5px;
+    margin-right: -3px;
+}
+
+.option-container>li:first-child {
+    margin-top: 7px;
+}
+
+.option-container>li:nth-child(2) {
+    margin-top: 3px;
+}
+
+.option-container>li:hover {
+    background-color: #E6EBF4;
+}
+
+.option-container>li>svg {
+    margin-right: 8px;
+}
+
+main {
+    padding-left: 15vw;
+    padding-top: 50px;
+    background-color: #E6EBF4;
+}
+
+.main_active {
+    padding-left: 0px;
+    padding-top: 0px;
+}
+
+.loginbutton {
+    padding: 5px;
+    font-size: medium;
+    color: #000000;
+    border: none;
+    border-radius: 10px;
+    background-color: #ffffff;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.loginbutton:hover {
+    transform: translateY(-1px);
+    border: 1px solid #2596be;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+#advance-icon{
+    border: none;
+    height: 40px;
+    margin-right: 10px; 
+    width: 40px;
+    background-color: #E6EBF4;
+    border-radius: 100px
+}
+
+#advance-icon:hover{
+    background-color: rgb(223, 223, 223);
+    color: #0d6efd;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* search */
+.but_todetail{
+    width: 40px; /* Đặt chiều rộng */
+    color: black;
+  height: 40px; /* Đặt chiều cao */
+  margin-right: 20px;
+  border-radius: 50%; /* Bo tròn */
+  background-color: #E6EBF4; /* Màu nền của button */
+  border: none; /* Loại bỏ viền mặc định */
+  display: flex;
+  align-items: center; /* Căn giữa nội dung theo chiều dọc */
+  justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+  cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+  transition: background-color 0.1s ease; /* Thêm hiệu ứng chuyển màu nền */
+    
+}
+.but_todetail:hover {
+    background-color: #2596be; /* Màu nền khi hover */
+    fill: white
+    
+  }
+
+.search_link{
+    display: block;
+}
+.search_global{
+    width: 35%;
+}
+.search_input{
+    border-radius: 15px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.search_input:hover {
+    transform: translateY(-0.5px); /* Di chuyển lên trên 2px */
+    box-shadow: 0 0px 8px rgba(0, 123, 255, 0.4);
+    border-color: #00a9a1; /* Đổi màu border */
+  }
+ 
+
+
+
+/* Container của ul */
+.search_item_container {
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-height: 500px; /* Chiều cao tối đa (tương ứng với 3 record) */
+    overflow-y: auto; /* Hiển thị thanh cuộn nếu vượt quá chiều cao */
+    border: 1px solid #ccc; /* Đường viền tùy chọn để dễ phân biệt */
+  border-radius: 5px;
+  background-color: white;
+  }
+  
+  /* Các li (kết quả tìm kiếm) */
+  .search_item {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Căn giữa theo trục dọc */
+     /* Khoảng cách giữa các li */
+    border-bottom: 1px solid #e0e0e0; /* Đường kẻ ngăn cách */
+    padding: 10px 0;
+  }
+  
+  /* Đường dẫn (a) */
+  .search_item_link {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Xóa gạch chân */
+    color: inherit; /* Giữ nguyên màu chữ */
+    width: 100%;
+  }
+  
+  /* Hình ảnh */
+  .search_item_thumbnail {
+    flex: 0 0 20%; /* Hình ảnh chiếm 20% chiều rộng */
+    max-width: 60px; /* Giới hạn kích thước tối đa */
+    max-height: 60px;
+    height: auto;
+    margin-left: 10px;
+    margin-right: 10px; /* Khoảng cách giữa hình và nội dung */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+  }
+  
+  /* Phần thông tin */
+  .search_item_info {
+    flex: 1; /* Chiếm 80% chiều rộng */
+  }
+  
+  /* Tiêu đề (title) */
+  .search_item_title {
+    font-size: 1.2rem; /* Font lớn hơn */
+    font-weight: bold; /* In đậm */
+    margin: 0;
+    color: #333; /* Màu chữ */
+  }
+  
+  /* Tác giả (author) */
+  .search_item_author {
+    font-size: 1rem; /* Font nhỏ hơn title */
+    margin: 5px 0 0 0; /* Khoảng cách trên */
+    color: #666; /* Màu chữ mờ hơn */
+  }
+  
+
+/* advance search */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(143, 167, 197, 0.5);
+    /* Màu nền tối với độ trong suốt */
+    display: flex;
+    justify-content: center;
+    /* Căn giữa theo chiều ngang */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    z-index: 5;
+
+    
+    /* Đảm bảo overlay nằm trên tất cả các phần tử khác */
+}
+
+
+.advance-search-form button {
+    /* margin-left: 15px;  */
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    /* Màu chữ */
+    cursor: pointer;
+    
+
+    /* Hiệu ứng con trỏ khi di chuột */
+}
+
+.advance-search-form .Nav-TB{
+    
+}
+
+.advance-search-form button:hover {
+    background-color: red;
+    /* Màu nền khi di chuột qua nút */
+    color: white;
+
+
+}
+
+.advance-search-p {
+    margin-bottom: 50xp;;
+}
+
+
+.advance-search-form{
+
+    background-color: white;
+    /* Màu nền cho modal */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Đổ bóng cho modal */
+    text-align: left;
+
+    background-color: white;
+    padding: 10px;
+    width: 50vw;
+   
+
+}
+
+.advance-search-form .Nav-TB h2{
+    margin-left: -2px;
+}
+
+.advance-search-form .Nav-TB {
+   margin-top: -5px;
+}
+
+.advance-search-form .Nav-TB button{
+    margin-right:-8px;
+    
+}
+#search-refresh-btn{
+    margin-top: 14px;
+    width: 100%;
+    height: 40px;
+    margin-left: 5px;
+    background-color: none ;
+    transition: 0.3s;
+}
+
+#search-refresh-btn:hover{
+    color: black;
+    background-color: #8bfe8d;
+    transform: translateY(-10px);
+}
+#search-advance-btn{
+    width:100%;
+    height: 40px;
+    transition: 0.3s;
+    margin-left: 5px;
+
+    
+  
+   
+}
+
+#search-advance-btn:hover{
+    color: black;
+    background-color: #18d9c2;
+    transform: translateY(12px);
+
+}
+
+
+.btn-search-advance-page{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #2596BE;
+}
+.btn-search-advance-page:hover{
+    background-color: #0ba8e1;
+}
+
+.btn-search-advance-page svg{
+    color: black;
+}
+
+
+.btn-search-advance-page-disable{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #74b0c6;
+    
+    pointer-events: none;
+}
+
+.searched-item {
+    display: flex;
+}
+
+.searched-doc-img {
+    margin-right: 10px;
+}
+
+.searched-doc-info a {
+    text-decoration: none;
+}
+
+.searched-doc-info p{
+    font-size: small;
+}
+
+.searched-advance-doc-resbar p:first-child {
+    margin-bottom: 1px;
+    color: rgb(113, 113, 113);
+}
+
+
+.searched-advance-doc-resbar p:nth-child(2) {
+    margin-bottom: 10px;
+    color: rgb(113, 113, 113);
+    font-size: 15px;
+    font-style: italic
+}

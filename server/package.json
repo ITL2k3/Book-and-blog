@@ -27,7 +27,8 @@
     "lodash": "^4.17.21",
     "mysql2": "^3.11.0",
     "pdf-parse": "^1.1.0",
-    "pdf2json": "^3.1.5"
+    "pdf2json": "^3.1.5",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "helmet": "^7.1.0",

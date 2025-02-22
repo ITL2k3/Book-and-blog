@@ -4,6 +4,7 @@ import { authentication, checkPermission} from '../../Auth/checkAuth.js'
 import BookController from '../../controller/book.controller.js'
 import permission from '../../configs/config.permission.js'
 import upload from '../../utils/uploadfile.js'
+import io from '../../../server.js'
 
 const bookRouter = Router()
 
@@ -54,7 +55,25 @@ bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
 bookRouter.get('/read-book/sourceId/:path', asyncHandler(BookController.getSourceId))
 bookRouter.get('/load-anotation', asyncHandler(BookController.loadAnotation))
 bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
+bookRouter.post('/report-error', async (req, res) => {
+    const { message, user } = req.body;
+    try {
+        // Lưu lỗi vào MongoDB
+        console.log('error click!');
 
+        
+        // Gửi thông báo đến tất cả admin đang online
+        io.emit('new-error', {
+            message: "st rrr",
+           
+        });
+
+        res.status(201).json({ message: 'Báo lỗi thành công' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Lỗi server' });
+    }
+});
 
 //manage doc for user
 

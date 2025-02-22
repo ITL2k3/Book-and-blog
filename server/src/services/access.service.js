@@ -1,5 +1,5 @@
 import { setToken } from '../Auth/authUtils.js'
-import { AuthFailureError, BadRequestError } from '../common/error.response.js'
+import { AuthFailureError, BadRequestError, ForbiddenError } from '../common/error.response.js'
 import UserRepo from '../repository/UserRepo.js'
 import { createRandKey, getInfoData } from '../utils/index.js'
 import FolderService from './folder.service.js'
@@ -11,7 +11,7 @@ class AccessService {
     static getAccount = async(userId) => {
       
         const [result] =  await (new UserRepo()).getInfoAccount(userId)
-        return result
+        return {result, userId}
     }
 
     static register = async(payload) => {
@@ -48,9 +48,11 @@ class AccessService {
 
 
 
-    static login = async({ userId, password }) => {
+    static login = async({ userId, password, roleIN }) => {
 
         const [foundUser] = await (new UserRepo()).getUserById(userId)
+        console.log(foundUser);
+        if(foundUser.role != roleIN) throw new ForbiddenError("Permission denied!")
             //check userId and password
         if (!foundUser) {
             throw new BadRequestError('User Not Found')
@@ -64,15 +66,19 @@ class AccessService {
         const { token_key: tokenKey } = await getKeyToken(userId)
 
         const {user_id, email, role} = foundUser
+
+
         const token = setToken({ userId: user_id, email, role }, tokenKey)
 
         return {
-            user: getInfoData({ fields: ["user_id", "email"], object: foundUser }),
+            user: getInfoData({ fields: ["user_id", "email", "role"], object: foundUser }),
             token: token
 
         }
 
     }
+
+    
 
     // static getUser = async({ userId }) => {
 

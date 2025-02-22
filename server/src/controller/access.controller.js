@@ -1,5 +1,6 @@
 import { BadRequestError } from "../common/error.response.js"
 import { CREATED, OK, SuccessResponse } from "../common/success.response.js"
+import permission from "../configs/config.permission.js"
 import UserDTO from "../dtos/UserDTO.js"
 import AccessService from "../services/access.service.js"
 import { setHeaderCookie } from "../utils/index.js"
@@ -53,18 +54,15 @@ class AccessController {
     login = async (req, res, next) => {
         //check valid User
         const reqUserDTo = new UserDTO(req.body)
+        const role = req.body.role ? req.body.role : permission.USER
         const isValidUser = reqUserDTo.validateLogin()
         if(isValidUser && isValidUser["error"]){
             throw new BadRequestError(
                 isValidUser["error"].message
             )
         }
-
-
         const validUser = isValidUser.value
-        const {user, token} = await AccessService.login(validUser)
-
-        
+        const {user, token} = await AccessService.login({...validUser,roleIN: role})
         //set token cookies and send request
         let setHeaderArray = [
             {
@@ -89,6 +87,13 @@ class AccessController {
         }).send(res,setHeaderArray)
         
     }
+
+    
+
+
+
+
+
 
     logout = async (req, res, next) => {
         

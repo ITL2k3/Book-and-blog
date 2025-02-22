@@ -1,0 +1,132 @@
+
+.access-p{
+    padding: 0px;
+    background-color: white;
+}
+
+.logo-access{
+    font-family: "Playwrite CU", sans-serif;
+    background-color: #FFFFFF;
+    color: #2596be;
+    font-size:x-large;
+    font-weight:normal;
+    text-decoration: none;
+    text-align: center;
+    padding-top: 20px;
+
+}
+.login-container{
+    width: 300px;
+    margin: auto;
+}
+.login{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(212, 212, 212);
+    /* box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.5); */
+    width: 300px;
+    border-radius: 10px;
+
+    margin: auto;
+    margin-top: 20px;
+}
+.login-content{
+    padding: 20px;
+}
+
+.login-content input{
+    width: 100%;
+    border-radius: 3px;
+}
+.login label{
+    display: block;
+    padding-bottom: 10px;
+}
+
+.login-content button{
+    margin-top: 5px;
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+    background-color:#FFD700 ;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
+}
+.login-content button:hover{
+    background-color: #eeca00 ;
+}
+
+.tb-login-loi{
+    margin: auto;
+    margin-top: 10px;
+    padding: 20px;
+    border: 1px solid rgb(212, 212, 212);
+    border-radius: 10px;
+    width: 300px;
+    margin-bottom: -5px;
+    display: flex;
+}
+.tb-login-loi h5{
+    color: rgb(253, 65, 65);
+}
+.tb-login-loi div:first-child {
+    margin-right: 10px;
+    padding-bottom: 10px;
+    color:  rgb(253, 65, 65);
+
+}
+.tb-login-loi div:first-child svg {
+    margin-bottom: 10px;
+}
+
+
+.newto{
+    text-align: center;
+    width: 300px;
+    margin: auto;
+}
+.divider {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.divider-text {
+    padding: 0 10px;
+   
+    font-size: 13px;
+}
+
+.create-account {
+    padding: 3px 20px;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    background-color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+
+    width: 300px;
+}
+
+.create-account:hover {
+    background-color: rgb(235, 235, 235);;
+}
+
+
+
+.loitbip{
+    color: red;
+    font-size: 13px;
+}

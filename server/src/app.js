@@ -6,43 +6,49 @@ import helmet from 'helmet'
 import compression from 'compression'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
-
+import fs from 'fs'
+import path from 'path'
 const app = express()
 
 //init middleware
 
 app.use(cors({
-    origin: `http://localhost:5173`,
+    origin: [`http://localhost:5173`, `http://localhost:3006`],
     credentials: true
 }))
 app.use(cookieParser())
-app.use(express.json({limit: '2.5mb'}))
-app.use(express.urlencoded({extended: true}))
+app.use(express.json({ limit: '2.5mb' }))
+app.use(express.urlencoded({ extended: true }))
 app.use(compression())
 
 
-switch (app.get('env')){
+
+
+app.use(writeLog)
+switch (app.get('env')) {
     case 'development':
+
         app.use(morgan('dev'))
         app.use(helmet())
         break;
     case 'production':
         app.use(expressLogger({
-            path: __dirname + '/log/requests.log'
+            path: __dirname + '/log/prod/requests.log'
         }))
 }
 
 //init db
-import('./dbs/init.mysql.js')
-import('./dbs/init.tables.js')
+import ('./dbs/init.mysql.js')
+import ('./dbs/init.tables.js')
 //init routes
 import router from './routes/index.js'
+import writeLog from './Helpers/logToElasitcsearch.js'
 
-app.use('',router)
-// app.use('', require('./routes'))
+app.use('', router)
+    // app.use('', require('./routes'))
 
 //error handler
-app.use((error,req,res,next) => {
+app.use((error, req, res, next) => {
     const statusCode = error.status || 500
     return res.status(statusCode).json({
         status: 'error',

@@ -1,6 +1,6 @@
 const permission = {
     USER: 'A',
-    LIBRARIAN: 'B',
+    CENSORSHIP: 'B',
     ADMIN: 'C'
 }
 

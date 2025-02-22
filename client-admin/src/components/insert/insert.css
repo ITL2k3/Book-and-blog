@@ -1,0 +1,144 @@
+.insert {
+    display: flex;
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
+    /* Center align children */
+    margin-top: 30px;
+    height: 650px;
+    width: 50%;
+    border-radius: 15px;
+    border: 0px;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Hiệu ứng bóng */
+}
+
+.insert form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 30px;
+}
+
+.Form-container-info {
+    margin-top: 5px;
+    display: flex;
+
+}
+
+.Form-info-01,
+.Form-info-02 {
+    flex: 1;
+    /* Allow them to grow equally */
+    margin-right: 10px;
+    /* Add space between the two sections */
+
+}
+.Form-info-02 textarea{
+    width: 100%;
+}
+.inputTE{
+    width: 80%;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.Form-info-02 {
+    margin-right: 0;
+    /* Remove right margin from the last section */
+}
+
+
+.Form-info-01 input{
+    
+}
+
+
+
+.insert-p {
+    padding-left: 0px;
+    height: 1000px;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.drop-zone {
+    border: 3px dashed #ccc;
+
+    border-radius: 10px;
+    padding: 60px;
+    text-align: center;
+    background-color: #FFF2F2;
+    margin-top: -20px;
+}
+
+#deleteFile{
+    border: none;
+    background-color: rgb(160, 249, 237,0.1);
+    transition: 0.1s;
+}
+
+#deleteFile:hover{
+    color: red;
+}
+
+
+.enable-file-drop{
+    background-color: rgb(160, 249, 237,0.3);
+}
+
+
+
+.categories {
+    margin-top: 10px;
+}
+
+.checkbox-container-categories {
+    display: flex; /* Sử dụng Flexbox */
+    flex-wrap: wrap; /* Cho phép các phần tử xuống dòng */
+}
+
+ .checkbox-container-categories > div {
+    margin-right: 20px; /* Khoảng cách giữa các cột */
+}
+
+
+.insert-btn-container{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.insert-btn-container btn{
+    display: block;
+    
+}
+
+
+.upload-btn{
+    margin-top: 14px;
+    width: 100px;
+    height: 40px;
+    margin-left: 5px;
+    border-radius: 10px;
+    background-color: #8bfe8d ;
+    border: none;
+    transition: 0.3s;
+}
+.diss{
+    pointer-events: none;
+}
+
+.upload-btn:hover{
+    color: black;
+    background-color: #8bfe8d;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+
+    transform: translateY(-2px);
+}
+
+.actionMEssage-container{
+    margin-top: 10px;
+}
