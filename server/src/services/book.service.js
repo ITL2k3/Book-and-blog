@@ -20,6 +20,24 @@ class BookService {
        
         return result.insertId
     }
+
+    static getNotificationInfo = async (is_read) => {
+        const report = is_read == 'null' ? await bookHelper.getAllReport() :  await bookHelper.getReport(is_read)
+        
+        const unreadCount = await bookHelper.countUnRead()
+        
+        
+        return {
+            notiMessage: report,
+            unreadCount
+        }
+    }
+
+    static updateNoti = async(reportId) => {
+        await bookHelper.updateReport(reportId)
+
+    }
+
     static getReferenceDoc = async(category) => {
 
 

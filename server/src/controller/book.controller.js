@@ -11,37 +11,47 @@ import io from "../../server.js"
 
 
 class BookController {
+    getNotiInfo = async(req, res, next) => {
+        const {is_read} = req.query 
+     
 
+        new SuccessResponse({
+            message: "report success",
+            metadata: await BookService.getNotificationInfo(is_read)
+        }).send(res)
+    }
+    updateReport = async(req, res, next) => {
+        const {reportId} = req.body
+        console.log(reportId);
+        new SuccessResponse({
+            message: "report success",
+            metadata: await BookService.updateNoti(reportId)
+        }).send(res)
+    }
     insertReport = async(req, res, next) => {
         const { message, author_id, book_id } = req.body
         const { userId } = req.user
         try {
             const result = await BookService.insertReport(userId, author_id, message, book_id)
                 //now throw error => insert success
-                //
-
             const notification = {
                 book_id,
                 author_id,
                 message,
                 userId,
+                report_id: result,
+                is_read: 0,
                 created_at: new Date().toISOString()
             }
-
             io.emit('receive_notification', notification)
 
             new SuccessResponse({
                 message: "report success",
                 metadata: result
             }).send(res)
-
-
         } catch (err) {
             throw new InternalServerError(err)
         }
-
-
-
     }
 
     getSourceId = async(req, res, next) => {

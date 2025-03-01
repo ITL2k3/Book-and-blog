@@ -9,7 +9,8 @@ const table = {
     BOOK_CATEGORY: "book_category",
     FOLDER: "folder",
     FOLDER_BOOK: "folder_book",
-    BOOK_LOVE_USER: "user_love_book"
+    BOOK_LOVE_USER: "user_love_book",
+    REPORT: "report"
 }
 
 export default table

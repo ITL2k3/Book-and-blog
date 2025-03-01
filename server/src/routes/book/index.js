@@ -80,7 +80,6 @@ bookRouter.delete('/user/delete-book', asyncHandler(BookController.deleteBook))
 //check permission
 bookRouter.use('/lib', checkPermission(permission["LIBRARIAN"]))
 
-//search 
 
 
 bookRouter.get('/lib', async (req, res) => {
@@ -90,6 +89,8 @@ bookRouter.get('/lib', async (req, res) => {
     })
 })
 //
+bookRouter.get('/get-noti-info', asyncHandler(BookController.getNotiInfo))
+bookRouter.patch('/update-read-noti', asyncHandler(BookController.updateReport))
 
 bookRouter.post('/lib/post-book',upload.fields([{
     name: 'pdf', maxCount: 1}, 

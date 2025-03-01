@@ -18,6 +18,42 @@ class BookRepo extends BaseRepo {
         return result
     }
 
+    countUnRead = async () => {
+       
+        const [result, fields] = await connection.query(`
+            SELECT COUNT(*) FROM report
+            WHERE is_read = false;
+            
+            `)
+
+        return result[0]["COUNT(*)"]
+    }
+    getAllReport = async () => {
+        const [result, fields] = await connection.query(`
+            SELECT * FROM ${table["REPORT"]}
+            ORDER BY create_at DESC;
+
+        `)
+        return result
+    }
+    getReport = async (is_read = 0) => {
+        const [result, fields] = await connection.query(`
+            SELECT * FROM ${table["REPORT"]}
+            WHERE is_read = ${is_read}
+            ORDER BY create_at DESC;
+        `)
+        return result
+    }
+
+    updateReport = async(report_id) => {
+        
+        const [result, fields] = await connection.query(`
+            UPDATE report 
+            SET is_read = true
+            WHERE report_id = ${report_id}
+            `)
+    }
+
     getReferencesDoc = async(categories, limit, numOfCategories) => {
         //query that find record base on exactly their category id 
         const [result, fields] = await connection.query(`
