@@ -7,10 +7,50 @@ import fs from 'fs'
 
 
 import { convertUpperCateToLowerCate, parseDateRange, parseNumRange } from "../utils/index.js"
-import io from "../../server.js"
 
 
 class BookController {
+
+    getNotiInfoUser = async(req, res, next) => {
+        const {is_read} = req.query 
+    
+        new SuccessResponse({
+            message: "get noti success",
+            metadata: await BookService.getNotificationForUserInfo(is_read, req.user.userId)
+        }).send(res)
+    }
+    updateNoti = async(req, res, next) => {
+        const {notiId} = req.body
+       
+        new SuccessResponse({
+            message: "update noti success",
+            metadata: await BookService.updateNotiForUser(notiId, req.user.userId)
+        }).send(res)
+    }
+    insertNoti = async(req, res, next) => {
+        const { message, title } = req.body
+        const { userId } = req.user
+        console.log(message, title);
+        try {
+            const result = await BookService.insertNoti(userId, message, title)
+                //now throw error => insert success
+            
+
+            new SuccessResponse({
+                message: "insert noti success",
+                metadata: result
+            }).send(res)
+        } catch (err) {
+            throw new InternalServerError(err)
+        }
+    }
+
+
+
+
+
+
+
     getNotiInfo = async(req, res, next) => {
         const {is_read} = req.query 
      
@@ -29,21 +69,13 @@ class BookController {
         }).send(res)
     }
     insertReport = async(req, res, next) => {
-        const { message, author_id, book_id } = req.body
+        const { message, author_id, book_id, title } = req.body
         const { userId } = req.user
+        console.log(message, author_id, book_id, title);
         try {
-            const result = await BookService.insertReport(userId, author_id, message, book_id)
+            const result = await BookService.insertReport(userId, author_id, message, book_id, title)
                 //now throw error => insert success
-            const notification = {
-                book_id,
-                author_id,
-                message,
-                userId,
-                report_id: result,
-                is_read: 0,
-                created_at: new Date().toISOString()
-            }
-            io.emit('receive_notification', notification)
+            
 
             new SuccessResponse({
                 message: "report success",

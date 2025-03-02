@@ -542,6 +542,11 @@ main {
 }
 #ntf-us-id{
     font-weight: 500;
+    width: 90%; /* Giới hạn chiều rộng */
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Ẩn phần nội dung bị tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." */
+    display: block; /* Đảm bảo thẻ hoạt động đúng */
 
 }
 .ntf-info-btm{
@@ -557,4 +562,18 @@ main {
 
 .main-noti-ctn{
     background-color: white;
+}
+
+#ntf-msg{
+    width: 90%; /* Giới hạn chiều rộng */
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Ẩn phần nội dung bị tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." */
+    display: block; /* Đảm bảo thẻ hoạt động đúng */
+}
+
+
+#report-ctn{
+    width: 500px;
+
 }

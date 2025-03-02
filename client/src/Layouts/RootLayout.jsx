@@ -13,9 +13,7 @@ import './RootLayout.css'
 import { host } from '../host'
 import SearchBar from './searchbar'
 import AdvancedSearch from './advanceSearchBar'
-
-
-
+import NotificationIcon from './NotificationIcon'
 export default function RootLayout() {
     const location = useLocation()
     const isStoragePage = location.pathname === '/storage';
@@ -181,6 +179,7 @@ export default function RootLayout() {
 
                     { isLogin && <NavLink to='/insert-book' className={ isInsertPage ? 'active' : '' } id="storageicon"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M23 18h-3v-3h-2v3h-3v2h3v3h2v-3h3M6 2a2 2 0 0 0-2 2v16c0 1.11.89 2 2 2h7.81c-.36-.62-.61-1.3-.73-2H6V4h7v5h5v4.08c.33-.05.67-.08 1-.08c.34 0 .67.03 1 .08V8l-6-6M8 12v2h8v-2m-8 4v2h5v-2Z" /></svg></NavLink> }
                     { isLogin && <NavLink to='/storage' className={ isStoragePage ? 'active' : '' } id="storageicon"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4s8-1.79 8-4s-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4" /></svg></NavLink> }
+                    { isLogin && <NotificationIcon/>}
                     { isLogin && (<div className="profile-container" onClick={ () => {
                         setOpenProfile(!openProfile)
                     } }><img className="profile" src="https://th.bing.com/th/id/OIP.ROcugbff3Ni9CaUl7PnW-AHaHa?rs=1&pid=ImgDetMain" /></div>) }

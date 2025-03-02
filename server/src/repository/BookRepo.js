@@ -10,11 +10,75 @@ import UserEntity from "./entities/user.entity.js";
 
 class BookRepo extends BaseRepo {
 
-    insertReport = async (authorId, userId, message, bookId) => {
+
+    insertNoti = async (userId, message, title) => {
+        const [result, fields] = await connection.query(`
+            INSERT INTO notification VALUE
+            (default, ?, ?, ?,default, default)
+            `, [message, userId, title])
+        return result
+    }
+    countUnReadNoti = async (userId) => {
+       
+        const [result, fields] = await connection.query(`
+            SELECT COUNT(*) FROM notification
+            WHERE is_read = false AND user_id = ${userId};
+            
+            `)
+
+        return result[0]["COUNT(*)"]
+    }
+
+    getAllNoti = async (userId) => {
+        try{
+            const [result, fields] = await connection.query(`
+                SELECT * FROM notification
+                WHERE user_id = ${userId}
+                ORDER BY create_at DESC;
+    
+            `)
+            return result
+        }catch(err){
+            console.log(err);
+        }
+        
+    }
+    getNoti = async (is_read = 0, userId) => {
+        const [result, fields] = await connection.query(`
+            SELECT * FROM notification
+            WHERE is_read = ${is_read} AND user_id = ${userId}
+            ORDER BY create_at DESC;
+        `)
+        return result
+    }
+
+    updateNoti = async(notiId, userId) => {
+        
+        const [result, fields] = await connection.query(`
+            UPDATE notification
+            SET is_read = true
+            WHERE notification_id = ${notiId} AND user_id = ${userId}
+            `)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    insertReport = async (authorId, userId, message, bookId, title) => {
         const [result, fields] = await connection.query(`
             INSERT INTO report VALUE
-            (default, ?, ?, ?, ?,default, default)
-            `, [message, userId, bookId, authorId])
+            (default, ?, ?, ?, ?, ?,default, default)
+            `, [message, userId, title, bookId, authorId])
         return result
     }
 

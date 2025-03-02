@@ -30,6 +30,10 @@ export default function Detail() {
     const [isAddDocToFolderModalOpen, setIsAddDocToFolderModalOpen] = useState(false)
 
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const [isModalWarningOpen, setIsModalWarningOpen] = useState(false)
+    const [statusCode, setStatusCode] = useState()
+
     const truncateDescription = (description) => {
         const words = description.split(' ');
         if (words.length > 200) {
@@ -135,7 +139,7 @@ export default function Detail() {
                                 <h2><span id="display-bookId">#{ data.book_id }</span> { data.title }</h2>
                                 <h5>Tác giả: <span id="author">{ data.author }</span></h5>
                                 <h5 id="cate">Thể loại: { data.categories.join(', ') }</h5>
-                                <h5 id="cate">Lượt đọc: { data.num_of_views / 2 }</h5>
+                                <h5 id="cate">Lượt đọc: { data.num_of_views  }</h5>
                                 <hr />
                                 <p>{ isExpanded ? data.description : truncateDescription(data.description) }
                                     { data.description.split(' ').length > 200 && (
@@ -164,14 +168,28 @@ export default function Detail() {
                                     <button onClick={ () => {
                                         navigate(`/read/${title}_${BookId}_${filename}`)
                                     } }>
-                                        Đọc tài liệu</button>
+                                        Xem tài liệu</button>
 
                                     <button onClick={ () => {
                                         // /add-book-to-storage
                                         setIsAddDocToFolderModalOpen(true)
                                     } }> Thêm tài liệu </button>
                                     <div className="HR"></div>
-                                    <button>Báo lỗi</button>
+                                    <button onClick = {() => {
+                                         
+                                            fetch(`http://${host}:3055/v1/api/user/delete-book?file=${data.filepath}&book_id=${data.book_id}&src_id=${data.source_id_chatPDF}`, {
+                                                method: 'delete',
+                                                credentials: 'include'
+                                            }).then((res) => {
+                                               
+                                                setStatusCode(200)
+                                                setIsModalOpen(true)
+                                                navigate(`/`)
+                                            }).catch(err => {
+                                                console.log(err);
+                                            })
+                                        
+                                    }}>Xóa tài liệu</button>
                                 </div>
 
                             </div>
@@ -255,6 +273,26 @@ export default function Detail() {
                                 </div>) }
 
                         </div>
+
+
+                         {/* warning report */ }
+                         { isModalWarningOpen && (
+                                <div className="tb-overlay">
+                                    <div className="Modal-tb">
+                                        <div className="Nav-TB">
+                                            <h2>Thông báo</h2>
+                                            <button onClick={ (event) => { setIsModalWarningOpen(false) } }>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                                        </div>
+                                        <p>
+                                            { statusCode == 200 ? "Xóa tài liệu thành công!" : "Lỗi"
+                                                
+
+                                            }
+                                        </p>
+                                    </div>
+                                </div>) }
 
 
 

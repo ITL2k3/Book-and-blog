@@ -10,14 +10,68 @@ import fs from 'fs/promises'
 
 import Fs from 'fs'
 import pdf from 'pdf-parse'
+import io from "../../server.js"
 
 const bookHelper = new BookRepo()
 class BookService {
-    static insertReport = async (userId, authorId, message, bookId) => {
-     
-        const result = await bookHelper.insertReport(authorId, userId, message, bookId)
 
-       
+    static insertNoti = async (userId, message, title) => {
+     
+        const result = await bookHelper.insertNoti(userId, message, title)
+
+        const notification = {
+         
+            message: message,
+            userId: userId,
+            title: title,
+            report_id: result.insert_id,
+            is_read: 0,
+            created_at: new Date().toISOString()
+        }
+        io.emit('receive_notification_user', notification)
+        return result.insertId
+    }
+
+    static getNotificationForUserInfo = async (is_read, userId) => {
+
+        const report = is_read == 'null' ? await bookHelper.getAllNoti(userId) :  await bookHelper.getNoti(is_read, userId)
+        
+        const unreadCount = await bookHelper.countUnReadNoti(userId)
+        
+        
+        return {
+            notiMessage: report,
+            unreadCount
+        }
+    }
+
+    static updateNotiForUser = async(notiId, userId) => {
+     
+        await bookHelper.updateNoti(notiId, userId)
+
+    }
+
+
+
+
+
+
+    static insertReport = async (userId, authorId, message, bookId, title) => {
+     
+        const result = await bookHelper.insertReport(authorId, userId, message, bookId, title)
+
+        
+        const notification = {
+            book_id: bookId,
+            author_id: authorId,
+            message: message,
+            userId: userId,
+            title: title,
+            report_id: result.insert_id,
+            is_read: 0,
+            created_at: new Date().toISOString()
+        }
+        io.emit('receive_notification', notification)
         return result.insertId
     }
 

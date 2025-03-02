@@ -473,3 +473,111 @@ main {
     font-size: 15px;
     font-style: italic
 }
+
+
+
+
+
+
+
+/* notification */
+
+#notification-badge {
+    position: absolute;
+    top: 5px;
+    right: 50px;
+    background-color: rgb(255, 70, 70);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+#not-ctn{
+    right: 60px;
+    width: 400px;
+    height: 500px;
+    overflow-x: none;
+    overflow-y: scroll;
+}
+
+#not-ctn button{
+    margin-left: 10px;
+    
+    font-weight: 500;
+    padding: 3px 10px 3px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+}
+#not-ctn button:hover{
+    background-color: rgb(202, 202, 202);
+}
+
+#enable-ntf-btn{
+    color: #002f66 ;
+    background-color: #75B6FF !important;
+}
+
+.notify-container{
+    margin-top: 10px
+}
+.ntf-item{
+    padding-top: 10px;
+    
+    padding-bottom: 10px;
+    border-top: 1px solid rgb(180, 180, 180);
+    width: 95%;
+    margin: auto;
+
+}
+.ntf-item:hover{
+    color: #0053b3 ;
+}
+
+.ntf-item div{
+    padding-top: 3px
+}
+#ntf-us-id{
+    font-weight: 500;
+    width: 90%; /* Giới hạn chiều rộng */
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Ẩn phần nội dung bị tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." */
+    display: block; /* Đảm bảo thẻ hoạt động đúng */
+
+}
+.ntf-info-btm{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+#ntf-time{
+    font-size:14px;
+}
+
+.main-noti-ctn{
+    background-color: white;
+}
+
+#ntf-msg{
+    width: 90%; /* Giới hạn chiều rộng */
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Ẩn phần nội dung bị tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." */
+    display: block; /* Đảm bảo thẻ hoạt động đúng */
+}
+
+
+#report-ctn{
+    width: 500px;
+
+}

@@ -306,6 +306,19 @@ export const insertAction = async ({ request }) => {
         // setTimeout(() => {
         //     window.location.reload()
         // }, 2000)
+
+       
+       fetch(`http://${host}:3055/v1/api/insert-noti-info-user`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({title: "Đăng tải tài liệu thành công!",
+                message: `Bạn đã đăng tải tài liệu "${formData.get('title')}" thành công! `
+            }),
+    
+            credentials: 'include'
+        })
         return {
             success: "Thêm sách thành công!"
         }

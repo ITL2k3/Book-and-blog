@@ -55,7 +55,11 @@ bookRouter.get('/read-book/:path', asyncHandler(BookController.getPdfBook))
 bookRouter.get('/read-book/sourceId/:path', asyncHandler(BookController.getSourceId))
 bookRouter.get('/load-anotation', asyncHandler(BookController.loadAnotation))
 bookRouter.post('/save-anotation', asyncHandler(BookController.saveAnotation))
+//manage report and notification for user
 bookRouter.post('/report-error', asyncHandler(BookController.insertReport));
+bookRouter.post('/insert-noti-info-user', asyncHandler(BookController.insertNoti))
+bookRouter.get('/get-noti-info-user', asyncHandler(BookController.getNotiInfoUser))
+bookRouter.patch('/update-read-noti-user', asyncHandler(BookController.updateNoti))
 
 //manage doc for user
 

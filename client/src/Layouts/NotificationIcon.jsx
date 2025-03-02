@@ -42,13 +42,13 @@ const NotificationIcon = () => {
         //update-read-noti
         console.log('nt: ', Noti);
         Noti.is_read = 1;
-        fetch(`http://${host}:3055/v1/api/update-read-noti`, {
+        fetch(`http://${host}:3055/v1/api/update-read-noti-user`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ reportId: Noti.report_id })
+            body: JSON.stringify({ notiId: Noti.notification_id })
         })
         setUnreadCount(unreadCount - 1)
     }
@@ -58,21 +58,16 @@ const NotificationIcon = () => {
                 <div className="modal3" style={ { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } }>
                     <div className="modal-content3" id="report-ctn">
                         <h4>Báo cáo</h4>
-                        <p>Từ người dùng <b>{clickedNoti.user_id}</b></p> 
                         <b>{clickedNoti.title}</b>
-                        <br /> <br />
+
                         <p >{ clickedNoti.message }</p>
-                        
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <div id="ntf-time">{ dayjs(clickedNoti.create_at).fromNow() }</div>
                             <div>
                             <button onClick={ () => {
                                 setNotiOpen(false)
                             } }>Thoát</button>
-                            <button onClick = {() => {
-                                    window.location.href =`/detail/${clickedNoti.book_id}`}}>
-                                Xem 
-                            </button>
+                         
                             </div>
                           
                         </div>
@@ -120,7 +115,7 @@ const NotificationIcon = () => {
 
 
     const getNoti = async (is_read = null) => {
-        fetch(`http://${host}:3055/v1/api/get-noti-info?is_read=${is_read}`, {
+        fetch(`http://${host}:3055/v1/api/get-noti-info-user?is_read=${is_read}`, {
             method: 'get',
             credentials: 'include',
 
@@ -144,7 +139,7 @@ const NotificationIcon = () => {
         getNoti()
 
 
-        socket.on('receive_notification', (data) => {
+        socket.on('receive_notification_user', (data) => {
 
             setNotifications((prev) => [data, ...prev]);
             setUnreadCount((prev) => prev + 1);
