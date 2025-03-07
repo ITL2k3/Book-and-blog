@@ -1,10 +1,7 @@
-
-
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
-
-
+import ChatComponent from './chat'
 //import pre-load web page
 import checkAuth from '../Auth/checkAuth'
 
@@ -14,6 +11,7 @@ import { host } from '../host'
 import SearchBar from './searchbar'
 import AdvancedSearch from './advanceSearchBar'
 import NotificationIcon from './NotificationIcon'
+import ChatContainer from './chatContainer'
 export default function RootLayout() {
     const location = useLocation()
     const isStoragePage = location.pathname === '/storage';
@@ -27,6 +25,8 @@ export default function RootLayout() {
     const [account, setAccount] = useState(null)
     const [openProfile, setOpenProfile] = useState(false)
     const [isFirstLoad, setIsFirstLoad] = useState(true)
+    const [isChatOpen, setIsChatOpen] = useState(false)
+    const [isChatVisible, setIsChatVisible] = useState(true)
     
     //tìm kiếm nâng cao
     const [showAdvancedSearch, setShowAdvancedSearch] = useState()
@@ -162,6 +162,14 @@ export default function RootLayout() {
         }
     };
 
+    const toggleChat = () => {
+        setIsChatOpen(!isChatOpen);
+    };
+
+    const toggleChatVisibility = () => {
+        setIsChatVisible(!isChatVisible);
+    };
+
     return (
 
         <div>
@@ -201,16 +209,32 @@ export default function RootLayout() {
             { showAdvancedSearch && <AdvancedSearch setShowAdvancedSearch={setShowAdvancedSearch}/> }
 
 
-            <main className={ isReadPage ? "main_active" : 
+            <main className={`${isReadPage ? "main_active" : 
                 (isStoragePage ? "storage-p" : 
                 (isDetailPage ? "detail-p" : 
                 (isAccessPage ? "access-p" : 
-                (isInsertPage ? "insert-p":
-                    ""
-
-                )))) }>
+                (isInsertPage ? "insert-p": ""))))} ${isChatOpen ? 'chat-active' : ''}`}>
                 <Outlet />
             </main>
+
+            {isLogin && (
+                <>
+                    <button className={isChatVisible ? 'chat-toggle-btn' : 'chat-toggle-btn hiddenbtn'} onClick={toggleChatVisibility} >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            {isChatVisible ? (
+                                 <path d="M9 18l6-6-6-6"/>
+                               
+                            ) : (
+                                <path d="M15 18l-6-6 6-6"/>
+                            )}
+                        </svg>
+                    </button>
+                    {/* tạo chat window ngoài này */}
+                    <div className={`chat-container ${isChatOpen ? 'active' : ''} ${isChatVisible ? 'visible' : 'hidden'}`}>
+                        {account && <ChatContainer userId={account.result.user_id} isChatVisible={isChatVisible} />}
+                    </div>
+                </>
+            )}
         </div>
     )
 

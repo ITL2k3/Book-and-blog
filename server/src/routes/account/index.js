@@ -6,10 +6,10 @@ import AccountController from '../../controller/account.controller.js'
 const accountRouter = Router()
 
 // Public routes
-
 // Protected routes
-// accountRouter.use('/', asyncHandler(authentication))
+accountRouter.use('/', asyncHandler(authentication))
 
+accountRouter.get('/get-account-by-id', asyncHandler(AccountController.getAccountById))
 // Account management
 // accountRouter.get('/profile', asyncHandler(AccountController.getProfile))
 // accountRouter.put('/profile', asyncHandler(AccountController.updateProfile))

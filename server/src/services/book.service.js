@@ -7,10 +7,11 @@ import BookRepo from "../repository/BookRepo.js"
 import { getFilepathFromString } from "../utils/index.js"
 import fs from 'fs/promises'
 
-
+import { getIO } from "../socket/socket.js"
 import Fs from 'fs'
 import pdf from 'pdf-parse'
-import io from "../../server.js"
+
+const io = getIO()
 
 const bookHelper = new BookRepo()
 class BookService {

@@ -4,7 +4,6 @@ import { authentication, checkPermission} from '../../Auth/checkAuth.js'
 import BookController from '../../controller/book.controller.js'
 import permission from '../../configs/config.permission.js'
 import upload from '../../utils/uploadfile.js'
-import io from '../../../server.js'
 
 const bookRouter = Router()
 
