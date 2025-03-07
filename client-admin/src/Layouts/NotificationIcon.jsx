@@ -59,9 +59,10 @@ const NotificationIcon = () => {
                     <div className="modal-content3" id="report-ctn">
                         <h4>Báo cáo</h4>
                         <p>Từ người dùng <b>{clickedNoti.user_id}</b></p> 
-                        <b>{clickedNoti.title}</b>
-                        <br /> <br />
-                        <p >{ clickedNoti.message }</p>
+                        <p>Tiêu đề: <b>{clickedNoti.title}</b></p>
+                        <p>Tác giả tài liệu: <b>{clickedNoti.author_id}</b></p> 
+                       
+                        <p > { clickedNoti.message }</p>
                         
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <div id="ntf-time">{ dayjs(clickedNoti.create_at).fromNow() }</div>

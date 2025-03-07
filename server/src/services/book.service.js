@@ -65,7 +65,7 @@ class BookService {
             book_id: bookId,
             author_id: authorId,
             message: message,
-            userId: userId,
+            user_id: userId,
             title: title,
             report_id: result.insert_id,
             is_read: 0,

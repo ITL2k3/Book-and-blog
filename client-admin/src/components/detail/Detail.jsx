@@ -34,6 +34,12 @@ export default function Detail() {
     const [isModalWarningOpen, setIsModalWarningOpen] = useState(false)
     const [statusCode, setStatusCode] = useState()
 
+
+    const [isReportOpen, setIsReportOpen] = useState(false)
+    const [reportTitle, setReportTitle] = useState('')
+
+    const [reportMessage, setReportMessage] = useState('')
+
     const truncateDescription = (description) => {
         const words = description.split(' ');
         if (words.length > 200) {
@@ -119,6 +125,42 @@ export default function Detail() {
     }, [])
 
 
+    const handleReportClick = (book) => {
+        setIsReportOpen(true)
+       
+
+    }
+    
+    const handleReportSend = () => {
+       
+            fetch(`http://${host}:3055/v1/api/insert-noti-info-user`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: reportTitle,
+                    message: reportMessage,
+                    userId: data.user_id
+                }),
+
+                credentials: 'include'
+            }).then(() => {
+                setStatusCode(200)
+                setIsModalWarningOpen(true)
+                setReportTitle('')
+                setReportMessage('')
+                setIsReportOpen(false)
+            }).catch((err) => {
+                console.log(err);
+                setStatusCode(500)
+            })
+
+            
+       
+    }
+
+
 
     if (isValid == null) {
         <p>Loading...</p>
@@ -171,9 +213,9 @@ export default function Detail() {
                                         Xem tài liệu</button>
 
                                     <button onClick={ () => {
-                                        // /add-book-to-storage
-                                        setIsAddDocToFolderModalOpen(true)
-                                    } }> Thêm tài liệu </button>
+                                       handleReportClick()
+                                      
+                                    } }> Cảnh cáo vi phạm </button>
                                     <div className="HR"></div>
                                     <button onClick = {() => {
                                          
@@ -295,6 +337,71 @@ export default function Detail() {
                                 </div>) }
 
 
+                                            {/* modal for report */ }
+                            { isReportOpen && (
+                                <div className="modal-add-ovl">
+                                    <div className="modal3" style={ { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' } }>
+                                        <div className="modal-content3" style={ { width: '400px' } }>
+                                            <h4>Báo cáo</h4>
+                                            <p>Người dùng { data.user_id }</p>
+                                            <input
+                                                type="text"
+                                                value={ reportTitle }
+                                                style={ { marginTop: '-5px' } }
+
+                                                onChange={ (e) => setReportTitle(e.target.value) }
+                                                placeholder="Tiêu đề"
+                                            />
+                                            <textarea
+                                                type="text"
+                                                value={ reportMessage }
+                                                rows={ 4 } // Số dòng hiển thị
+
+                                                style={ {
+                                                    border: '1px solid black',
+                                                    borderRadius: "5px",
+                                                    width: "100%"
+
+                                                } }
+                                                onChange={ (e) => setReportMessage(e.target.value) }
+                                                placeholder="Nội dung báo cáo"
+                                            />
+                                            <div className="btn-md-ctn" style={ { marginTop: '5px' } }>
+                                                <button onClick={ () => {
+                                                    setIsReportOpen(false);
+                                                    setBook(null)
+                                                } }>Hủy</button>
+                                                <button onClick={ handleReportSend }>Gửi</button>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            ) }
+
+                            {/* warning report */ }
+                            { isModalWarningOpen && (
+                                <div className="tb-overlay">
+                                    <div className="Modal-tb">
+                                        <div className="Nav-TB">
+                                            <h2>Thông báo</h2>
+                                            <button onClick={ (event) => { setIsModalWarningOpen(false) } }>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32"><path fill="currentColor" d="M17.414 16L24 9.414L22.586 8L16 14.586L9.414 8L8 9.414L14.586 16L8 22.586L9.414 24L16 17.414L22.586 24L24 22.586z" /></svg></button>
+
+                                        </div>
+                                        <p>
+                                            { statusCode == 200 ? "Gửi báo cáo thành công!" : "Lỗi"
+                                                
+
+                                            }
+                                        </p>
+                                    </div>
+                                </div>) }
+
+
+                    
 
                     </>
 

@@ -84,6 +84,8 @@ export default function Detail() {
 
             setIsModalWarningOpen(true)
             setIsReportOpen(false)
+            setReportTitle('')
+            setReportMessage('')
         }).catch((error) => {
             setStatusCode(500)
         });
@@ -337,6 +339,8 @@ export default function Detail() {
                                                 <button onClick={ () => {
                                                     setIsReportOpen(false);
                                                     setBook(null)
+                                                    setReportTitle('')
+                                                    setReportMessage('')
                                                 } }>Hủy</button>
                                                 <button onClick={ handleReportSend }>Gửi</button>
                                             </div>
