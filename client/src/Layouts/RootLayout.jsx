@@ -217,7 +217,7 @@ export default function RootLayout() {
                 <Outlet />
             </main>
 
-            {isLogin && (
+            {isLogin && !isReadPage && (
                 <>
                     <button className={isChatVisible ? 'chat-toggle-btn' : 'chat-toggle-btn hiddenbtn'} onClick={toggleChatVisibility} >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -229,7 +229,6 @@ export default function RootLayout() {
                             )}
                         </svg>
                     </button>
-                    {/* tạo chat window ngoài này */}
                     <div className={`chat-container ${isChatOpen ? 'active' : ''} ${isChatVisible ? 'visible' : 'hidden'}`}>
                         {account && <ChatContainer userId={account.result.user_id} isChatVisible={isChatVisible} />}
                     </div>

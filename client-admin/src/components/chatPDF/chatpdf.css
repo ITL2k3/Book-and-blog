@@ -37,7 +37,7 @@
 
 /* Danh sách tin nhắn */
 .chat_container > div:nth-child(2) {
-    height: 87vh;
+    height: 80vh;
     overflow-y: auto;
     padding: 20px;
   
