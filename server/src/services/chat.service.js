@@ -21,8 +21,9 @@ class ChatService {
         return messageReturn
     }
 
-    static updateMessageStatus = async (messageId, status) => {
-        const message = await chatRepo.UpdateMessageStatus(messageId, status)
+    static updateMessageStatus = async ({conversationId, status}) => {
+        const message = await chatRepo.UpdateMessageStatus({status, conversationId})
+   
         return message
     }
 

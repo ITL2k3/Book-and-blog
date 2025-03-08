@@ -14,7 +14,7 @@ dayjs.locale('vi'); // Thiết lập ngôn ngữ mặc định là tiếng Việ
 
 const socket = io('http://localhost:3055');
 
-const ChatComponent = ({ userId, receiverId, conversationId }) => {
+const ChatComponent = ({ userId, receiverId, conversationId, onFocus }) => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const messagesEndRef = useRef(null);
@@ -50,7 +50,10 @@ const ChatComponent = ({ userId, receiverId, conversationId }) => {
 
 
     useEffect(() => {
-        socket.on("receiveMessage", (data) => {
+        socket.on("receiveMessage", (data) => { 
+
+            console.log('rc: ',data);
+
             if (data.conversation_id == conversationId) {
                 const formattedMessage = {
                     sender_id: data.sender_id,
@@ -98,6 +101,12 @@ const ChatComponent = ({ userId, receiverId, conversationId }) => {
         }
     };
 
+    const handleInputFocus = () => {
+        if (onFocus) {
+            onFocus(conversationId);
+        }
+    };
+
     return (
         <div className="chat-box">
             <div className="messages-container">
@@ -121,6 +130,7 @@ const ChatComponent = ({ userId, receiverId, conversationId }) => {
                     type="text"
                     value={ message }
                     onChange={ (e) => setMessage(e.target.value) }
+                    onFocus={ handleInputFocus }
                     placeholder="Nhập tin nhắn..."
                     className="message-input"
                 />

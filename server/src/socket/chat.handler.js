@@ -18,7 +18,7 @@ const chatHandler = (io, socket) => {
 
         // Broadcast trạng thái online
         io.emit("userOnline", userId);
-
+     
     });
 
     socket.on("checkOnline", (userId) => {
@@ -31,7 +31,7 @@ const chatHandler = (io, socket) => {
         //server recerive message from user
     socket.on("sendMessage", async({ senderId, receiverId, message }) => {
         try {
-
+    
             //find conservation between 2 user
             let [conversation] = await ChatService.findConversation(senderId, receiverId);
             let conversationId;
@@ -59,7 +59,7 @@ const chatHandler = (io, socket) => {
             // Gửi tin nhắn đến room của receiver nếu online
             if (onlineUsers.has(receiverId)) {
                 const receiverData = onlineUsers.get(receiverId);
-                //send message to ALL CLIENT, since socket.io not support to send message to specific room
+                //send message to ALL CLIENT, since socket.io
                 socket.broadcast.emit("receiveMessage", newMessage);
 
 
@@ -80,7 +80,7 @@ const chatHandler = (io, socket) => {
 
     socket.on("markAsRead", async({ conversationId, userId }) => {
         try {
-            await ChatService.updateMessageStatus(conversationId, userId, 'read');
+            await ChatService.updateMessageStatus(conversationId, 'read');
         } catch (error) {
             console.log("mark as read: ", error);
             socket.emit("chat_error", { message: "Failed to mark as read" });

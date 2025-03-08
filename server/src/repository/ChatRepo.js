@@ -21,10 +21,10 @@ class ChatRepo extends BaseRepo {
         return result
     }
 
-    async UpdateMessageStatus(messageId, status) {
+    async UpdateMessageStatus({conversationId, status}) {
         const [result, fields] = await connection.query(`
-            UPDATE messages SET status = ? WHERE id = ?
-        `, [status, messageId])
+            UPDATE messages SET status = ? WHERE conversation_id = ?
+        `, [status, conversationId])
         return result
     }
 
@@ -45,6 +45,13 @@ class ChatRepo extends BaseRepo {
         const [result, fields] = await connection.query(`
             SELECT * FROM conversations WHERE user1_id = ? OR user2_id = ?
         `, [userId, userId])
+        return result
+    }
+
+    async updateStatusConversation({conversationId, isRead}) {
+        const [result, fields] = await connection.query(`
+            UPDATE conversations SET is_read= ? WHERE id = ?
+        `, [isRead, conversationId])
         return result
     }
 
