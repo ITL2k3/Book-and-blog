@@ -1,4 +1,7 @@
+import { SuccessResponse } from '../common/success.response.js'
 import ChatService from '../services/chat.service.js'
+
+
 class ChatController {
     getAllConversationOfUser = async (req, res, next) => {
         const userId = req.user.userId
@@ -6,6 +9,15 @@ class ChatController {
         new SuccessResponse({
             message: 'Get conversation of user success',
             metadata: conversation
+        }).send(res)
+    }
+
+    getMessageByConversationId = async (req, res, next) => {
+        const conversationId = req.query.conversationId
+        const message = await ChatService.getMessageByConversationId(conversationId)
+        new SuccessResponse({
+            message: 'Get message by conversation id success',
+            metadata: message
         }).send(res)
     }
 }

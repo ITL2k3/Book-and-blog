@@ -8,6 +8,18 @@ class ChatRepo extends BaseRepo {
         `, [conservationId, senderId, receiverId, message])
         return result
     }
+    async getMessageById(messageId) {
+        const [result, fields] = await connection.query(`
+            SELECT * FROM messages WHERE id = ?
+        `, [messageId])
+        return result
+    }
+    async getMessageByConversationId(conversationId) {
+        const [result, fields] = await connection.query(`
+            SELECT * FROM messages WHERE conversation_id = ?
+        `, [conversationId])
+        return result
+    }
 
     async UpdateMessageStatus(messageId, status) {
         const [result, fields] = await connection.query(`

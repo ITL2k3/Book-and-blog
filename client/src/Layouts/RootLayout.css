@@ -612,6 +612,10 @@ main {
     transform: translateX(0);
 }
 
+#offline-text {
+    color: rgb(107, 107, 107);
+}
+
 .chat-container.hidden {
     transform: translateX(100%);
 }
@@ -731,6 +735,7 @@ main {
     justify-content: center;
     font-weight: bold;
     margin-right: 10px;
+    position: relative;
 }
 
 .account-details {
@@ -794,8 +799,8 @@ main {
 }
 
 .chat-avatar {
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     background-color: #2596be;
     color: white;
     border-radius: 50%;
@@ -804,6 +809,7 @@ main {
     justify-content: center;
     font-weight: bold;
     margin-right: 10px;
+    position: relative;
 }
 
 .chat-user-info {
@@ -860,6 +866,7 @@ main {
 .message-wrapper {
     display: flex;
     flex-direction: column;
+   
     max-width: 80%;
 }
 
@@ -891,6 +898,8 @@ main {
 
 .message-content {
     margin-bottom: 4px;
+    word-wrap: break-word;
+    
 }
 
 .message-time {
@@ -971,4 +980,16 @@ main {
 
 main.no-chat {
     padding-right: 0;
+}
+
+.online-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background-color: #44b700;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }

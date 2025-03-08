@@ -4,14 +4,34 @@ const onlineUsers = new Map();
 
 const chatHandler = (io, socket) => {
 
-    //user login, set sid to onlineUsers
+    //user login, set sid to onlineUsers và join room
     socket.on("userOnline", (userId) => {
-        onlineUsers.set(userId, socket.id);
-        console.log(onlineUsers);
+        // Tạo room name cho user
+        const userRoom = `user_${userId}`;
+
+        // Join vào room của user
+        socket.join(userRoom)
+        onlineUsers.set(userId, {
+            socketId: socket.id,
+            room: userRoom
+        });
+
+        // Broadcast trạng thái online
+        io.emit("userOnline", userId);
+
     });
-    //server recerive message from user
+
+    socket.on("checkOnline", (userId) => {
+            if (onlineUsers.has(userId)) {
+                socket.emit("userOnline", userId);
+            } else {
+                socket.emit("userOffline", userId);
+            }
+        })
+        //server recerive message from user
     socket.on("sendMessage", async({ senderId, receiverId, message }) => {
         try {
+
             //find conservation between 2 user
             let [conversation] = await ChatService.findConversation(senderId, receiverId);
             let conversationId;
@@ -36,15 +56,19 @@ const chatHandler = (io, socket) => {
             //insert message in mysql
             const newMessage = await ChatService.createMessage(conversationId, senderId, receiverId, message);
 
-            //send message if user online
+            // Gửi tin nhắn đến room của receiver nếu online
             if (onlineUsers.has(receiverId)) {
-                io.to(onlineUsers.get(receiverId)).emit("receiveMessage", newMessage);
-                //update status to delivered
+                const receiverData = onlineUsers.get(receiverId);
+                //send message to ALL CLIENT, since socket.io not support to send message to specific room
+                socket.broadcast.emit("receiveMessage", newMessage);
+
+
                 await ChatService.updateMessageStatus(newMessage.insertId, 'delivered');
             }
 
-            // Emit message back to sender
-            // socket.emit("receiveMessage", newMessage);
+            // Gửi lại tin nhắn cho sender
+            socket.emit("receiveMessage", newMessage);
+            console.log('Message sent back to sender');
 
         } catch (error) {
             console.error('Error in sendMessage:', error);
@@ -52,14 +76,28 @@ const chatHandler = (io, socket) => {
         }
     });
 
+
+
+    socket.on("markAsRead", async({ conversationId, userId }) => {
+        try {
+            await ChatService.updateMessageStatus(conversationId, userId, 'read');
+        } catch (error) {
+            console.log("mark as read: ", error);
+            socket.emit("chat_error", { message: "Failed to mark as read" });
+        }
+    })
+
     socket.on("disconnect", () => {
-        for (let [userId, socketId] of onlineUsers) {
-            if (socketId === socket.id) {
+        for (let [userId, userData] of onlineUsers) {
+            if (userData.socketId === socket.id) {
+                // Rời khỏi room khi disconnect
+                socket.leave(userData.room);
                 onlineUsers.delete(userId);
+                io.emit("userOffline", userId);
                 break;
             }
         }
-        console.log('after dis  ', onlineUsers);
+        console.log('User disconnected, remaining users:', onlineUsers);
     })
 
 };

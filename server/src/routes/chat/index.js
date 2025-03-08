@@ -11,7 +11,7 @@ chatRouter.use('/', asyncHandler(authentication))
 
 chatRouter.get('/get-all-conservation', asyncHandler(ChatController.getAllConversationOfUser))
 
-
+chatRouter.get('/get-message-by-conversation-id', asyncHandler(ChatController.getMessageByConversationId))
 
 
 
