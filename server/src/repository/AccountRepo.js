@@ -13,9 +13,30 @@ class AccountRepo extends BaseRepo {
             `, [id])
 
         return result
-
-
     }
+
+    getAllAccount = async() => {
+        const [result, fields] = await connection.query(`
+                SELECT user_id, name, email, role, create_at FROM ${table.USER}
+            `)
+        return result
+    }
+
+    deleteAccount = async(id) => {
+        const [result, fields] = await connection.query(`
+               CALL DeleteUser( ? );
+            `, [id])
+        return result
+    }
+
+    updateRole = async(id, role) => {
+        const [result, fields] = await connection.query(`
+                UPDATE ${table.USER} SET role = ? WHERE user_id = ?
+            `, [role, id])
+        return result
+    }
+
+
 }
 
 export default AccountRepo

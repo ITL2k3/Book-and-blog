@@ -1,11 +1,13 @@
 import { setToken } from '../Auth/authUtils.js'
 import { AuthFailureError, BadRequestError, ForbiddenError } from '../common/error.response.js'
+import KeyTokenRepo from '../repository/KeyTokenRepo.js'
 import UserRepo from '../repository/UserRepo.js'
 import { createRandKey, getInfoData } from '../utils/index.js'
 import FolderService from './folder.service.js'
 import { getKeyToken, saveKeyToken } from './keytoken.service.js'
 import bcrypt from 'bcrypt'
 
+const tokenHelper = new KeyTokenRepo()
 class AccessService {
 
     static getAccount = async(userId) => {
@@ -47,7 +49,12 @@ class AccessService {
     }
 
 
-
+    static resetKeyToken = async(userId) => {
+       
+        const newKeyToken = createRandKey()
+        await tokenHelper.updateKeyToken(userId, newKeyToken)
+      
+    }
     static login = async({ userId, password, roleIN }) => {
 
         const [foundUser] = await (new UserRepo()).getUserById(userId)

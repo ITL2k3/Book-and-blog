@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { asyncHandler } from '../../Helpers/asynchandler.js'
-import { authentication } from '../../Auth/checkAuth.js'
+import { authentication, checkPermission } from '../../Auth/checkAuth.js'
 import AccountController from '../../controller/account.controller.js'
 
 const accountRouter = Router()
@@ -18,5 +18,13 @@ accountRouter.get('/get-account-by-id', asyncHandler(AccountController.getAccoun
 // Account settings
 // accountRouter.put('/change-password', asyncHandler(AccountController.changePassword))
 // accountRouter.put('/settings', asyncHandler(AccountController.updateSettings))
+
+
+//account management
+
+accountRouter.use('/admin', checkPermission('C'))
+accountRouter.get('/admin/get-all-account', asyncHandler(AccountController.getAllAccount))
+accountRouter.delete('/admin/delete-account', asyncHandler(AccountController.deleteAccount))
+accountRouter.patch('/admin/update-role', asyncHandler(AccountController.updateRole))
 
 export default accountRouter

@@ -50,7 +50,6 @@ class AccessController {
         }).send(res,setHeaderArray)
     }
 
-
     login = async (req, res, next) => {
         //check valid User
         const reqUserDTo = new UserDTO(req.body)

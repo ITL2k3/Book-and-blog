@@ -4,11 +4,11 @@ import AccountService from "../services/account.service.js"
 import ChatService from "../services/chat.service.js"
 
 class AccountController {
-    getAccountById = async (req, res, next) => {
+    getAccountById = async(req, res, next) => {
         const { id } = req.query
-       
+
         const account = await AccountService.getAccountById(id)
-        //check conversation exsits, return id with account
+            //check conversation exsits, return id with account
         let [conversation] = await ChatService.findConversation(req.user.userId, id);
         let conversationId;
 
@@ -22,7 +22,7 @@ class AccountController {
         } else {
             conversationId = conversation.id;
         }
-        const accountWithConversationId = { ...account, conversationId}
+        const accountWithConversationId = {...account, conversationId }
 
         new SuccessResponse({
             message: "Get account by id successfully",
@@ -30,6 +30,39 @@ class AccountController {
         }).send(res)
     }
 
+    getAllAccount = async(req, res, next) => {
+        const accounts = await AccountService.getAllAccount()
+        new SuccessResponse({
+            message: "Get all account successfully",
+            metadata: accounts
+        }).send(res)
+    }
+
+    deleteAccount = async(req, res, next) => {
+        const { id } = req.query
+        const account = await AccountService.deleteAccount(id)
+        new SuccessResponse({
+            message: "Delete account successfully",
+            metadata: account
+        }).send(res)
+    }
+
+    updateRole = async(req, res, next) => {
+        const { id } = req.query
+        const { role } = req.query
+        //role is valid
+        if (role == 'A' || role == 'B' || role == 'C') {
+            const account = await AccountService.updateRole(id, role)
+            new SuccessResponse({
+                message: "Update role successfully",
+                metadata: account
+            }).send(res)
+        }else {
+            throw new BadRequestError('Role is not valid')
+
+        }
+
+    }
 }
 
 export default new AccountController

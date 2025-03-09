@@ -20,6 +20,13 @@ class KeyTokenRepo extends BaseRepo {
 
     }
 
+    updateKeyToken = async (userId, keyToken) => {
+        const [results, fields] = await connection.query(`
+                UPDATE ${table.KEYTOKEN} SET token_key = ? WHERE user_id = ?
+            `, [keyToken, userId])
+        return results
+    }
+
     getKeyTokenByUserId = async (userId) => {
         const [results, fields] = await connection.query(`
                 SELECT token_key FROM ${table.KEYTOKEN}

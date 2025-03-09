@@ -58,6 +58,7 @@
 .insert-p {
     padding-left: 0px;
     height: 1000px;
+    background-color: #fff;
     display: flex;
     justify-content: center;
 }

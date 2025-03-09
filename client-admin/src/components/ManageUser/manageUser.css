@@ -1,0 +1,113 @@
+.mu-container {
+    padding: 20px;
+    margin-top: 60px;
+    width: 80%;
+}
+
+.mu-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mu-table th,
+.mu-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.mu-table th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+.mu-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.mu-action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.mu-action-buttons button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.mu-update-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.mu-update-btn:hover {
+    background-color: #45a049;
+}
+
+.mu-delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.mu-delete-btn:hover {
+    background-color: #da190b;
+}
+
+.mu-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.mu-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 300px;
+}
+
+.mu-modal h2 {
+    margin-top: 0;
+}
+
+.mu-modal select {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+.mu-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.mu-modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.mu-confirm-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.mu-cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
