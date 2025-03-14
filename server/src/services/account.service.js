@@ -5,30 +5,31 @@ import AccessService from "./access.service.js"
 const accountHelper = new AccountRepo()
 
 class AccountService {
-    static getAccountById = async (id) => {
+    static getAccountById = async(id) => {
         const [account] = await accountHelper.getAccountById(id)
-        if(!account) throw new NotFoundError('Account not found')
+        if (!account) throw new NotFoundError('Account not found')
         return account
     }
 
-    static getAllAccount = async () => {
+    static getAllAccount = async() => {
         const accounts = await accountHelper.getAllAccount()
         return accounts
     }
 
-    static deleteAccount = async (id) => {
+    static deleteAccount = async(id) => {
         const account = await accountHelper.deleteAccount(id)
-        if(!account) throw new NotFoundError('Account not found')
+        if (!account) throw new NotFoundError('Account not found')
         return account
     }
 
-    static updateRole = async (id, role) => {
+    static updateRole = async(id, role) => {
         const account = await accountHelper.updateRole(id, role)
-        if(!account) throw new NotFoundError('Account not found')
-        //reset keytoken
+        if (!account) throw new NotFoundError('Account not found')
+            //reset keytoken
         await AccessService.resetKeyToken(id)
         return account
     }
+
 
 }
 

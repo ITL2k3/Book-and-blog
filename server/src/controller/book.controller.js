@@ -388,6 +388,43 @@ class BookController {
         });
     }
 
+    getPopularCategories = async(req, res, next) => {
+        const result = await BookService.getPopularCategories()
+        new SuccessResponse({
+            message: 'Get popular categories success',
+            metadata: result
+        }).send(res)
+    }
+
+    getTopViewBook = async(req, res, next) => {
+        const result = await BookService.getTopViewBook()
+        new SuccessResponse({
+            message: 'Get top view book success',
+            metadata: result
+        }).send(res)
+    }       
+
+    getAllBookByMonth = async(req, res, next) => {
+        const result = await BookService.getAllBookByMonth()
+        new SuccessResponse({
+            message: 'Get all book by month success',
+            metadata: result
+        }).send(res)
+    }
+    getPublicPrivateRatio = async(req, res, next) => {
+        const result = await BookService.getPublicPrivateRatio()
+        new SuccessResponse({
+            message: 'Get public private ratio success',
+            metadata: result
+        }).send(res)
+    }
+    countAllBook = async(req, res, next) => {
+        const result = await BookService.countAllBook()
+        new SuccessResponse({
+            message: 'Count all book success',
+            metadata: result
+        }).send(res)
+    }
 
 }
 

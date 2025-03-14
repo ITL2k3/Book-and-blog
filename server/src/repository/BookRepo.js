@@ -10,7 +10,7 @@ import UserEntity from "./entities/user.entity.js";
 
 class BookRepo extends BaseRepo {
 
-
+    
     insertNoti = async (userId, message, title) => {
         const [result, fields] = await connection.query(`
             INSERT INTO notification VALUE
@@ -470,6 +470,48 @@ class BookRepo extends BaseRepo {
         }
         console.log(result);
     }
+
+    getAllBookByMonth = async() => {
+        const [results, fields] = await connection.query(
+            ` SELECT DATE_FORMAT(create_at, '%Y-%m') AS month, COUNT(*) AS total 
+            FROM book 
+            GROUP BY month 
+            ORDER BY month DESC
+            `
+        )
+        return results
+    }
+
+    getPublicPrivateRatio = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT isPublic, COUNT(*) AS total 
+            FROM book 
+            GROUP BY isPublic`
+        )
+        return results
+    }
+    topViewBook = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT title, num_of_views 
+            FROM book 
+            ORDER BY num_of_views DESC 
+            LIMIT 10`
+        )
+        return results
+    }
+
+    getPopularCategories = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT c.name_category, COUNT(bc.book_id) AS total 
+            FROM book_category bc       
+            JOIN category c ON bc.category_id = c.category_id
+            GROUP BY bc.category_id 
+            ORDER BY total DESC 
+            LIMIT 10`
+        )
+        return results
+    }
+    
 
 }
 

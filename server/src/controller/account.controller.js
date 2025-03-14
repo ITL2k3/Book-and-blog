@@ -73,8 +73,8 @@ class AccountController {
     }
 
     getUserActivityLog = async(req, res, next) => {
-        const {userId} = req.query
-        const activityLog = await LogService.getUserActivityLog(userId)
+        const {id} = req.query
+        const activityLog = await LogService.getUserActivityLog(id)
         new SuccessResponse({
             message: "Get user activity log successfully",
             metadata: activityLog

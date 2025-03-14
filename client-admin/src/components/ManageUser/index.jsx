@@ -9,6 +9,8 @@ export default function ManageUser() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+    const [activityLog, setActivityLog] = useState([]);
     const [newRole, setNewRole] = useState('');
     const [isValid, setValid] = useState(null);
     const navigate = useNavigate();
@@ -36,6 +38,21 @@ export default function ManageUser() {
             }
         } catch (error) {
             console.error('Error fetching users:', error);
+        }
+    };
+
+    const fetchActivityLog = async (userId) => {
+        try {
+            const response = await fetch(`http://${host}:3055/v1/api/admin/get-user-activity-log?id=${userId}`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            if (data.metadata) {
+                setActivityLog(data.metadata);
+            }
+        } catch (error) {
+            console.error('Error fetching activity log:', error);
+            alert('Có lỗi xảy ra khi lấy lịch sử hoạt động!');
         }
     };
 
@@ -85,6 +102,12 @@ export default function ManageUser() {
             console.error('Error deleting user:', error);
             alert('Có lỗi xảy ra khi xóa tài khoản!');
         }
+    };
+
+    const handleViewActivity = (user) => {
+        setSelectedUser(user);
+        fetchActivityLog(user.user_id);
+        setIsActivityModalOpen(true);
     };
 
     const getRoleName = (role) => {
@@ -140,6 +163,12 @@ export default function ManageUser() {
                                     Cập nhật quyền
                                 </button>
                                 <button 
+                                    className="mu-activity-btn"
+                                    onClick={() => handleViewActivity(user)}
+                                >
+                                    Lịch sử hoạt động
+                                </button>
+                                <button 
                                     className={user.role === 'C' ? 'mu-delete-btn disabled' : 'mu-delete-btn'}
                                     onClick={() => {
                                         setSelectedUser(user);
@@ -148,6 +177,7 @@ export default function ManageUser() {
                                 >
                                     Xóa
                                 </button>
+                                
                             </td>
                         </tr>
                     ))}
@@ -203,6 +233,33 @@ export default function ManageUser() {
                                 onClick={handleDeleteUser}
                             >
                                 Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal lịch sử hoạt động */}
+            {isActivityModalOpen && (
+                <div className="mu-modal-overlay">
+                    <div className="mu-modal activity-modal">
+                        <h2>Lịch sử hoạt động</h2>
+                        <p>Tài khoản: {selectedUser?.name}</p>
+                        <div className="activity-log-container">
+                            {activityLog.map((record, index) => (
+                                <div key={index} className="activity-record">
+                                    <p><strong>Loại hành động:</strong> {record.action_type}</p>
+                                    <p><strong>Chi tiết:</strong> {record.action_detail}</p>
+                                    <p><strong>Thời gian:</strong> {new Date(record.timestamp).toLocaleString()}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mu-modal-buttons">
+                            <button 
+                                className="mu-cancel-btn"
+                                onClick={() => setIsActivityModalOpen(false)}
+                            >
+                                Đóng
                             </button>
                         </div>
                     </div>

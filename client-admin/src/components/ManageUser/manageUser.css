@@ -120,3 +120,66 @@
 .disabled:hover {
     background-color: #ccc;
 }
+
+.mu-activity-btn {
+    background-color: #2596BE;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.mu-activity-btn:hover {
+    background-color: #1f7a9e;
+}
+
+.activity-modal {
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-modal h2 {
+    margin-bottom: 15px;
+}
+
+.activity-modal p {
+    margin-bottom: 15px;
+}
+
+.activity-log-container {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0;
+    padding-right: 10px;
+}
+
+.activity-record {
+    background-color: #f5f5f5;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #2596BE;
+}
+
+.activity-record:last-child {
+    margin-bottom: 0;
+}
+
+.activity-record p {
+    margin: 5px 0;
+}
+
+.activity-record strong {
+    color: #333;
+}
+
+.mu-modal-buttons {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}

@@ -80,36 +80,17 @@ bookRouter.delete('/user/delete-book', asyncHandler(BookController.deleteBook))
 
 
 
-//check permission
-bookRouter.use('/lib', checkPermission(permission["LIBRARIAN"]))
 
-
-
-bookRouter.get('/lib', async (req, res) => {
-    res.send({
-        statusCode: 200,
-        statusText: 'authen success'
-    })
-})
-//
 bookRouter.get('/get-noti-info', asyncHandler(BookController.getNotiInfo))
 bookRouter.patch('/update-read-noti', asyncHandler(BookController.updateReport))
 
-bookRouter.post('/lib/post-book',upload.fields([{
-    name: 'pdf', maxCount: 1}, 
-    {
-    name: 'img', maxCount: 1
-}]),asyncHandler(BookController.insertBook))
 
-bookRouter.put('/lib/update-book',upload.fields([{
-    name: 'pdf', maxCount: 1}, 
-    {
-    name: 'img', maxCount: 1
-}]),asyncHandler(BookController.updateBook))
-
-bookRouter.delete('/lib/delete-book', asyncHandler(BookController.deleteBook))
-
-
+bookRouter.use('/KDV', checkPermission(permission["ADMIN"]))
+bookRouter.get('/KDV/get-popular-categories', asyncHandler(BookController.getPopularCategories))
+bookRouter.get('/KDV/get-top-view-book', asyncHandler(BookController.getTopViewBook))
+bookRouter.get('/KDV/get-all-book-by-month', asyncHandler(BookController.getAllBookByMonth))
+bookRouter.get('/KDV/get-public-private-ratio', asyncHandler(BookController.getPublicPrivateRatio))
+bookRouter.get('/KDV/count-all-book', asyncHandler(BookController.countAllBook))
 
 
 

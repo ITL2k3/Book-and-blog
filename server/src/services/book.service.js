@@ -537,6 +537,30 @@ class BookService {
        
     }
 
+    static getPopularCategories = async() => {
+        const result = await bookHelper.getPopularCategories()
+        return result
+    }
+
+    static getTopViewBook = async() => {
+        const result = await bookHelper.topViewBook()
+        return result
+    }
+
+    static getAllBookByMonth = async() => {
+        const result = await bookHelper.getAllBookByMonth()
+        return result
+    }
+    static getPublicPrivateRatio = async() => {
+        const result = await bookHelper.getPublicPrivateRatio()
+        return result
+    }
+
+    static countAllBook = async() => {
+        const result = await bookHelper.countAllEntities()
+        return result
+    }
+    
 
 }
 
