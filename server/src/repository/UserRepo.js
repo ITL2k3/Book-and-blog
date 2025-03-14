@@ -38,6 +38,21 @@ class UserRepo extends BaseRepo {
 
     }
 
+    writeUserActivityLog = async(userId, actionType, actionDetail) => {
+        const [results, fields] = await connection.query(
+            `INSERT INTO ${table.USER_ACTIVITY_LOG} (user_id, action_type, action_detail)
+             VALUES (${userId}, "${actionType}", "${actionDetail}")`
+        )
+        return results
+    }
+
+    getUserActivityLog = async(userId) => {
+        const [results, fields] = await connection.query(
+            `SELECT * FROM ${table.USER_ACTIVITY_LOG} WHERE user_id = ${userId}`
+        )
+        return results
+    }
+
 }
 
 export default UserRepo

@@ -1,7 +1,7 @@
 import { BadRequestError } from "../common/error.response.js"
 import { SuccessResponse } from "../common/success.response.js"
 import FolderService from "../services/folder.service.js"
-
+import LogService from "../services/log.service.js"
 
 class FolderController{
 
@@ -58,7 +58,8 @@ class FolderController{
     addDocToFolder = async(req, res, next) => {
         const {folderId, bookId} = req.body
         const userId = req.user.userId
-
+        //Ghi lại lịch sử hoạt động của người dùng
+        LogService.writeUserActivityLog(userId, 'add-doc-to-folder', `user ${userId} add document ${bookId} to folder`)
         new SuccessResponse({
             message: "post doc to folder success",
             metadata: await FolderService.addDocToFolder(bookId, folderId, userId)

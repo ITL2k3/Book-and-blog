@@ -5,8 +5,8 @@ import BookService from "../services/book.service.js"
 import path, { basename } from 'path'
 import fs from 'fs'
 
-
 import { convertUpperCateToLowerCate, parseDateRange, parseNumRange } from "../utils/index.js"
+import LogService from "../services/log.service.js"
 
 
 class BookController {
@@ -76,7 +76,8 @@ class BookController {
             const result = await BookService.insertReport(userId, author_id, message, book_id, title)
                 //now throw error => insert success
             
-
+            //Ghi lại lịch sử hoạt động của người dùng
+            LogService.writeUserActivityLog(userId, 'report', `user ${userId} report document ${book_id}`)
             new SuccessResponse({
                 message: "report success",
                 metadata: result
@@ -210,7 +211,9 @@ class BookController {
         const filename = parts[0]
         const bookId = parts[1]
 
-        await BookService.upViewsBook(bookId)
+        BookService.upViewsBook(bookId)
+        //Ghi lại lịch sử hoạt động của người dùng
+        LogService.writeUserActivityLog(req.user.userId, 'read', `user ${req.user.userId} read document ${bookId}`)
         const stream = fs.createReadStream(`uploads/files_pdf/${filename}.pdf`)
         stream.on('error', (err) => {
             console.log('Error reading file: ', err);

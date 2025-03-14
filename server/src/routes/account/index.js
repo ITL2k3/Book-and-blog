@@ -26,5 +26,5 @@ accountRouter.use('/admin', checkPermission('C'))
 accountRouter.get('/admin/get-all-account', asyncHandler(AccountController.getAllAccount))
 accountRouter.delete('/admin/delete-account', asyncHandler(AccountController.deleteAccount))
 accountRouter.patch('/admin/update-role', asyncHandler(AccountController.updateRole))
-
+accountRouter.get('/admin/get-user-activity-log', asyncHandler(AccountController.getUserActivityLog))
 export default accountRouter

@@ -130,7 +130,7 @@ export default function ManageUser() {
                             <td>{getRoleName(user.role)}</td>
                             <td className="mu-action-buttons">
                                 <button 
-                                    className="mu-update-btn"
+                                    className={user.role === 'C' ? 'mu-update-btn disabled' : 'mu-update-btn'}
                                     onClick={() => {
                                         setSelectedUser(user);
                                         setNewRole(user.role);
@@ -140,7 +140,7 @@ export default function ManageUser() {
                                     Cập nhật quyền
                                 </button>
                                 <button 
-                                    className="mu-delete-btn"
+                                    className={user.role === 'C' ? 'mu-delete-btn disabled' : 'mu-delete-btn'}
                                     onClick={() => {
                                         setSelectedUser(user);
                                         setIsDeleteModalOpen(true);
@@ -155,7 +155,7 @@ export default function ManageUser() {
             </table>
 
             {/* Modal cập nhật quyền */}
-            {isUpdateModalOpen && (
+            {(isUpdateModalOpen && selectedUser.role !== 'C') && (
                 <div className="mu-modal-overlay">
                     <div className="mu-modal">
                         <h2>Cập nhật quyền</h2>
@@ -166,7 +166,6 @@ export default function ManageUser() {
                         >
                             <option value="A">Người dùng</option>
                             <option value="B">Kiểm duyệt viên</option>
-                            <option value="C">Quản trị viên</option>
                         </select>
                         <div className="mu-modal-buttons">
                             <button 
@@ -187,7 +186,7 @@ export default function ManageUser() {
             )}
 
             {/* Modal xác nhận xóa */}
-            {isDeleteModalOpen && (
+            {(isDeleteModalOpen && selectedUser.role !== 'C') && (
                 <div className="mu-modal-overlay">
                     <div className="mu-modal">
                         <h2>Xác nhận xóa</h2>

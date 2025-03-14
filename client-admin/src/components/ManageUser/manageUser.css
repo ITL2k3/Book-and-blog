@@ -111,3 +111,12 @@
     background-color: #f44336;
     color: white;
 }
+
+.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.disabled:hover {
+    background-color: #ccc;
+}

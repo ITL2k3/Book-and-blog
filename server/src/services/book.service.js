@@ -10,6 +10,7 @@ import fs from 'fs/promises'
 import { getIO } from "../socket/socket.js"
 import Fs from 'fs'
 import pdf from 'pdf-parse'
+import LogService from "./log.service.js"
 
 const io = getIO()
 
@@ -400,6 +401,10 @@ class BookService {
             })
 
         })
+        
+
+        //Ghi lại lịch sử hoạt động của người dùng
+        LogService.writeUserActivityLog(payload.userId, 'upload', `user ${payload.userId} upload document ${bookId.Id}`)
 
 
 

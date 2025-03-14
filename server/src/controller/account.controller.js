@@ -2,6 +2,7 @@ import { BadRequestError, InternalServerError } from "../common/error.response.j
 import { OK, SuccessResponse } from "../common/success.response.js"
 import AccountService from "../services/account.service.js"
 import ChatService from "../services/chat.service.js"
+import LogService from "../services/log.service.js"
 
 class AccountController {
     getAccountById = async(req, res, next) => {
@@ -40,7 +41,10 @@ class AccountController {
 
     deleteAccount = async(req, res, next) => {
         const { id } = req.query
+        const {userId} = req.user
         const account = await AccountService.deleteAccount(id)
+        //Ghi lại lịch sử hoạt động của người dùng
+        LogService.writeUserActivityLog(userId, 'delete-account', `admin ${userId} delete account ${id}`)
         new SuccessResponse({
             message: "Delete account successfully",
             metadata: account
@@ -50,9 +54,13 @@ class AccountController {
     updateRole = async(req, res, next) => {
         const { id } = req.query
         const { role } = req.query
+        const {userId} = req.user
         //role is valid
         if (role == 'A' || role == 'B' || role == 'C') {
             const account = await AccountService.updateRole(id, role)
+            //Ghi lại lịch sử hoạt động của người dùng
+
+            LogService.writeUserActivityLog(userId, 'update-role', `admin ${userId} update role to ${id}`)
             new SuccessResponse({
                 message: "Update role successfully",
                 metadata: account
@@ -62,6 +70,15 @@ class AccountController {
 
         }
 
+    }
+
+    getUserActivityLog = async(req, res, next) => {
+        const {userId} = req.query
+        const activityLog = await LogService.getUserActivityLog(userId)
+        new SuccessResponse({
+            message: "Get user activity log successfully",
+            metadata: activityLog
+        }).send(res)
     }
 }
 

@@ -10,7 +10,8 @@ const table = {
     FOLDER: "folder",
     FOLDER_BOOK: "folder_book",
     BOOK_LOVE_USER: "user_love_book",
-    REPORT: "report"
+    REPORT: "report",
+    USER_ACTIVITY_LOG: "user_activity"
 }
 
 export default table
