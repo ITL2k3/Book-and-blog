@@ -1,0 +1,425 @@
+* {
+    user-select: none;
+}
+
+.storage-content {
+    height: 100%;
+}
+
+.storage-p {
+    padding-left: 0vw;
+    padding-top: 50px;
+    min-height: 1000px;
+}
+
+.btext a {
+    text-decoration: none;
+}
+
+.btext {
+    margin-left: 10px;
+    line-height: 10px;
+}
+
+.btitle {
+    font-size: large;
+    font-weight: bold;
+}
+
+.bauthor {
+    font-size: medium;
+    font-weight: lighter;
+}
+
+.bcate {
+    font-size: medium;
+    font-weight: lighter;
+}
+
+.btext button {
+    background-color: #FF4646;
+    color: black;
+    /* Màu chữ đen */
+    border: none;
+    /* Không có viền */
+    padding: 10px 15px;
+    /* Khoảng cách bên trong */
+    text-align: center;
+    /* Căn giữa nội dung */
+    text-decoration: none;
+    /* Không có gạch chân */
+    display: inline-block;
+    /* Hiển thị như một khối inline */
+    font-size: 16px;
+    /* Kích thước chữ */
+    cursor: pointer;
+    /* Hiệu ứng con trỏ khi di chuột */
+    border-radius: 11px;
+    /* Bo góc */
+    transition: background-color 0.2s;
+    /* Hiệu ứng chuyển màu nền */
+}
+
+.btext button:hover {
+    background-color: rgb(245, 135, 135);
+    /* Màu nền khi di chuột */
+}
+
+.button-ctn :first-child {
+    background-color: #8CFF9F;
+    font-size: medium;
+    font-weight: 400;
+    margin-right: 10px;
+}
+
+.button-ctn :first-child:hover {
+    background-color: #45f863;
+}
+
+.endtext {
+    color: red;
+    margin-left: 20px;
+}
+
+.left-tool-bar-tk {
+    display: flex;
+    flex-direction: column;
+    margin-top: 60px;
+    position: fixed;
+    align-items: flex-start;
+    top: 0px;
+    left: 0px;
+    width: 15%;
+    height: 100vh;
+    background-color: #FFFFFF;
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    z-index: 4;
+}
+
+.left-tool-bar-tk div {
+    width: 100%;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.left-tool-bar-tk div:hover {
+    background-color: #f0f0f0;
+}
+
+.left-tool-bar-tk div.active {
+    background-color: #e6f7ff;
+    border-right: 3px solid #1890ff;
+}
+
+.left-tool-bar-tk div svg {
+    margin-right: 10px;
+}
+
+.left-tool-bar-tk div span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.main-display-folder {
+    margin-top: 25px;
+    margin-left: 0% !important;
+    margin-right: 1%;
+    width: 83%;
+}
+
+.myLibrary-container {
+    padding: 20px;
+    background-color: white;
+    min-height: 90vh;
+    border-radius: 20px;
+}
+
+.folder-header-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.folder-list {
+    overflow: scroll;
+    max-height: 60vh;
+}
+
+.folder-header,
+.folder-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.folder-header .folder-column {
+    font-weight: 700;
+}
+
+.folder-column {
+    font-weight: 500;
+}
+
+.folder-column {
+    flex: 1;
+    text-align: left;
+}
+
+.folder-column:first-child {
+    flex: 0 0 50%;
+    /* Cột đầu tiên chiếm 50% */
+}
+
+.folder-column:first-child svg {
+    margin-top: -5px;
+    margin-right: 15px;
+    margin-left: 20px;
+}
+
+.folder-column:last-child {
+    flex: 0 0 10%;
+    /* Cột cuối chiếm 10% */
+    text-align: right;
+}
+
+.folder-column:last-child svg {
+    padding: 3px;
+    border-radius: 50%;
+    transition: 0.1s;
+}
+
+.folder-column:last-child svg:hover {
+    background-color: #b4b4b4;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.folder-item:hover {
+    transition: 0.1s;
+    background-color: #e6e6e6;
+    /* Hiệu ứng hover cho item */
+    cursor: pointer;
+}
+
+.modal2 {
+    position: absolute;
+    /* Chuyển sang absolute để định vị theo icon */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    padding: 5px;
+    transform: translate(-50%, 0%);
+    /* Để căn giữa modal theo vị trí đã tính toán */
+    border-radius: 10px;
+}
+
+.modal-content2 {
+    width: 170px;
+    /* Đặt chiều rộng tối đa cho modal */
+    font-weight: 500;
+}
+
+.modal-content2 div {
+    padding: 0px;
+    border-radius: 10px;
+}
+
+.modal-content2 div:hover {
+    background-color: rgb(202, 202, 202);
+}
+
+.modal-content2 div svg {
+    margin: 10px;
+    margin-right: 15px;
+}
+
+
+/* model nhap ten thu muc */
+
+.modal-add-ovl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    /* Màu nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    /* Đảm bảo overlay nằm trên tất cả các phần tử khác */
+}
+
+.modal3 {
+    position: absolute;
+    /* Chuyển sang absolute để định vị theo icon */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    z-index: 2;
+    padding: 20px;
+}
+
+.modal-content3 {
+    width: 250px;
+    /* Đặt chiều rộng tối đa cho modal */
+}
+
+.modal-content3 input {
+    width: 100%;
+    border: 1px solid black;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.modal-content3 button {
+    border: none;
+    background-color: white;
+    width: 50px;
+    height: 30px;
+    border-radius: 5px;
+    font-weight: 600;
+    color: #0b57b0;
+}
+
+.modal-content3 button:hover {
+    border: none;
+    background-color: white;
+    font-weight: 600;
+    color: #0b57b0;
+    background-color: rgb(241, 241, 241);
+}
+
+.btn-md-ctn {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+#add-folder-btn {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #8bfe8d;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    /* Thêm hiệu ứng chuyển tiếp */
+}
+
+#add-pdf-btn {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #e75454;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    /* Thêm hiệu ứng chuyển tiếp */
+}
+
+#add-pdf-btn:hover {
+    background-color: #f13030;
+    transform: translateY(-1px);
+    /* Dịch chuyển nút lên trên 5px */
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
+    /* Thêm box-shadow */
+}
+
+#add-folder-btn:hover {
+    background-color: #64f667;
+    transform: translateY(-1px);
+    /* Dịch chuyển nút lên trên 5px */
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
+    /* Thêm box-shadow */
+}
+
+#add-folder-btn svg {
+    margin-top: -5px;
+}
+
+#backward-folder-btn {
+    border: none;
+    background-color: white;
+    width: 40px;
+    height: 30px;
+}
+
+#backward-folder-btn:hover {
+    background-color: rgb(228, 228, 228);
+    border-radius: 5px;
+}
+
+
+/* css for upload.jsx */
+
+
+/* Overlay */
+
+.ovl-frm-ctn-update {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Màu nền tối với độ trong suốt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+
+/* Container for the form */
+
+.form-ctn-update {
+    background-color: white;
+    /* Nền trắng cho form */
+    padding: 20px;
+    border-radius: 8px;
+    /* Bo tròn góc */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    /* Đổ bóng */
+    width: 60vw;
+    /* Độ rộng của form */
+    max-width: 90%;
+    /* Độ rộng tối đa */
+}
+
+.form-ctn-update h2 {
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+
+#cancle-btn-update {
+    background-color: rgb(255, 85, 85);
+}
+
+#small_search_udt {
+    width: 200px;
+}
+
+#small_search_udt input {
+    width: 200px;
+    height: 35px;
+}
+
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 97%;
+}
+
+.dashboard-container-tk {
+    margin-left: 2%;
+    min-height: 90vh;
+}

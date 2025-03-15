@@ -37,6 +37,60 @@ class AccountRepo extends BaseRepo {
     }
 
 
+
+    countUser = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT COUNT(*)  FROM ${table.USER}`
+        )
+        return results
+    }
+
+    getNewUserByMonth = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT DATE_FORMAT(create_at, '%Y-%m') AS month, COUNT(*) AS total 
+            FROM ${table.USER}
+            GROUP BY month
+            ORDER BY month`
+        )
+        return results
+    }
+
+    getTotalActionOfUser = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT COUNT(*) FROM ${table.USER_ACTIVITY_LOG}`
+        )
+        return results
+    }
+
+    getTopPopularActions = async() => {
+        const [results, fields] = await connection.query(
+            `SELECT action_type, COUNT(*) AS total 
+            FROM ${table.USER_ACTIVITY_LOG}
+            GROUP BY action_type
+            ORDER BY total DESC
+            LIMIT 5`
+        )
+
+        return results
+    }
+
+    getTopNotifiedUsers = async() => {
+        const [results, fields] = await connection.query(
+            ` SELECT 
+    u.user_id,
+    u.name AS name,
+    u.email as email,
+    COUNT(n.notification_id) AS total_notifications
+FROM notification n
+JOIN user u ON n.user_id = u.user_id
+GROUP BY u.user_id, u.name
+ORDER BY total_notifications DESC
+LIMIT 5;`
+        )
+
+        return results
+    }
+
 }
 
 export default AccountRepo

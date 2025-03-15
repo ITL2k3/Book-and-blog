@@ -19,6 +19,12 @@ accountRouter.get('/get-account-by-id', asyncHandler(AccountController.getAccoun
 // accountRouter.put('/change-password', asyncHandler(AccountController.changePassword))
 // accountRouter.put('/settings', asyncHandler(AccountController.updateSettings))
 
+//dashboard
+accountRouter.get('/admin/get-total-user', asyncHandler(AccountController.getTotalUser))
+accountRouter.get('/admin/get-new-user-by-month', asyncHandler(AccountController.getNewUserByMonth))
+accountRouter.get('/admin/get-total-action-of-user', asyncHandler(AccountController.getTotalActionOfUser))
+accountRouter.get('/admin/get-top-popular-actions', asyncHandler(AccountController.getTopPopularActions))
+accountRouter.get('/admin/get-top-notified-users', asyncHandler(AccountController.getTopNotifiedUsers))
 
 //account management
 
@@ -27,4 +33,8 @@ accountRouter.get('/admin/get-all-account', asyncHandler(AccountController.getAl
 accountRouter.delete('/admin/delete-account', asyncHandler(AccountController.deleteAccount))
 accountRouter.patch('/admin/update-role', asyncHandler(AccountController.updateRole))
 accountRouter.get('/admin/get-user-activity-log', asyncHandler(AccountController.getUserActivityLog))
+
+
+
+
 export default accountRouter

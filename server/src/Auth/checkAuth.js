@@ -14,13 +14,13 @@ export const authentication = async (req,res,next) => {
    
     if(!token || !userId) throw new AuthFailureError('token not found!')
 
-   
     const {token_key} = await getKeyToken(req.cookies.userId)
-
     if(!token_key) throw new BadRequestError('User not Found!!')
 
     const decodeUser = JWT.verify(token,token_key)
+    
     if(!decodeUser) throw new AuthFailureError('Wrong token')
+   
     req.user = decodeUser
     
     

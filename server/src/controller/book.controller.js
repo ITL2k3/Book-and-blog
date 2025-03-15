@@ -83,6 +83,7 @@ class BookController {
                 metadata: result
             }).send(res)
         } catch (err) {
+            console.log('err: ',err);
             throw new InternalServerError(err)
         }
     }

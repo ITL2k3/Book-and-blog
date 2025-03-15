@@ -33,7 +33,6 @@ class KeyTokenRepo extends BaseRepo {
                 WHERE user_id = ${userId}
             `)
     
-
         return results[0]
     }
 

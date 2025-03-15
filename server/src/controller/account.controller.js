@@ -80,6 +80,46 @@ class AccountController {
             metadata: activityLog
         }).send(res)
     }
+
+    getTotalUser = async(req, res, next) => {
+        const totalUser = await AccountService.getTotalUser()
+        new SuccessResponse({
+            message: "Get total user successfully",
+            metadata: totalUser
+        }).send(res)
+    }   
+
+    getNewUserByMonth = async(req, res, next) => {
+        const newUserByMonth = await AccountService.getNewUserByMonth()
+        new SuccessResponse({
+            message: "Get new user by month successfully",
+            metadata: newUserByMonth    
+        }).send(res)
+    }
+
+    getTotalActionOfUser = async(req, res, next) => {
+        const totalActionOfUser = await AccountService.getTotalActionOfUser()
+        new SuccessResponse({
+            message: "Get total action of user successfully",
+            metadata: totalActionOfUser
+        }).send(res)
+    }
+
+    getTopPopularActions = async(req, res, next) => {
+        const topPopularActions = await AccountService.getTopPopularActions()
+        new SuccessResponse({
+            message: "Get top popular actions successfully",
+            metadata: topPopularActions
+        }).send(res)
+    }
+
+    getTopNotifiedUsers = async(req, res, next) => {
+        const topNotifiedUsers = await AccountService.getTopNotifiedUsers()
+        new SuccessResponse({   
+            message: "Get top notified users successfully",
+            metadata: topNotifiedUsers
+        }).send(res)
+    }
 }
 
 export default new AccountController

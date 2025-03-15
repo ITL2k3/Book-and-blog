@@ -31,6 +31,32 @@ class AccountService {
     }
 
 
+    static getTotalUser = async() => {
+        const totalUser = await accountHelper.countUser()
+        return totalUser[0]['COUNT(*)']
+    }
+
+    static getNewUserByMonth = async() => {
+        const newUserByMonth = await accountHelper.getNewUserByMonth()
+        return newUserByMonth
+    }
+
+    static getTotalActionOfUser = async() => {
+        const totalActionOfUser = await accountHelper.getTotalActionOfUser()
+        return totalActionOfUser[0]['COUNT(*)']
+    }   
+
+    static getTopPopularActions = async() => {
+        const topPopularActions = await accountHelper.getTopPopularActions()
+        return topPopularActions
+    }   
+
+    static getTopNotifiedUsers = async() => {
+        const topNotifiedUsers = await accountHelper.getTopNotifiedUsers()
+        return topNotifiedUsers
+    }   
+    
+    
 }
 
 
